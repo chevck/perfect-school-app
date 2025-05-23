@@ -100,7 +100,10 @@ export function Billing() {
             <option value=''>Unpaid</option>
           </select>
         </div>
-        <button className='button create-bill'>
+        <button
+          className='button create-bill'
+          onClick={() => (window.location.href = "/create-bill")}
+        >
           <i className='bi bi-plus'></i>
           <p>Add New Bill</p>
         </button>
@@ -150,14 +153,17 @@ function EmptyBillContainer() {
   return (
     <div className='empty-bill-container'>
       <div className='bill-icon-wrapper'>
-        <i className='bi bi-cash'></i>
+        <i className='bi bi-file-earmark-text'></i>
       </div>
       <h2>No Bills Found</h2>
       <p>
         You haven't created any bills yet or no bills match your current
         filters. Create your first bill to get started.
       </p>
-      <button className='button create-bill'>
+      <button
+        className='button create-bill'
+        onClick={() => (window.location.href = "/create-bill")}
+      >
         <i className='bi bi-plus'></i>
         <p>Create Your First Bill</p>
       </button>

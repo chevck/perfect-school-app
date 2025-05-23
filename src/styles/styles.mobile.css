@@ -2,4 +2,14 @@
   .registration-page-wrapper {
     padding: 25px;
   }
+
+  .create-bill {
+    & .create-bill-container {
+      & .bill-items-wrapper {
+        .bill-items {
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
 }

@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/login";
 import { Dashboard } from "./pages/dashboard";
 import { DashboardLayout } from "./components/dashboard-layout";
 import { Billing } from "./pages/billing";
+import { CreateBill } from "./pages/create-bill";
 
 export function AppRouter() {
   return (
@@ -15,6 +16,7 @@ export function AppRouter() {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/billing' element={<Billing />} />
         </Route>
+        <Route path='/create-bill' element={<CreateBill />} />
       </Routes>
     </BrowserRouter>
   );
