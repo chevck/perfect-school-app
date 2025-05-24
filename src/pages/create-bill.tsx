@@ -4,9 +4,17 @@ import { BillLayout } from "../components/bill-layout";
 export function CreateBill() {
   const [billItems] = useState([1, 2]);
   const [itemToEdit] = useState(1);
-  const [previewing, setPreviewing] = useState(false);
+  const [previewing, setPreviewing] = useState(true);
   return (
     <div className='create-bill'>
+      <div className='close-button-container'>
+        <div
+          className='close-button'
+          onClick={() => (window.location.href = "/billing")}
+        >
+          <i className='bi bi-x'></i>
+        </div>
+      </div>
       {!previewing ? (
         <div className='create-bill-container'>
           <div className='title-section'>
@@ -169,7 +177,7 @@ export function CreateBill() {
           <div className='footer'>
             <button className='button edit'>Back to Edit</button>
             <button className='button draft'>Save as Draft</button>
-            <button className='button draft'>Download PDF</button>
+            <button className='button download'>Download PDF</button>
             <button className='button process'>Process Bill</button>
           </div>
         </div>

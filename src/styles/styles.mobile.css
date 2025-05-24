@@ -3,11 +3,179 @@
     padding: 25px;
   }
 
+  .header {
+    padding: 0 40px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1500;
+
+    .full-school-name {
+      display: none;
+    }
+
+    .short-school-name {
+      display: block;
+    }
+
+    .notification-section {
+      display: none;
+    }
+
+    .logo-wrapper {
+      h3 {
+        width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+
+    .mobile-menu-bar {
+      font-size: 25px;
+      border: 1px solid #e2e8f0;
+      display: block;
+      height: 35px;
+      width: 40px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      i {
+        height: -webkit-fill-available;
+      }
+    }
+
+    .notification-section.mobile {
+      display: flex;
+      padding-left: 15px;
+      padding-top: 3px;
+
+      i {
+        font-size: 22px;
+      }
+
+      .user-profile {
+        p {
+          display: none;
+        }
+
+        .user-profile-avatar {
+          width: 35px;
+          height: 35px;
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  .dashboard-layout {
+    .dashboard-container {
+      .dashboard-sidebar-container {
+        display: none;
+      }
+    }
+  }
+
+  .psa_d_page {
+    margin-top: 75px;
+    padding: 20px;
+
+    .title {
+      margin-bottom: 12px;
+    }
+  }
+
+  .dashboard {
+    .card-set {
+      gap: 10px;
+
+      .card_o {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  .billing {
+    .card-set {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter_create_section {
+      flex-direction: column;
+      gap: 10px;
+
+      .filter {
+        input,
+        select {
+          width: 100%;
+        }
+      }
+
+      button.create-bill {
+        justify-content: center;
+      }
+    }
+  }
+
   .create-bill {
     & .create-bill-container {
       & .bill-items-wrapper {
         .bill-items {
           flex-wrap: wrap;
+          input.amount,
+          input,
+          button {
+            width: 100%;
+          }
+        }
+
+        .added-bill-items {
+          table {
+            tbody tr {
+              td {
+                &.actions {
+                  gap: 0px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.preview {
+        .bill-layout-container {
+          .bill-layout {
+            &.standard {
+              .items-table {
+                table {
+                  thead tr th {
+                    background-color: #f3f4f6;
+                  }
+                  tbody {
+                    tr td {
+                      background-color: #f9fafb;
+                    }
+                  }
+                }
+              }
+            }
+            &.modern {
+              .total-section-wrapper {
+                .total-section {
+                  width: fit-content;
+
+                  .subtotal,
+                  .total {
+                    gap: 20px;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
