@@ -12,6 +12,28 @@ button.button {
   color: white;
   height: 40px;
   cursor: pointer;
+  border: none;
+}
+
+table {
+  thead tr th {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: red;
+    }
+    td {
+      font-size: 14px;
+      color: #020817;
+      font-weight: 400;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+  }
 }
 
 .custom-status {
@@ -77,8 +99,17 @@ button.button {
     align-items: center;
     gap: 20px;
 
+    &.mobile {
+      display: none;
+    }
+
     .notification-wrapper {
       position: relative;
+
+      button {
+        background: none;
+        border: none;
+      }
 
       .notification-count {
         width: 15px;
@@ -91,7 +122,7 @@ button.button {
         font-size: 12px;
         position: absolute;
         top: -2px;
-        right: -2px;
+        right: 3px;
         color: white;
       }
     }
@@ -277,6 +308,29 @@ button.button {
     font-weight: 600;
     margin-bottom: 20px;
   }
+
+  .header_ {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin-bottom: 0;
+    }
+
+    .button {
+      font-size: 14px;
+      height: 36px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+
+      i {
+        height: 20px;
+      }
+    }
+  }
 }
 
 .card-set {
@@ -371,6 +425,8 @@ button.button {
           color: #2563eb;
           width: fit-content;
           font-size: 12px;
+          background: none;
+          border: none;
         }
       }
 
@@ -548,7 +604,6 @@ button.button {
   .billing-table-wrapper {
     border-radius: 8px;
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    overflow: hidden;
     border: 1px solid #e5e7eb;
 
     .billing-table {
@@ -565,8 +620,9 @@ button.button {
       }
 
       tbody tr td {
-        height: 49px;
+        font-size: 14px;
         cursor: pointer;
+        white-space: nowrap;
 
         &.actions {
           display: flex;
@@ -582,6 +638,10 @@ button.button {
             align-items: center;
             justify-content: center;
             border-radius: 4px;
+
+            &:last-child {
+              color: #ef4444;
+            }
 
             &:hover {
               background-color: #f1f5f9;
@@ -1266,27 +1326,23 @@ button.button {
 }
 
 .teachers {
-  .header_ {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-
-    h2 {
-      margin-bottom: 0;
-    }
-
-    .button {
-      font-size: 14px;
-    }
-  }
+  min-height: 100dvh;
 
   .teachers-table {
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border: 1px solid #e5e7eb;
+
     .table {
+      margin-bottom: 0;
       thead tr th {
         font-size: 12px;
         text-transform: uppercase;
+        color: #6b7280;
+        letter-spacing: 0.6px;
         font-weight: 500;
+        line-height: 16px;
+        background: #f9fafb;
       }
 
       tbody tr td {
@@ -1294,7 +1350,7 @@ button.button {
         height: 53px;
 
         &.actions {
-          display: inline-flex;
+          display: flex;
           gap: 10px;
           align-items: center;
 
@@ -1316,6 +1372,173 @@ button.button {
             }
           }
         }
+      }
+    }
+  }
+}
+
+.examination {
+  .header_ {
+    margin-bottom: 24px;
+  }
+
+  .filters {
+    background-color: white;
+    display: flex;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 16px;
+    margin-bottom: 24px;
+    border-color: #f3f4f6;
+    border-radius: 8px;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .form-filter {
+      width: 100%;
+      label {
+        font-size: 14px;
+        color: #374151;
+        line-height: 20px;
+        margin-bottom: 4px;
+      }
+
+      select {
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+
+  .examination-table {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+
+    table {
+      margin-bottom: 0;
+      thead {
+        tr th {
+          text-transform: uppercase;
+          color: #6b7280;
+          font-size: 12px;
+          background-color: #f9fafb;
+        }
+      }
+
+      tbody tr td {
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 300;
+        height: 73px;
+        white-space: nowrap;
+
+        h3 {
+          color: #111827;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          margin-bottom: 0;
+        }
+
+        p {
+          margin-bottom: 0;
+          color: #6b7280;
+          font-weight: 300;
+          font-size: 13px;
+        }
+
+        &.actions {
+          button {
+            height: 32px;
+            font-size: 12px;
+            line-height: 16px;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            color: #2563eb;
+            background-color: transparent;
+            border: 1px solid #e2e8f0;
+            white-space: nowrap;
+            display: flex;
+            gap: 10px;
+
+            &:last-child {
+              margin-left: 10px;
+              color: #020817;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal#create-teacher-modal {
+  .modal-dialog {
+    width: 448px;
+  }
+  .modal-header {
+    border-bottom: 0;
+    align-items: baseline;
+    padding-bottom: 0;
+
+    .modal-title {
+      h1 {
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.45px;
+        margin-bottom: 0;
+      }
+      p {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 20px;
+        width: 85%;
+        font-weight: 300;
+      }
+    }
+
+    .btn-close {
+      font-size: 10px;
+    }
+  }
+
+  .modal-body {
+    div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-left: 35px;
+
+      input,
+      select {
+        font-size: 14px;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        width: 60px;
+      }
+    }
+  }
+
+  .modal-footer {
+    border-top: 0;
+
+    button {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      height: 36px;
+      font-size: 14px;
+      line-height: 20px;
+      height: 36px;
+
+      &.cancel {
+        background-color: transparent;
+        color: #020817;
+        border-color: #e2e8f0;
       }
     }
   }

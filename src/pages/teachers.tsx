@@ -1,9 +1,17 @@
+import { CreateTeacher } from "../components/create-teacher";
+
 export function Teachers() {
   return (
     <div className="teachers psa_d_page">
       <div className="header_">
         <h2 className="title">Teachers</h2>
-        <button className="button">Invite Teacher</button>
+        <button
+          className="button"
+          data-bs-toggle="modal"
+          data-bs-target="#create-teacher-modal"
+        >
+          Invite Teacher
+        </button>
       </div>
       <div className="teachers-table table-responsive">
         <table className="table">
@@ -40,6 +48,7 @@ export function Teachers() {
             ))}
           </tbody>
         </table>
+        <CreateTeacher />
       </div>
     </div>
   );
