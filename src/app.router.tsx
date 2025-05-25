@@ -5,6 +5,7 @@ import { Dashboard } from "./pages/dashboard";
 import { DashboardLayout } from "./components/dashboard-layout";
 import { Billing } from "./pages/billing";
 import { CreateBill } from "./pages/create-bill";
+import { Teachers } from "./pages/teachers";
 
 export function AppRouter() {
   return (
@@ -15,6 +16,11 @@ export function AppRouter() {
         <Route path='/' element={<DashboardLayout />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/billing' element={<Billing />} />
+          <Route path='/teachers' element={<Teachers />} />
+          <Route path='/parents' element={<Billing />} />
+          <Route path='/students' element={<Billing />} />
+          <Route path='/examination' element={<Billing />} />
+          <Route path='/settings' element={<Billing />} />
         </Route>
         <Route path='/create-bill' element={<CreateBill />} />
       </Routes>

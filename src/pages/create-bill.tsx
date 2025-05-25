@@ -113,8 +113,8 @@ export function CreateBill() {
                 <p>No items added yet!</p>
               </div>
             ) : (
-              <div className='added-bill-items'>
-                <table className='table table-hover table-responsive'>
+              <div className='added-bill-items table-responsive'>
+                <table className='table table-hover'>
                   <thead>
                     <tr>
                       <th scope='col' colSpan={5}>

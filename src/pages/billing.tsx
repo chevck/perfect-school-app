@@ -109,8 +109,8 @@ export function Billing() {
         </button>
       </div>
       {bills.length ? (
-        <div className='billing-table-wrapper'>
-          <table className='table table-hover table-responsive billing-table'>
+        <div className='billing-table-wrapper table-responsive'>
+          <table className='table table-hover billing-table'>
             <thead>
               <tr>
                 <th scope='col'>Bill Number</th>

@@ -1264,3 +1264,59 @@ button.button {
     }
   }
 }
+
+.teachers {
+  .header_ {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin-bottom: 0;
+    }
+
+    .button {
+      font-size: 14px;
+    }
+  }
+
+  .teachers-table {
+    .table {
+      thead tr th {
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      tbody tr td {
+        white-space: nowrap;
+        height: 53px;
+
+        &.actions {
+          display: inline-flex;
+          gap: 10px;
+          align-items: center;
+
+          span {
+            height: fit-content;
+            font-size: 14px;
+
+            &.edit {
+              color: #2563eb;
+            }
+            &.deactivate {
+              color: #d97706;
+            }
+            &.activate {
+              color: #16a34a;
+            }
+            &.delete {
+              color: #dc2626;
+            }
+          }
+        }
+      }
+    }
+  }
+}
