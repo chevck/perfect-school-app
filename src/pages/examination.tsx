@@ -1,44 +1,50 @@
+import { CreateExaminationModal } from "../components/create-examination";
+
 export function Examination() {
   return (
-    <div className="examination psa_d_page">
-      <div className="header_">
-        <h2 className="title">Examination</h2>
-        <button className="button">
-          <i className="bi bi-plus-lg"></i>
+    <div className='examination psa_d_page'>
+      <div className='header_'>
+        <h2 className='title'>Examination</h2>
+        <button
+          className='button'
+          data-bs-toggle='modal'
+          data-bs-target='#create-examination-modal'
+        >
+          <i className='bi bi-plus-lg'></i>
           New Examination
         </button>
       </div>
-      <div className="filters">
-        <div className="form-filter">
+      <div className='filters'>
+        <div className='form-filter'>
           <label>Subject</label>
-          <select className="form-select">
+          <select className='form-select'>
             <option selected>All Subjects</option>
             <option>Mathematics</option>
             <option>English</option>
             <option>Science</option>
           </select>
         </div>
-        <div className="form-filter">
+        <div className='form-filter'>
           <label>Class</label>
-          <select className="form-select">
+          <select className='form-select'>
             <option selected>All Classes</option>
             <option>Mathematics</option>
             <option>English</option>
             <option>Science</option>
           </select>
         </div>
-        <div className="form-filter">
+        <div className='form-filter'>
           <label>Status</label>
-          <select className="form-select">
+          <select className='form-select'>
             <option selected>All Status</option>
             <option>Mathematics</option>
             <option>English</option>
             <option>Science</option>
           </select>
         </div>
-        <div className="form-filter">
+        <div className='form-filter'>
           <label>Term</label>
-          <select className="form-select">
+          <select className='form-select'>
             <option selected>All Terms</option>
             <option>Mathematics</option>
             <option>English</option>
@@ -46,8 +52,8 @@ export function Examination() {
           </select>
         </div>
       </div>
-      <div className="examination-table table-responsive">
-        <table className="table">
+      <div className='examination-table table-responsive'>
+        <table className='table'>
           <thead>
             <tr>
               <th>Subject</th>
@@ -69,17 +75,18 @@ export function Examination() {
                 <td>John Smith</td>
                 <td>June 14, 2020</td>
                 <td>
-                  <span className="custom-status">Active</span>
+                  <span className='custom-status'>Active</span>
                 </td>
-                <td className="actions">
-                  <button className="button">Set Questions</button>
-                  <button className="button">View</button>
+                <td className='actions'>
+                  <button className='button'>Set Questions</button>
+                  <button className='button'>View</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <CreateExaminationModal />
     </div>
   );
 }

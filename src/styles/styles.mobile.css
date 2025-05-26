@@ -180,4 +180,40 @@
       }
     }
   }
+
+  .examination {
+    .filters {
+      flex-wrap: wrap;
+    }
+  }
+
+  .create-examination {
+    .exam-details {
+      .dets {
+        flex-direction: column;
+        gap: 16px;
+        align-items: start;
+      }
+    }
+
+    .questions-container {
+      .questions {
+        .question {
+          .options .option {
+            flex-basis: 100%;
+
+            label {
+              width: 180px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .modal#create-examination-modal {
+    .modal-dialog {
+      width: auto;
+    }
+  }
 }

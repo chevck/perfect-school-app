@@ -1391,7 +1391,6 @@ table {
     border-color: #f3f4f6;
     border-radius: 8px;
     gap: 12px;
-    flex-wrap: wrap;
 
     .form-filter {
       width: 100%;
@@ -1448,6 +1447,10 @@ table {
         }
 
         &.actions {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+
           button {
             height: 32px;
             font-size: 12px;
@@ -1457,8 +1460,6 @@ table {
             background-color: transparent;
             border: 1px solid #e2e8f0;
             white-space: nowrap;
-            display: flex;
-            gap: 10px;
 
             &:last-child {
               margin-left: 10px;
@@ -1471,10 +1472,338 @@ table {
   }
 }
 
-.modal#create-teacher-modal {
-  .modal-dialog {
-    width: 448px;
+.create-examination {
+  padding: 24px;
+  min-height: 100dvh;
+  background-color: #f9fafb;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h3 {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 32px;
+      margin-bottom: 0;
+    }
+
+    button {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      height: 36px;
+      font-size: 14px;
+      line-height: 20px;
+      height: 36px;
+      background-color: #16a34a;
+      white-space: nowrap;
+    }
   }
+
+  .exam-details {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    background-color: white;
+
+    .dets {
+      display: flex;
+      gap: 25%;
+      align-items: center;
+      margin-bottom: 24px;
+
+      .det {
+        h6 {
+          font-size: 14px;
+          color: #6b7280;
+          font-weight: 400;
+          line-height: 20px;
+          margin-bottom: 4px;
+        }
+
+        h3 {
+          font-size: 18px;
+          color: #111827;
+          font-weight: 500;
+          line-height: 20px;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .question-det {
+      padding-top: 16px;
+      border-top: 1px solid #f3f4f6;
+
+      h6 {
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 400;
+        line-height: 20px;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  .add-question-container {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    background-color: white;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    .question-text {
+      label {
+        font-size: 14px;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+    }
+
+    .question-options {
+      margin-top: 16px;
+      margin-bottom: 16px;
+      .flex {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        .form-group {
+          width: 100%;
+          flex: 35%;
+
+          label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+          }
+
+          input {
+            width: 100%;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          }
+        }
+      }
+    }
+
+    .correct-option {
+      margin-bottom: 16px;
+
+      h6 {
+        font-size: 14px;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .options {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        div {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          label {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+
+    .marks {
+      margin-bottom: 24px;
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      input {
+        width: 20%;
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        font-size: 14px;
+        line-height: 20px;
+        height: 36px;
+      }
+    }
+  }
+
+  .questions-container {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #f3f4f6;
+    border-radius: 8px;
+    background-color: white;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    .no-questions {
+      text-align: center;
+      padding: 2rem 0;
+      color: #6b7280;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .questions {
+      .question {
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        margin-top: 16px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .title_ {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .actions {
+            display: flex;
+            gap: 10px;
+
+            button {
+              height: 32px;
+              font-size: 12px;
+              line-height: 16px;
+              box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              background-color: transparent;
+              border: 1px solid #e2e8f0;
+              color: #2563eb;
+
+              &:last-child {
+                color: #dc2626;
+              }
+            }
+          }
+        }
+
+        h4 {
+          color: #111827;
+          font-weight: 600;
+          font-size: 16px;
+          margin-bottom: 0;
+
+          span {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 20px;
+            font-weight: 300;
+          }
+        }
+
+        h6 {
+          margin-top: 8px;
+          color: #1f2937;
+          font-weight: 400;
+          font-size: 16px;
+        }
+
+        .options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+
+          .option {
+            display: flex;
+            flex-basis: 49.5%;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+
+            p {
+              margin-bottom: 0;
+              background-color: #d1d5db;
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 16px;
+              display: flex;
+              color: #374151;
+              align-items: center;
+              justify-content: center;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+            }
+
+            label {
+              color: #374151;
+              font-size: 16px;
+              width: 250px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+
+            span {
+              display: block;
+              position: absolute;
+              right: 0;
+              padding-right: 10px;
+              font-size: 12px;
+              font-weight: 500;
+              color: #16a34a;
+            }
+
+            &.correct {
+              background-color: #f0fdf4;
+              border-color: #bbf7d0;
+
+              p {
+                background-color: #22c55e;
+                color: white;
+              }
+
+              label {
+                color: #166534;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal {
   .modal-header {
     border-bottom: 0;
     align-items: baseline;
@@ -1503,6 +1832,66 @@ table {
     }
   }
 
+  .modal-footer {
+    border-top: 0;
+
+    button {
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      height: 36px;
+      font-size: 14px;
+      line-height: 20px;
+      height: 36px;
+
+      &.cancel {
+        background-color: transparent;
+        color: #020817;
+        border-color: #e2e8f0;
+      }
+    }
+  }
+}
+
+.modal#create-examination-modal {
+  .modal-dialog {
+    width: 628px;
+  }
+
+  .modal-body {
+    .flex {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-group {
+        width: 100%;
+
+        label {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 4px;
+        }
+
+        select,
+        input,
+        textarea {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+
+.modal#create-teacher-modal {
+  .modal-dialog {
+    width: 448px;
+  }
+
   .modal-body {
     div {
       display: flex;
@@ -1521,24 +1910,6 @@ table {
         font-weight: 500;
         line-height: 1;
         width: 60px;
-      }
-    }
-  }
-
-  .modal-footer {
-    border-top: 0;
-
-    button {
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      height: 36px;
-      font-size: 14px;
-      line-height: 20px;
-      height: 36px;
-
-      &.cancel {
-        background-color: transparent;
-        color: #020817;
-        border-color: #e2e8f0;
       }
     }
   }
