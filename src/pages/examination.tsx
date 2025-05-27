@@ -1,4 +1,5 @@
 import { CreateExaminationModal } from "../components/create-examination";
+import { motion } from "motion/react";
 
 export function Examination() {
   return (
@@ -66,7 +67,12 @@ export function Examination() {
           </thead>
           <tbody>
             {[1, 3, 3, 5, 6].map((_, index) => (
-              <tr key={index}>
+              <motion.tr
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
                 <td>
                   <h3>Mathematics</h3>
                   <p>First Term - 2023/2024</p>
@@ -79,9 +85,16 @@ export function Examination() {
                 </td>
                 <td className='actions'>
                   <button className='button'>Set Questions</button>
-                  <button className='button'>View</button>
+                  <button
+                    className='button'
+                    onClick={() =>
+                      (location.href = "/view-examination-details")
+                    }
+                  >
+                    View
+                  </button>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>

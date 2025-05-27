@@ -195,17 +195,34 @@
         align-items: start;
       }
     }
+  }
 
-    .questions-container {
-      .questions {
-        .question {
-          .options .option {
-            flex-basis: 100%;
+  .questions-container {
+    .questions {
+      .question {
+        .options .option {
+          flex-basis: 100%;
 
-            label {
-              width: 180px;
-            }
+          label {
+            width: 180px;
           }
+        }
+      }
+    }
+  }
+
+  .view-examination-details {
+    .header_ {
+      justify-content: center;
+    }
+    .body {
+      .exam-dets {
+        gap: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        div {
+          width: 100%;
+          flex: 40%;
         }
       }
     }

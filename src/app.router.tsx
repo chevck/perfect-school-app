@@ -8,6 +8,7 @@ import { CreateBill } from "./pages/create-bill";
 import { Teachers } from "./pages/teachers";
 import { Examination } from "./pages/examination";
 import { CreateExamination } from "./pages/create-examination";
+import { ViewExaminationDetails } from "./pages/view-examination-details";
 
 export function AppRouter() {
   return (
@@ -26,6 +27,10 @@ export function AppRouter() {
         </Route>
         <Route path='/create-bill' element={<CreateBill />} />
         <Route path='/create-examination' element={<CreateExamination />} />
+        <Route
+          path='/view-examination-details'
+          element={<ViewExaminationDetails />}
+        />
       </Routes>
     </BrowserRouter>
   );

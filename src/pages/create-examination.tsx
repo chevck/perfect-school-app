@@ -1,21 +1,12 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-
-interface Question {
-  questionText: string;
-  options: {
-    text: string;
-    correct: boolean;
-  }[];
-  correctOption: string;
-  marks: number;
-}
+import type { Question } from "../utils/types.tsx";
 
 export function CreateExamination() {
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const handleAddQuestion = () => {
-    const newQuestion = {
+    const newQuestion: Question = {
       questionText: "What is your name?",
       options: [
         { text: "John", correct: true },
@@ -124,54 +115,57 @@ export function CreateExamination() {
       <div className='questions-container'>
         <h3>Questions ({questions.length})</h3>
         {questions.length ? (
-          <div className='questions'>
-            <AnimatePresence>
-              {questions.map((question, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className={"question"}
-                >
-                  <div className='' key={index}>
-                    <div className='title_'>
-                      <h4>
-                        Question {index + 1}{" "}
-                        <span>({question.marks} marks)</span>
-                      </h4>
-                      <div className='actions'>
-                        <button className='button'>Edit</button>
-                        <button className='button'>Delete</button>
-                      </div>
-                    </div>
-                    <h6>{question.questionText}</h6>
-                    <div className='options'>
-                      {question.options.map((option, index) => (
-                        <div
-                          className={`option ${
-                            option.correct ? "correct" : ""
-                          }`}
-                          key={index}
-                        >
-                          <p>{String.fromCharCode(65 + index)}</p>
-                          <label>{option.text}</label>
-                          {option.correct ? <span>Correct</span> : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+          <QuestionsList questions={questions} />
         ) : (
           <p className='no-questions'>
             No questions added yet. Use the form above to add questions.
           </p>
         )}
       </div>
+    </div>
+  );
+}
+
+export function QuestionsList({ questions }: { questions: [] | Question[] }) {
+  return (
+    <div className='questions'>
+      <AnimatePresence>
+        {questions.map((question, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className={"question"}
+          >
+            <div className='' key={index}>
+              <div className='title_'>
+                <h4>
+                  Question {index + 1} <span>({question.marks} marks)</span>
+                </h4>
+                <div className='actions'>
+                  <button className='button'>Edit</button>
+                  <button className='button'>Delete</button>
+                </div>
+              </div>
+              <h6>{question.questionText}</h6>
+              <div className='options'>
+                {question.options.map((option, index) => (
+                  <div
+                    className={`option ${option.correct ? "correct" : ""}`}
+                    key={index}
+                  >
+                    <p>{String.fromCharCode(65 + index)}</p>
+                    <label>{option.text}</label>
+                    {option.correct ? <span>Correct</span> : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
