@@ -7,3 +7,15 @@ export interface Question {
   correctOption: string;
   marks: number;
 }
+
+export interface ExamDetails {
+  name: string;
+  grade: string;
+  term: string;
+  year: string;
+  teacher: string;
+  date: string;
+  questions: number;
+  totalMarks: number;
+  id: number;
+}

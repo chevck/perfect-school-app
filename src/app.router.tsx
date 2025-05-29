@@ -9,6 +9,8 @@ import { Teachers } from "./pages/teachers";
 import { Examination } from "./pages/examination";
 import { CreateExamination } from "./pages/create-examination";
 import { ViewExaminationDetails } from "./pages/view-examination-details";
+import { TakeExamComponent } from "./pages/take-exam";
+import { StudentExamView } from "./pages/student-exam-view";
 
 export function AppRouter() {
   return (
@@ -30,6 +32,11 @@ export function AppRouter() {
         <Route
           path='/view-examination-details'
           element={<ViewExaminationDetails />}
+        />
+        <Route path='/take-exam/:examId' element={<TakeExamComponent />} />
+        <Route
+          path='/take-exam/:examId/questions'
+          element={<StudentExamView />}
         />
       </Routes>
     </BrowserRouter>

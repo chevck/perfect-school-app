@@ -13,6 +13,22 @@ button.button {
   height: 40px;
   cursor: pointer;
   border: none;
+
+  &:disabled {
+    background-color: #d1d5db !important;
+    color: #f8fafc !important;
+    opacity: 0.5;
+    cursor: auto;
+  }
+}
+
+input {
+  &:active,
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: 1px solid #111827 !important;
+  }
 }
 
 table {
@@ -2007,6 +2023,407 @@ table {
   }
 }
 
+.take-exam-container {
+  background-color: #fafcfe;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .take-exam-loading-container {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    padding: 32px;
+    width: 448px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 234px;
+    justify-content: center;
+    background: white;
+
+    p {
+      margin-bottom: 0;
+      margin-top: 30px;
+      color: #4b5563;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .spinner-border {
+      height: 60px;
+      width: 60px;
+      border-width: thin;
+      border-color: #2563eb;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spinner-border 1s linear infinite;
+    }
+
+    .iconny {
+      background: #2563eb;
+      height: 64px;
+      width: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      color: #111827;
+      font-weight: 600;
+      line-height: 32px;
+      margin-bottom: 8px;
+    }
+
+    .grade {
+      text-align: center;
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 400;
+      line-height: 20px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 16px;
+
+      label {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      input {
+        font-size: 14px;
+        line-height: 20px;
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      }
+    }
+
+    button {
+      width: 100%;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1);
+      font-size: 16px;
+    }
+
+    .error-container {
+      color: #dc2626;
+      background-color: #fef2f2;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      width: 100%;
+
+      h6 {
+        margin-bottom: 0;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+}
+
+.student-exam-view {
+  padding: 24px;
+  background-color: #f1f7ff;
+  min-height: 100dvh;
+
+  .question-timer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .question-timer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 768px;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      padding: 16px;
+      border-radius: 12px;
+      background-color: white;
+      gap: 16px;
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .question {
+        width: 100%;
+
+        h6 {
+          font-size: 14px;
+          line-height: 20px;
+          font-weight: 400;
+          color: #6b7280;
+        }
+
+        .progress {
+          height: 8px;
+        }
+      }
+
+      .timer {
+        display: flex;
+        padding: 8px 16px;
+        background-color: #dbeafe;
+        border-radius: 9999px;
+        gap: 4px;
+        align-items: center;
+        color: #1e40af;
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .question-box {
+      display: block;
+
+      h2 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 28px;
+        color: #111827;
+        margin-bottom: 8px;
+      }
+
+      h6 {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        margin-bottom: 24px;
+      }
+
+      .options {
+        .option {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          padding: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          position: relative;
+
+          p {
+            margin-bottom: 0;
+            background-color: #e5e7eb;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 16px;
+            display: flex;
+            color: #374151;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+          }
+
+          label {
+            color: #1f2937;
+            font-weight: 400;
+          }
+
+          .answer-check,
+          .answer-x {
+            position: absolute;
+            right: 0;
+            padding: 16px;
+            display: none;
+          }
+
+          &:hover {
+            border-color: #93c5fd;
+            background-color: #eff6ff;
+          }
+
+          &.selected {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            p {
+              color: white;
+              background-color: #3b82f6;
+            }
+          }
+
+          &.correct {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+
+            p {
+              background-color: #22c55e;
+              color: white;
+            }
+
+            label {
+              color: #166534;
+            }
+
+            .answer-check {
+              display: block;
+            }
+          }
+
+          &.incorrect {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+
+            p {
+              background-color: #ef4444;
+              color: white;
+            }
+
+            .answer-x {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    .grade-box {
+      flex-direction: column;
+      gap: 0;
+      .grade-container {
+        background-color: #dbeafe;
+        color: #2563eb;
+        height: 96px;
+        width: 96px;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        line-height: 36px;
+        margin-bottom: 16px;
+      }
+
+      h3 {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      h4 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #4b5563;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      .score-box {
+        background-color: #f9fafb;
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 24px;
+        border-radius: 8px;
+
+        h6 {
+          margin-bottom: 0;
+          color: #6b7280;
+          font-size: 14px;
+          font-weight: 400;
+          margin-bottom: 4px;
+        }
+
+        h2 {
+          margin-bottom: 0;
+          font-size: 20px;
+          line-height: 28px;
+          font-weight: 600;
+        }
+
+        &:last-child {
+          margin-bottom: 32px;
+        }
+      }
+
+      button.return-button {
+        font-size: 14px;
+        height: 36px;
+      }
+    }
+  }
+
+  .feedback-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .feedback {
+      color: #991b1b;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 28px;
+      background-color: #fee2e2;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      width: 768px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+
+  .action-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 768px;
+
+      button {
+        height: 36px;
+        font-size: 14px;
+      }
+
+      .submit-button {
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        background-color: white;
+        color: #111827;
+        border-color: #e2e8f0;
+      }
+
+      .finish-button {
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        background-color: #2563eb;
+        color: white;
+      }
+    }
+  }
+}
+
 .modal {
   .modal-header {
     border-bottom: 0;
@@ -2115,6 +2532,89 @@ table {
         line-height: 1;
         width: 60px;
       }
+    }
+  }
+}
+
+.modal#share-examination-modal {
+  .modal-dialog {
+    width: 512px;
+  }
+
+  .modal-header {
+    padding: 24px;
+    padding-bottom: 0;
+  }
+
+  .modal-body {
+    padding: 24px;
+    .__input-group {
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      margin-bottom: 10px;
+
+      &:first-child {
+        .form-group {
+          margin-top: 0;
+        }
+      }
+
+      input,
+      select {
+        font-size: 14px;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .form-group {
+        width: 100%;
+        margin-top: 16px;
+      }
+
+      button {
+        white-space: nowrap;
+        display: flex;
+        gap: 5px;
+        font-size: 12px;
+        line-height: 16px;
+        align-items: center;
+        height: 32px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
+          0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+        &.send {
+          background-color: #0f172a;
+          color: white;
+        }
+
+        &.copy {
+          background-color: transparent;
+          border: 1px solid #e2e8f0;
+          color: #0f172a;
+          width: 42px;
+        }
+      }
+    }
+  }
+}
+
+.modal#confirm-submit-modal {
+  .modal-dialog {
+    width: 448px;
+  }
+
+  .modal-footer {
+    button.cancel {
+      border: 1px solid #dc2626;
+      color: #dc2626;
+      background-color: white;
     }
   }
 }

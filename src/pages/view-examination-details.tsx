@@ -2,6 +2,7 @@ import { useState } from "react";
 import { QuestionsList } from "./create-examination";
 import { ChartColumnIncreasing, CircleHelp, UserCircle } from "lucide-react";
 import type { Question } from "../utils/types";
+import { ShareExaminationModal } from "../components/share-examination";
 
 export function ViewExaminationDetails() {
   const [selectedTab, setSelectedTab] = useState("questions");
@@ -14,7 +15,11 @@ export function ViewExaminationDetails() {
         </div>
         <div className='controls'>
           <button className='button'>Upcoming</button>
-          <button className='button'>
+          <button
+            className='button'
+            data-bs-toggle='modal'
+            data-bs-target='#share-examination-modal'
+          >
             <i className='bi bi-share'></i>Share
           </button>
           <button className='button'>Edit Questions</button>
@@ -92,6 +97,7 @@ export function ViewExaminationDetails() {
           {selectedTab === "result" && <ResultsComponent />}
         </div>
       </div>
+      <ShareExaminationModal />
     </div>
   );
 }
