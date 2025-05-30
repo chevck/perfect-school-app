@@ -23,6 +23,7 @@ const SignupSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), ""], "Passwords must match"),
   schoolLogo: Yup.string().required("Please upload your school logo"),
   schoolThemeColor: Yup.string().default("#ffffff"),
+  acceptedTerms: Yup.boolean().isTrue("Please accept the terms and conditions"),
 });
 
 export default SignupSchema;
