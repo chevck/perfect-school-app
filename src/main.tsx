@@ -17,10 +17,13 @@ createRoot(document.getElementById("root")!).render(
           fontSize: 14,
           paddingLeft: 24,
           textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           // minWidth: "max-content",
           // maxWidth: "max-content",
           width: "max-content",
-          margin: "0 auto",
+          margin: "auto",
         },
       }}
     />

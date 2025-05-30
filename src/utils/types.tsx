@@ -19,3 +19,9 @@ export interface ExamDetails {
   totalMarks: number;
   id: number;
 }
+
+export interface UserInformation {
+  schoolName: string;
+  adminName: string;
+  expiresAt: number;
+}

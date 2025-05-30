@@ -11,15 +11,19 @@ import { CreateExamination } from "./pages/create-examination";
 import { ViewExaminationDetails } from "./pages/view-examination-details";
 import { TakeExamComponent } from "./pages/take-exam";
 import { StudentExamView } from "./pages/student-exam-view";
-import { ADMIN_INFORMATION, logUserOut } from "./utils";
+import { USER_INFORMATION, logUserOut } from "./utils";
 
 export function AppRouter() {
-  const adminInformation = localStorage.getItem(ADMIN_INFORMATION);
-  if (adminInformation) {
-    const { expiresAt } = JSON.parse(adminInformation);
-    if (expiresAt < new Date().getTime()) {
-      logUserOut();
-    }
+  const userInformation = localStorage.getItem(USER_INFORMATION);
+  if (userInformation) {
+    const { expiresAt } = JSON.parse(userInformation);
+    if (expiresAt < new Date().getTime()) logUserOut();
+  }
+  if (
+    !userInformation &&
+    !["/sign-in", "/sign-up"].includes(window.location.pathname)
+  ) {
+    window.location.href = "/sign-in";
   }
 
   return (

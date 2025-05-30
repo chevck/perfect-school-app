@@ -6,7 +6,6 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Loader } from "../components/loader";
-import { ADMIN_INFORMATION, getHourInMilliseconds } from "../utils";
 
 export function RegisterPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -79,23 +78,19 @@ export function RegisterPage() {
         role: formik.values.role,
         adminPassword: formik.values.password,
       };
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/register`,
         body
       );
       toast.success(
-        "You school has been registered successfully. Please login to access your dashboard"
+        "You school has been registered successfully. Please check your email for next steps."
       );
-      const dataToSave = {
-        ...res.data,
-        expiresAt: new Date().getTime() + getHourInMilliseconds(24),
-      };
-      delete dataToSave.password;
-      localStorage.setItem(ADMIN_INFORMATION, JSON.stringify(dataToSave));
       window.location.href = "/sign-in";
     } catch (error) {
       console.log("error registering school", error);
-      toast.error("There was an error registering your school");
+      toast.error(
+        "There was an error registering your school. Please try again later"
+      );
     } finally {
       setIsLoading(false);
     }
