@@ -12,12 +12,18 @@ import { ViewExaminationDetails } from "./pages/view-examination-details";
 import { TakeExamComponent } from "./pages/take-exam";
 import { StudentExamView } from "./pages/student-exam-view";
 import { USER_INFORMATION, logUserOut } from "./utils";
+import { Students } from "./pages/students";
 
 export function AppRouter() {
   const userInformation = localStorage.getItem(USER_INFORMATION);
   if (userInformation) {
     const { expiresAt } = JSON.parse(userInformation);
+    console.log({ expiresAt });
     if (expiresAt < new Date().getTime()) logUserOut();
+    else {
+      if (["/sign-in", "/sign-up", "/"].includes(window.location.pathname))
+        window.location.href = "/dashboard";
+    }
   }
   if (
     !userInformation &&
@@ -36,7 +42,7 @@ export function AppRouter() {
           <Route path="/billing" element={<Billing />} />
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/parents" element={<Billing />} />
-          <Route path="/students" element={<Billing />} />
+          <Route path="/students" element={<Students />} />
           <Route path="/examination" element={<Examination />} />
           <Route path="/settings" element={<Billing />} />
         </Route>

@@ -9,7 +9,7 @@ export function StudentExamView() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  const [examSubmitted, setExamSubmitted] = useState(false);
+  const [examSubmitted] = useState(false);
 
   //   const [answers, setAnswers] = useState<StudentAnswer[]>([]);
 

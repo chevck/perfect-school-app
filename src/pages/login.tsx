@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "sonner";
 import { Loader } from "../components/loader";
-import { USER_INFORMATION } from "../utils";
+import { getHourInMilliseconds, USER_INFORMATION } from "../utils";
 
 export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,10 +66,11 @@ export function LoginPage() {
         USER_INFORMATION,
         JSON.stringify({
           ...rest,
+          expiresAt: new Date().getTime() + getHourInMilliseconds(24),
         })
       );
       toast.success(message);
-      window.location.href = "/dashboard";
+      window.location.replace("/dashboard");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(
