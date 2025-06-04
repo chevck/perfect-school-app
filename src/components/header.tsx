@@ -30,7 +30,7 @@ export function Header() {
           </div>
           <div className="user-profile">
             <div className="user-profile-avatar">
-              {userData?.schoolName?.charAt(0)}
+              <img src={userData?.logoUrl} alt="logo" />
             </div>
             <p>{userData?.schoolName}</p>
           </div>
@@ -54,7 +54,7 @@ export function Header() {
           </div>
           <div className="user-profile">
             <div className="user-profile-avatar">
-              {userData?.schoolName?.charAt(0)}
+              <img src={userData?.logoUrl} alt="logo" />
             </div>
             <p>{userData?.schoolName}</p>
           </div>

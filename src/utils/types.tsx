@@ -24,4 +24,15 @@ export interface UserInformation {
   schoolName: string;
   adminName: string;
   expiresAt: number;
+  logoUrl: string;
+}
+
+export interface Teacher {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  class: string;
+  subject: string;
 }

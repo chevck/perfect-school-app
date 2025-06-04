@@ -13,9 +13,15 @@ import {
   RemoveStudentModal,
 } from "../components/student.modal";
 import { useState } from "react";
+import useTeachersStore from "../dataset/teachers.store.tsx";
+import type { TeacherStore } from "../dataset/store.types.tsx";
 
 export function Students() {
   const [students] = useState([]);
+  const { teachers } = useTeachersStore() as TeacherStore;
+
+  console.log({ teachers });
+
   return (
     <div className="students psa_d_page">
       <div className="header_">

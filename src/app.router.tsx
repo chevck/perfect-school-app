@@ -11,32 +11,19 @@ import { CreateExamination } from "./pages/create-examination";
 import { ViewExaminationDetails } from "./pages/view-examination-details";
 import { TakeExamComponent } from "./pages/take-exam";
 import { StudentExamView } from "./pages/student-exam-view";
-import { USER_INFORMATION, logUserOut } from "./utils";
 import { Students } from "./pages/students";
+import { CompleteTeacherRegistration } from "./pages/complete-teacher-registration";
 
 export function AppRouter() {
-  const userInformation = localStorage.getItem(USER_INFORMATION);
-  if (userInformation) {
-    const { expiresAt } = JSON.parse(userInformation);
-    console.log({ expiresAt });
-    if (expiresAt < new Date().getTime()) logUserOut();
-    else {
-      if (["/sign-in", "/sign-up", "/"].includes(window.location.pathname))
-        window.location.href = "/dashboard";
-    }
-  }
-  if (
-    !userInformation &&
-    !["/sign-in", "/sign-up"].includes(window.location.pathname)
-  ) {
-    window.location.href = "/sign-in";
-  }
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/sign-up" element={<RegisterPage />} />
         <Route path="/sign-in" element={<LoginPage />} />
+        <Route
+          path="/complete-teacher-registration/:teacherCode"
+          element={<CompleteTeacherRegistration />}
+        />
         <Route path="/" element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/billing" element={<Billing />} />

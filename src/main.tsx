@@ -20,9 +20,9 @@ createRoot(document.getElementById("root")!).render(
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          // minWidth: "max-content",
-          // maxWidth: "max-content",
-          width: "max-content",
+          maxWidth: "100%",
+          width: "100%",
+          minWidth: "500px",
           margin: "auto",
         },
       }}

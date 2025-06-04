@@ -1,68 +1,83 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "../components/header";
 import {
   Book,
   CreditCard,
   LayoutDashboard,
+  LogOut,
   Settings,
   User,
   UserCheck,
   Users,
 } from "lucide-react";
+import { getUserRole, logUserOut, TEACHER, USER_INFORMATION } from "../utils";
 
 const SideBar = () => {
   const selectedPage = location.pathname.split("/")[1];
+  const navigate = useNavigate();
+  const userRole = getUserRole();
+  const hasTeacherAccess = userRole === TEACHER;
+  console.log({ userRole });
+
   return (
     <div className="dashboard-sidebar">
       <ul>
         <li
           className={selectedPage === "dashboard" ? "active" : ""}
-          onClick={() => (window.location.href = "/dashboard")}
+          onClick={() => navigate("/dashboard")}
         >
           <LayoutDashboard width={18} height={18} />
-          <a href="/dashboard">Dashboard</a>
+          <a>Dashboard</a>
         </li>
-        <li
-          className={selectedPage === "billing" ? "active" : ""}
-          onClick={() => (window.location.href = "/billing")}
-        >
-          <CreditCard width={18} height={18} />
-          <a href="/billing">Billing</a>
-        </li>
+        {!hasTeacherAccess && (
+          <li
+            className={selectedPage === "billing" ? "active" : ""}
+            onClick={() => navigate("/billing")}
+          >
+            <CreditCard width={18} height={18} />
+            <a>Billing</a>
+          </li>
+        )}
         <li
           className={selectedPage === "examination" ? "active" : ""}
-          onClick={() => (window.location.href = "/examination")}
+          onClick={() => navigate("/examination")}
         >
           <Book width={18} height={18} />
-          <a href="/examination">Examination</a>
+          <a>Examination</a>
         </li>
-        <li
-          className={selectedPage === "parents" ? "active" : ""}
-          onClick={() => (window.location.href = "/parents")}
-        >
-          <Users width={18} height={18} />
-          <a href="/parents">Parents</a>
-        </li>
+        {!hasTeacherAccess && (
+          <li
+            className={selectedPage === "parents" ? "active" : ""}
+            onClick={() => navigate("/parents")}
+          >
+            <Users width={18} height={18} />
+            <a>Parents</a>
+          </li>
+        )}
         <li
           className={selectedPage === "students" ? "active" : ""}
-          onClick={() => (window.location.href = "/students")}
+          onClick={() => navigate("/students")}
         >
           <UserCheck width={18} height={18} />
-          <a href="/students">Students</a>
+          <a>Students</a>
         </li>
         <li
           className={selectedPage === "teachers" ? "active" : ""}
-          onClick={() => (window.location.href = "/teachers")}
+          onClick={() => navigate("/teachers")}
         >
           <User width={18} height={18} />
-          <a href="/teachers">Teachers</a>
+          <a>Teachers</a>
         </li>
         <li
           className={selectedPage === "settings" ? "active" : ""}
-          onClick={() => (window.location.href = "/settings")}
+          onClick={() => navigate("/settings")}
         >
           <Settings width={18} height={18} />
-          <a href="/settings">Settings</a>
+          <a>Settings</a>
+        </li>
+        <li onClick={() => logUserOut()}>
+          <LogOut width={18} height={18} />
+          <a>Logout</a>
         </li>
       </ul>
     </div>
@@ -70,6 +85,21 @@ const SideBar = () => {
 };
 
 export function DashboardLayout() {
+  const nonAuthedRoutes = ["/sign-in", "/sign-up"];
+  const userInformation = localStorage.getItem(USER_INFORMATION);
+  if (userInformation) {
+    const { expiresAt } = JSON.parse(userInformation);
+    console.log({ expiresAt });
+    if (expiresAt < new Date().getTime()) logUserOut();
+    else {
+      if (nonAuthedRoutes.includes(window.location.pathname))
+        window.location.href = "/dashboard";
+    }
+  }
+  if (!userInformation && !nonAuthedRoutes.includes(window.location.pathname)) {
+    window.location.href = "/sign-in";
+  }
+
   return (
     <div className="dashboard-layout">
       <Header />

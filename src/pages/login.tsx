@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "sonner";
 import { Loader } from "../components/loader";
-import { getHourInMilliseconds, USER_INFORMATION } from "../utils";
+import { getHourInMilliseconds, handleError, USER_INFORMATION } from "../utils";
 
 export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,18 +15,40 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const formik = useFormik({
     initialValues: {
+      role: "",
       email: "",
       password: "",
       verificationCode: "",
     },
     onSubmit: () => {
-      handleLogin();
+      if (formik.values.role === "teacher") handleTeacherLogin();
+      else handleLogin();
     },
     validationSchema: LoginSchema,
   });
 
   const handleBackToLogin = () => {
     setStep(1);
+  };
+
+  const handleTeacherLogin = async () => {
+    try {
+      console.log("running teacher login");
+      setIsLoading(true);
+      await axios.post(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/teacher-login`,
+        {
+          email: formik.values.email,
+          password: formik.values.password,
+        }
+      );
+      toast.success("Verification code sent to your email");
+      formik.values.verificationCode = "";
+      setStep(2);
+    } catch (error) {
+      handleError(error);
+    }
+    setIsLoading(false);
   };
 
   const handleLogin = async () => {
@@ -84,6 +106,32 @@ export function LoginPage() {
     setIsLoading(false);
   };
 
+  const handleTeacherVerifyAndSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/teacher-confirm-otp`,
+        {
+          email: formik.values.email,
+          otp: formik.values.verificationCode,
+        }
+      );
+      const { message, ...rest } = res.data;
+      localStorage.setItem(
+        USER_INFORMATION,
+        JSON.stringify({
+          ...rest,
+          expiresAt: new Date().getTime() + getHourInMilliseconds(24),
+        })
+      );
+      toast.success(message);
+      window.location.replace("/dashboard");
+    } catch (error) {
+      handleError(error);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="registration-page-wrapper">
       {step === 1 ? (
@@ -99,6 +147,18 @@ export function LoginPage() {
             </center>
             <h3>Welcome back!</h3>
             <h6>Sign in to access your Perfect School App account</h6>
+            <div className="form-group">
+              <label>I am a </label>
+              <select className="form-select" {...formik.getFieldProps("role")}>
+                <option value="" disabled selected>
+                  --Select--
+                </option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="parent">Parent</option>
+              </select>
+              <span className="text-danger">{formik.errors.role}</span>
+            </div>
             <div className="form-group">
               <label>Email</label>
               <input
@@ -137,7 +197,10 @@ export function LoginPage() {
               type="submit"
               onClick={() => formik.handleSubmit()}
               disabled={
-                isLoading || !formik.values.email || !formik.values.password
+                isLoading ||
+                !formik.values.email ||
+                !formik.values.password ||
+                !formik.values.role
               }
             >
               {isLoading ? <Loader /> : "Continue with email verification"}
@@ -180,7 +243,11 @@ export function LoginPage() {
             <button
               className="button create-account"
               type="submit"
-              onClick={handleVerifyAndSignIn}
+              onClick={
+                formik.values.role === "teacher"
+                  ? handleTeacherVerifyAndSignIn
+                  : handleVerifyAndSignIn
+              }
               disabled={isLoading || !formik.values.verificationCode}
             >
               {isLoading ? <Loader /> : "Verify & Sign in"}

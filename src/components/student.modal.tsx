@@ -1,7 +1,57 @@
+import { useFormik } from "formik";
 import { FileChartColumn, User } from "lucide-react";
 import { useState } from "react";
+import StudentRegistrationSchema from "../utils/schemas/studentRegistration.schema";
+import { getUserData, schoolPrefix } from "../utils";
+import axios from "axios";
 
 export function CreateStudentModal() {
+  const userData = getUserData();
+  const admissionNumber = () => {
+    const randomNumber = Math.floor(10000 + Math.random() * 90000);
+    const schoolNamePrefix = schoolPrefix();
+    return `${schoolNamePrefix}${randomNumber}`;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      admissionNumber: admissionNumber(),
+      dateOfBirth: "",
+      gender: "",
+      email: "",
+      teacher: "",
+      class: "",
+      joinDate: new Date().toISOString().split("T")[0],
+      parent: "",
+      address: "",
+    },
+    onSubmit: () => {
+      handleSubmit();
+    },
+    validationSchema: StudentRegistrationSchema,
+  });
+
+  console.log("values", formik.values);
+  console.log("errors", formik.errors);
+
+  const handleSubmit = async () => {
+    try {
+      const { email, ...rest } = formik.values;
+      const body = { ...rest, studentEmail: email };
+      console.log({ body });
+      const response = await axios.post(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/student-create`,
+        body,
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      console.log({ response });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return (
     <div
       className="modal fade"
@@ -32,31 +82,74 @@ export function CreateStudentModal() {
               <div className="row">
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="first-name">First Name *</label>
-                  <input type="text" id="first-name" className="form-control" />
+                  <input
+                    type="text"
+                    id="firstName"
+                    className="form-control"
+                    value={formik.values.firstName}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors?.firstName && formik.touched.firstName ? (
+                    <span className="text-danger">
+                      {formik.errors.firstName}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="last-name">Last Name *</label>
-                  <input type="text" id="last-name" className="form-control" />
+                  <input
+                    type="text"
+                    id="lastName"
+                    className="form-control"
+                    value={formik.values.lastName}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors?.lastName && formik.touched.lastName ? (
+                    <span className="text-danger">
+                      {formik.errors.lastName}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="admission-number">Admission Number *</label>
                   <input
                     type="text"
-                    id="admission-number"
+                    id="admissionNumber"
                     className="form-control"
+                    value={formik.values.admissionNumber}
+                    onChange={formik.handleChange}
+                    disabled
                   />
+                  {formik.errors?.admissionNumber &&
+                  formik.touched.admissionNumber ? (
+                    <span className="text-danger">
+                      {formik.errors.admissionNumber}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="date-of-birth">Date of Birth *</label>
                   <input
                     type="date"
-                    id="date-of-birth"
+                    id="dateOfBirth"
                     className="form-control"
+                    value={formik.values.dateOfBirth}
+                    onChange={formik.handleChange}
                   />
+                  {formik.errors?.dateOfBirth && formik.touched.dateOfBirth ? (
+                    <span className="text-danger">
+                      {formik.errors.dateOfBirth}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="class">Class *</label>
-                  <select id="class" className="form-select">
+                  <select
+                    id="class"
+                    className="form-select"
+                    value={formik.values.class}
+                    onChange={formik.handleChange}
+                  >
                     <option disabled selected value="">
                       Select Class
                     </option>
@@ -65,10 +158,18 @@ export function CreateStudentModal() {
                     <option value="3">Class 3</option>
                     <option value="4">Class 4</option>
                   </select>
+                  {formik.errors?.class && formik.touched.class ? (
+                    <span className="text-danger">{formik.errors.class}</span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="teacher">Teacher *</label>
-                  <select id="teacher" className="form-select">
+                  <select
+                    id="teacher"
+                    className="form-select"
+                    value={formik.values.teacher}
+                    onChange={formik.handleChange}
+                  >
                     <option disabled selected value="">
                       Select Teacher
                     </option>
@@ -77,41 +178,81 @@ export function CreateStudentModal() {
                     <option value="3">Teacher 3</option>
                     <option value="4">Teacher 4</option>
                   </select>
+                  {formik.errors?.teacher && formik.touched.teacher ? (
+                    <span className="text-danger">{formik.errors.teacher}</span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="gender">Gender *</label>
-                  <select id="gender" className="form-select">
+                  <select
+                    id="gender"
+                    className="form-select"
+                    value={formik.values.gender}
+                    onChange={formik.handleChange}
+                  >
                     <option disabled selected value="">
                       Select Gender
                     </option>
                     <option value="1">Male</option>
                     <option value="2">Female</option>
                   </select>
+                  {formik.errors?.gender && formik.touched.gender ? (
+                    <span className="text-danger">{formik.errors.gender}</span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="join-date">Join Date *</label>
                   <input
                     type="date"
-                    id="join-date"
+                    id="joinDate"
                     className="form-control"
-                    value={new Date().toISOString().split("T")[0]}
+                    value={formik.values.joinDate}
+                    onChange={formik.handleChange}
                   />
+                  {formik.errors?.joinDate && formik.touched.joinDate ? (
+                    <span className="text-danger">
+                      {formik.errors.joinDate}
+                    </span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="parent-name">Parent Name *</label>
                   <input
                     type="text"
-                    id="parent-name"
+                    id="parent"
                     className="form-control"
+                    value={formik.values.parent}
+                    onChange={formik.handleChange}
                   />
+                  {formik.errors?.parent && formik.touched.parent ? (
+                    <span className="text-danger">{formik.errors.parent}</span>
+                  ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
                   <label htmlFor="email">Email</label>
-                  <input type="text" id="email" className="form-control" />
+                  <input
+                    type="text"
+                    id="email"
+                    className="form-control"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors?.email && formik.touched.email ? (
+                    <span className="text-danger">{formik.errors.email}</span>
+                  ) : null}
                 </div>
                 <div className="col-12 form-group">
                   <label htmlFor="address">Address</label>
-                  <input type="text" id="address" className="form-control" />
+                  <input
+                    type="text"
+                    id="address"
+                    className="form-control"
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors?.address && formik.touched.address ? (
+                    <span className="text-danger">{formik.errors.address}</span>
+                  ) : null}
                 </div>
               </div>
             </form>
@@ -124,7 +265,11 @@ export function CreateStudentModal() {
             >
               Cancel
             </button>
-            <button type="submit" className="button create">
+            <button
+              type="submit"
+              className="button create"
+              onClick={() => formik.handleSubmit()}
+            >
               Create Student
             </button>
           </div>
