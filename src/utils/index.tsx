@@ -49,3 +49,10 @@ export const handleError = (error: unknown) => {
     return toast.error("Something went wrong. Please try again later");
   }
 };
+
+export const getStatusFamily = (status: string) => {
+  if (["active"].includes(status.toLowerCase())) return "success";
+  if (["inactive"].includes(status.toLowerCase())) return "error";
+  if (["pending"].includes(status.toLowerCase())) return "primary";
+  return "warning";
+};

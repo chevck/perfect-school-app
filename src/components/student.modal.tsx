@@ -1,12 +1,34 @@
 import { useFormik } from "formik";
 import { FileChartColumn, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StudentRegistrationSchema from "../utils/schemas/studentRegistration.schema";
-import { getUserData, schoolPrefix } from "../utils";
+import { getUserData, handleError, schoolPrefix } from "../utils";
 import axios from "axios";
+import useTeachersStore from "../dataset/teachers.store";
+import type { StudentStore, TeacherStore } from "../dataset/store.types";
+import Select from "react-select";
+import useStudentsStore from "../dataset/students.store";
+import moment from "moment";
+import { toast } from "sonner";
+import type { Student } from "../utils/types";
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
 
 export function CreateStudentModal() {
   const userData = getUserData();
+  const { teachers, fetchTeachersApi } = useTeachersStore() as TeacherStore;
+  const {
+    addStudent,
+    selectedStudent,
+    updateStudent,
+    setSelectedStudent,
+    updateStudentApi,
+  } = useStudentsStore() as StudentStore;
+  const isEditAction = !!selectedStudent;
+
   const admissionNumber = () => {
     const randomNumber = Math.floor(10000 + Math.random() * 90000);
     const schoolNamePrefix = schoolPrefix();
@@ -21,36 +43,100 @@ export function CreateStudentModal() {
       dateOfBirth: "",
       gender: "",
       email: "",
-      teacher: "",
+      teacherId: "",
       class: "",
-      joinDate: new Date().toISOString().split("T")[0],
-      parent: "",
+      joinDate: "",
+      parents: [] as string[],
       address: "",
     },
-    onSubmit: () => {
-      handleSubmit();
-    },
+    onSubmit: () => (isEditAction ? handleEdit() : handleSubmit()),
     validationSchema: StudentRegistrationSchema,
   });
 
-  console.log("values", formik.values);
-  console.log("errors", formik.errors);
+  useEffect(() => {
+    if (!isEditAction) return formik.resetForm();
+    if (isEditAction && selectedStudent) {
+      formik.setValues({
+        firstName: selectedStudent?.name.split(" ")[0] ?? "",
+        lastName: selectedStudent?.name.split(" ")[1] ?? "",
+        admissionNumber: selectedStudent?.admissionNumber ?? admissionNumber(),
+        dateOfBirth: selectedStudent?.dob
+          ? moment(selectedStudent.dob).format("YYYY-MM-DD")
+          : new Date().toISOString().split("T")[0],
+        gender: selectedStudent?.gender ?? "",
+        email: selectedStudent?.email ?? "",
+        teacherId:
+          selectedStudent?.teacherId?._id ?? selectedStudent?.teacherId ?? "",
+        class: selectedStudent?.class ?? "",
+        joinDate: selectedStudent?.joinDate
+          ? moment(selectedStudent.joinDate).format("YYYY-MM-DD")
+          : new Date().toISOString().split("T")[0],
+        parents: selectedStudent?.parents ?? [],
+        address: selectedStudent?.address ?? "",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditAction, selectedStudent]);
+
+  useEffect(() => {
+    if (!teachers.length) fetchTeachersApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (userData?.teacherId)
+      formik.setFieldValue("teacherId", userData.teacherId);
+    if (userData?.class) formik.setFieldValue("class", userData.class);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData?.teacherId, userData?.class]);
+
+  const handleEdit = async () => {
+    try {
+      const { email, ...rest } = formik.values;
+      const body = {
+        ...rest,
+        studentEmail: email,
+        dob: moment(rest.dateOfBirth).format("YYYY-MM-DD"),
+        name: `${rest.firstName} ${rest.lastName}`,
+        joinDate: moment(rest.joinDate).format("YYYY-MM-DD"),
+        _id: selectedStudent?._id,
+      };
+      const response = await updateStudentApi(body as unknown as Student);
+      updateStudent(response);
+      setSelectedStudent(null);
+      formik.resetForm();
+      document.getElementById("close-create-student-modal")?.click();
+      toast.success("Student updated successfully");
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
       const { email, ...rest } = formik.values;
       const body = { ...rest, studentEmail: email };
-      console.log({ body });
       const response = await axios.post(
-        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/student-create`,
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/student`,
         body,
         { headers: { Authorization: `Bearer ${userData?.token}` } }
       );
-      console.log({ response });
+      addStudent(response.data.student);
+      formik.resetForm();
+      document.getElementById("close-create-student-modal")?.click();
+      toast.success("Student created successfully");
     } catch (error) {
       console.log({ error });
+      toast.error("Something went wrong. Please try again later");
     }
   };
+
+  const parentOptions: SelectOption[] = [
+    { label: "Parent 1", value: "1" },
+    { label: "Parent 2", value: "2" },
+    { label: "Parent 3", value: "3" },
+    { label: "Parent 4", value: "4" },
+  ];
 
   return (
     <div
@@ -64,7 +150,7 @@ export function CreateStudentModal() {
         <div className="modal-content">
           <div className="modal-header">
             <div className="modal-title fs-5" id="create-student-modal-label">
-              <h1>Add New Student</h1>
+              <h1>{isEditAction ? "Edit Student" : "Add New Student"}</h1>
               <p>
                 Enter the student's information below. Required fields are
                 marked with an asterisk (*).
@@ -74,6 +160,7 @@ export function CreateStudentModal() {
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
+              id="close-create-student-modal"
               aria-label="Close"
             ></button>
           </div>
@@ -153,33 +240,36 @@ export function CreateStudentModal() {
                     <option disabled selected value="">
                       Select Class
                     </option>
-                    <option value="1">Class 1</option>
-                    <option value="2">Class 2</option>
-                    <option value="3">Class 3</option>
-                    <option value="4">Class 4</option>
+                    <option value="Class 1">Class 1</option>
+                    <option value="Class 2">Class 2</option>
+                    <option value="Class 3">Class 3</option>
+                    <option value="Class 4">Class 4</option>
                   </select>
                   {formik.errors?.class && formik.touched.class ? (
                     <span className="text-danger">{formik.errors.class}</span>
                   ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
-                  <label htmlFor="teacher">Teacher *</label>
+                  <label htmlFor="teacherId">Teacher *</label>
                   <select
-                    id="teacher"
+                    id="teacherId"
                     className="form-select"
-                    value={formik.values.teacher}
+                    value={formik.values.teacherId}
                     onChange={formik.handleChange}
                   >
                     <option disabled selected value="">
                       Select Teacher
                     </option>
-                    <option value="1">Teacher 1</option>
-                    <option value="2">Teacher 2</option>
-                    <option value="3">Teacher 3</option>
-                    <option value="4">Teacher 4</option>
+                    {teachers.map((teacher) => (
+                      <option key={teacher._id} value={teacher._id}>
+                        {teacher.name}
+                      </option>
+                    ))}
                   </select>
-                  {formik.errors?.teacher && formik.touched.teacher ? (
-                    <span className="text-danger">{formik.errors.teacher}</span>
+                  {formik.errors?.teacherId && formik.touched.teacherId ? (
+                    <span className="text-danger">
+                      {formik.errors.teacherId}
+                    </span>
                   ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
@@ -193,8 +283,8 @@ export function CreateStudentModal() {
                     <option disabled selected value="">
                       Select Gender
                     </option>
-                    <option value="1">Male</option>
-                    <option value="2">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                   </select>
                   {formik.errors?.gender && formik.touched.gender ? (
                     <span className="text-danger">{formik.errors.gender}</span>
@@ -216,16 +306,27 @@ export function CreateStudentModal() {
                   ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
-                  <label htmlFor="parent-name">Parent Name *</label>
-                  <input
-                    type="text"
-                    id="parent"
-                    className="form-control"
-                    value={formik.values.parent}
-                    onChange={formik.handleChange}
+                  <label htmlFor="parent-name">Parent Name</label>
+                  <Select
+                    options={parentOptions}
+                    // value={parentOptions.filter((option) =>
+                    //   formik.values.parents.includes(option.value as string)
+                    // )}
+                    onChange={(value) =>
+                      formik.setFieldValue(
+                        "parents",
+                        value?.map((o) => o.value) ?? []
+                      )
+                    }
+                    className="custom-react-select"
+                    classNamePrefix="select"
+                    placeholder="Search Parent"
+                    isSearchable={true}
+                    isClearable={true}
+                    isMulti={true}
                   />
-                  {formik.errors?.parent && formik.touched.parent ? (
-                    <span className="text-danger">{formik.errors.parent}</span>
+                  {formik.errors?.parents && formik.touched.parents ? (
+                    <span className="text-danger">{formik.errors.parents}</span>
                   ) : null}
                 </div>
                 <div className="col-12 col-md-6 form-group">
@@ -270,7 +371,7 @@ export function CreateStudentModal() {
               className="button create"
               onClick={() => formik.handleSubmit()}
             >
-              Create Student
+              {isEditAction ? "Update Student" : "Create Student"}
             </button>
           </div>
         </div>
@@ -280,6 +381,8 @@ export function CreateStudentModal() {
 }
 
 function StudentDetailsTab() {
+  const { selectedStudent } = useStudentsStore() as StudentStore;
+
   return (
     <div className="student-details-tab">
       <div className="info-cards-container">
@@ -290,23 +393,27 @@ function StudentDetailsTab() {
           <div className="info-card-body">
             <div className="info-card-item">
               <h4>Full Name</h4>
-              <p>John Doe</p>
+              <p>{selectedStudent?.name}</p>
             </div>
             <div className="info-card-item">
               <h4>Date of Birth</h4>
-              <p>21/02/2023</p>
+              <p>
+                {selectedStudent?.dob
+                  ? moment(selectedStudent.dob).format("Do MMM, YYYY")
+                  : "-"}
+              </p>
             </div>
             <div className="info-card-item">
               <h4>Gender</h4>
-              <p>Male</p>
+              <p>{selectedStudent?.gender}</p>
             </div>
             <div className="info-card-item">
               <h4>Blood Group</h4>
-              <p>A+</p>
+              <p>{selectedStudent?.bloodGroup ?? "-"}</p>
             </div>
             <div className="info-card-item">
               <h4>Medical Conditions</h4>
-              <p>None</p>
+              <p>{selectedStudent?.medicalConditions ?? "-"}</p>
             </div>
           </div>
         </div>
@@ -317,11 +424,11 @@ function StudentDetailsTab() {
           <div className="info-card-body">
             <div className="info-card-item">
               <h4>Address</h4>
-              <p>123 Main St, Anytown, USA</p>
+              <p>{selectedStudent?.address ?? "-"}</p>
             </div>
             <div className="info-card-item">
               <h4>Emergency Contact</h4>
-              <p>Not specified</p>
+              <p>{selectedStudent?.parents?.[0] ?? "-"}</p>
             </div>
           </div>
         </div>
@@ -332,15 +439,19 @@ function StudentDetailsTab() {
           <div className="info-card-body">
             <div className="info-card-item">
               <h4>Class</h4>
-              <p>Grade 9 B</p>
+              <p>{selectedStudent?.class ?? "-"}</p>
             </div>
             <div className="info-card-item">
               <h4>Teacher</h4>
-              <p>Mr. John Doe</p>
+              <p>{selectedStudent?.teacherId?.name ?? "-"}</p>
             </div>
             <div className="info-card-item">
               <h4>Join Date</h4>
-              <p>21/02/2023</p>
+              <p>
+                {selectedStudent?.joinDate
+                  ? moment(selectedStudent.joinDate).format("Do MMM, YYYY")
+                  : "-"}
+              </p>
             </div>
           </div>
         </div>
@@ -546,6 +657,8 @@ function StudentAcademicTab() {
 
 export function ViewStudentDetailsModal() {
   const [activeTab, setActiveTab] = useState("details");
+  const { selectedStudent } = useStudentsStore() as StudentStore;
+
   return (
     <div
       className="modal fade"
@@ -564,17 +677,28 @@ export function ViewStudentDetailsModal() {
               <div className="student-intro">
                 <div className="student-image-container">
                   <img
-                    src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jane"
-                    alt="Jane"
+                    src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${selectedStudent?.name}`}
+                    alt={selectedStudent?.name}
                   />
                 </div>
-                <h5>Jane Cooper</h5>
+                <h5>{selectedStudent?.name}</h5>
                 <div>
-                  <span className="custom-status success">Active</span>
+                  <span
+                    className={`custom-status ${
+                      selectedStudent?.status === "active"
+                        ? "success"
+                        : "warning"
+                    }`}
+                  >
+                    {selectedStudent?.status}
+                  </span>
                 </div>
               </div>
               <div className="student-info">
-                Student ID: 123444 &#8226; Joined: 21/02/2023
+                Student ID: {selectedStudent?.studentId} &#8226; Joined:{" "}
+                {selectedStudent?.joinDate
+                  ? new Date(selectedStudent?.joinDate).toLocaleDateString()
+                  : "N/A"}
               </div>
             </div>
             <button
@@ -643,6 +767,20 @@ export function ViewStudentDetailsModal() {
 }
 
 export function RemoveStudentModal() {
+  const { selectedStudent, deleteStudentApi, removeStudent } =
+    useStudentsStore() as StudentStore;
+
+  const handleRemoveStudent = async () => {
+    try {
+      await deleteStudentApi(selectedStudent?._id ?? "");
+      removeStudent(selectedStudent?._id ?? "");
+      toast.success("Student removed successfully");
+      document.getElementById("close-remove-student-modal")?.click();
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   return (
     <div
       className="modal fade"
@@ -657,14 +795,15 @@ export function RemoveStudentModal() {
             <div className="modal-title" id="remove-student-modal-label">
               <h1>Remove Student</h1>
               <p>
-                Are you sure you want to remove Sarah Williams from the system?
-                This action cannot be undone.
+                Are you sure you want to remove {selectedStudent?.name} from the
+                system? This action cannot be undone.
               </p>
             </div>
             <button
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
+              id="close-remove-student-modal"
               aria-label="Close"
             ></button>
           </div>
@@ -676,7 +815,11 @@ export function RemoveStudentModal() {
             >
               Cancel
             </button>
-            <button type="submit" className="button create">
+            <button
+              type="submit"
+              className="button create"
+              onClick={handleRemoveStudent}
+            >
               Remove Student
             </button>
           </div>

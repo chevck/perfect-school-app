@@ -7,20 +7,62 @@ import {
   User2,
   UserX,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   CreateStudentModal,
   ViewStudentDetailsModal,
   RemoveStudentModal,
 } from "../components/student.modal";
-import { useState } from "react";
-import useTeachersStore from "../dataset/teachers.store.tsx";
-import type { TeacherStore } from "../dataset/store.types.tsx";
+import type { StudentStore } from "../dataset/store.types.tsx";
+import useStudentsStore from "../dataset/students.store.tsx";
+import type { Student } from "../utils/types.tsx";
+import { CustomModal } from "../components/custom-modal.tsx";
+import { getStatusFamily } from "../utils/index.tsx";
+import { toast } from "sonner";
 
 export function Students() {
-  const [students] = useState([]);
-  const { teachers } = useTeachersStore() as TeacherStore;
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
+  const [filters, setFilters] = useState<{
+    class: string;
+    status: string;
+    searchTerm: string;
+  }>({
+    class: "",
+    status: "",
+    searchTerm: "",
+  });
+  const {
+    students,
+    fetchStudentsApi,
+    setSelectedStudent,
+    selectedStudent,
+    updateStudentApi,
+    updateStudent,
+  } = useStudentsStore() as StudentStore;
 
-  console.log({ teachers });
+  useEffect(() => {
+    fetchStudentsApi(filters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.class, filters.status, filters.searchTerm]);
+
+  useEffect(() => {
+    const debouncedSearch = setTimeout(() => {
+      setFilters({ ...filters, searchTerm: debouncedSearchTerm });
+    }, 500);
+    return () => clearTimeout(debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm]);
+
+  const handleEditUser = async () => {
+    const body = {
+      status: selectedStudent?.status === "active" ? "inactive" : "active",
+      _id: selectedStudent?._id,
+    };
+    const response = await updateStudentApi(body as unknown as Student);
+    updateStudent(response);
+    document.getElementById("close-custom-modal-edit-student-modal")?.click();
+    toast.success("Student updated successfully");
+  };
 
   return (
     <div className="students psa_d_page">
@@ -33,6 +75,7 @@ export function Students() {
           className="button"
           data-bs-toggle="modal"
           data-bs-target="#create-student-modal"
+          onClick={() => setSelectedStudent(null)}
         >
           <Plus />
           Add Student
@@ -46,24 +89,40 @@ export function Students() {
               type="text"
               className="form-control"
               placeholder="Search by name"
+              value={debouncedSearchTerm}
+              onChange={(e) => setDebouncedSearchTerm(e.target.value)}
             />
           </div>
           <div className="select-filters">
-            <select className="form-select" name="class" id="class">
+            <select
+              className="form-select"
+              name="class"
+              id="class"
+              onChange={(e) => {
+                setFilters({ ...filters, class: e.target.value });
+              }}
+            >
               <option selected disabled value="">
                 All Classes
               </option>
-              <option value="">Class 1</option>
-              <option value="">Class 2</option>
-              <option value="">Class 3</option>
-              <option value="">Class 4</option>
+              <option value="Class 1">Class 1</option>
+              <option value="Class 2">Class 2</option>
+              <option value="Class 3">Class 3</option>
+              <option value="Class 4">Class 4</option>
             </select>
-            <select className="form-select" name="status" id="status">
+            <select
+              className="form-select"
+              name="status"
+              id="status"
+              onChange={(e) => {
+                setFilters({ ...filters, status: e.target.value });
+              }}
+            >
               <option selected disabled value="">
                 All Status
               </option>
-              <option value="">Active</option>
-              <option value="">Inactive</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
             </select>
           </div>
         </div>
@@ -91,25 +150,34 @@ export function Students() {
               <tbody>
                 {students.map((student) => {
                   return (
-                    <tr key={student}>
+                    <tr key={student._id}>
                       <td className="student-info-container">
                         <div className="student-info">
                           <div className="student-image-container">
                             <img
-                              src="https://api.dicebear.com/7.x/adventurer/svg?seed=Jane"
-                              alt="Jane"
+                              src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${student.name}`}
+                              alt={student.name}
                             />
                           </div>
                           <div className="student-name">
-                            <h6>Jane Cooper</h6>
-                            <p>123456 &#8226; 15/05/2006</p>
+                            <h6>{student.name}</h6>
+                            <p>
+                              {student.studentId} &#8226;{" "}
+                              {new Date(student.joinDate).toLocaleDateString()}
+                            </p>
                           </div>
                         </div>
                       </td>
-                      <td>123456</td>
-                      <td>Class 1</td>
+                      <td>{student.admissionNumber}</td>
+                      <td>{student.class}</td>
                       <td>
-                        <span className="custom-status success">Active</span>
+                        <span
+                          className={`custom-status ${getStatusFamily(
+                            student.status
+                          )}`}
+                        >
+                          {student.status}
+                        </span>
                       </td>
                       <td>
                         <span className="custom-status warning">Pending</span>
@@ -129,20 +197,42 @@ export function Students() {
                               href="#"
                               data-bs-toggle="modal"
                               data-bs-target="#view-student-details-modal"
+                              onClick={() => setSelectedStudent(student)}
                             >
                               View Details
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item" href="#">
+                            <a
+                              className="dropdown-item"
+                              href="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#create-student-modal"
+                              onClick={() => setSelectedStudent(student)}
+                            >
                               <Edit />
                               Edit
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item" href="#">
-                              <UserX />
-                              Deactivate
+                            <a
+                              className="dropdown-item"
+                              href="#"
+                              data-bs-toggle="modal"
+                              data-bs-target="#edit-student-modal"
+                              onClick={() => setSelectedStudent(student)}
+                            >
+                              {student.status === "active" ? (
+                                <>
+                                  <UserX />
+                                  Deactivate
+                                </>
+                              ) : (
+                                <>
+                                  <User2 />
+                                  Activate
+                                </>
+                              )}
                             </a>
                           </li>
                           <li>
@@ -154,6 +244,7 @@ export function Students() {
                               href="#"
                               data-bs-toggle="modal"
                               data-bs-target="#remove-student-modal"
+                              onClick={() => setSelectedStudent(student)}
                             >
                               <Trash /> Remove
                             </a>
@@ -171,6 +262,14 @@ export function Students() {
       <CreateStudentModal />
       <ViewStudentDetailsModal />
       <RemoveStudentModal />
+      <CustomModal
+        title="Edit Student"
+        description="Are you sure you want to edit this student?"
+        onConfirm={() => handleEditUser()}
+        onCancel={() => setSelectedStudent(null)}
+        confirmButtonText="Edit"
+        customId="edit-student-modal"
+      />
     </div>
   );
 }

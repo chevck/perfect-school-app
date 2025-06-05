@@ -17,7 +17,6 @@ const SideBar = () => {
   const navigate = useNavigate();
   const userRole = getUserRole();
   const hasTeacherAccess = userRole === TEACHER;
-  console.log({ userRole });
 
   return (
     <div className="dashboard-sidebar">
@@ -61,13 +60,15 @@ const SideBar = () => {
           <UserCheck width={18} height={18} />
           <a>Students</a>
         </li>
-        <li
-          className={selectedPage === "teachers" ? "active" : ""}
-          onClick={() => navigate("/teachers")}
-        >
-          <User width={18} height={18} />
-          <a>Teachers</a>
-        </li>
+        {!hasTeacherAccess && (
+          <li
+            className={selectedPage === "teachers" ? "active" : ""}
+            onClick={() => navigate("/teachers")}
+          >
+            <User width={18} height={18} />
+            <a>Teachers</a>
+          </li>
+        )}
         <li
           className={selectedPage === "settings" ? "active" : ""}
           onClick={() => navigate("/settings")}
@@ -89,7 +90,6 @@ export function DashboardLayout() {
   const userInformation = localStorage.getItem(USER_INFORMATION);
   if (userInformation) {
     const { expiresAt } = JSON.parse(userInformation);
-    console.log({ expiresAt });
     if (expiresAt < new Date().getTime()) logUserOut();
     else {
       if (nonAuthedRoutes.includes(window.location.pathname))

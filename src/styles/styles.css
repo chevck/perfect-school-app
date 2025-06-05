@@ -47,6 +47,44 @@ select {
   }
 }
 
+.custom-react-select {
+  height: 36px;
+  .select__control {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    height: inherit !important;
+
+    input {
+      height: 36px !important;
+      border: none !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .select__value-container {
+      height: 36px !important;
+      font-size: 14px;
+      font-weight: 400;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0px !important;
+      padding-top: 0 !important;
+    }
+
+    .select__input-container {
+      height: inherit !important;
+    }
+  }
+
+  .select__menu {
+    .select__option {
+      font-size: 14px !important;
+    }
+  }
+}
+
 .tablist {
   display: inline-flex;
   align-items: center;
@@ -128,11 +166,6 @@ table {
   &.error {
     background: #fee2e2;
     color: #991b1b;
-  }
-
-  &.info {
-    background: #e0e7ff;
-    color: #1e40af;
   }
 
   &.primary {

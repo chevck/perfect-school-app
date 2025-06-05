@@ -36,3 +36,26 @@ export interface Teacher {
   class: string;
   subject: string;
 }
+
+export interface Student {
+  _id: string;
+  firstName?: string;
+  lastName?: string;
+  studentName?: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: string;
+  class: string;
+  subject: string;
+  admissionNumber: string;
+  dob: string;
+  gender: string;
+  parents: string[];
+  address: string;
+  joinDate: string;
+  studentId: string;
+  bloodGroup: string;
+  medicalConditions: string;
+  teacherId: Teacher;
+}

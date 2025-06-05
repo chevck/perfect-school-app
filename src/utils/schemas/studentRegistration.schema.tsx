@@ -7,10 +7,10 @@ const StudentRegistrationSchema = Yup.object().shape({
   dateOfBirth: Yup.date().required("Date of birth is required"),
   gender: Yup.string().required("Gender is required"),
   email: Yup.string().email("Invalid email"),
-  teacher: Yup.string().required("Teacher is required"),
+  teacherId: Yup.string().required("Teacher is required"),
   class: Yup.string().required("Class is required"),
   joinDate: Yup.date().required("Join date is required"),
-  parent: Yup.string().required("Parent is required"),
+  parents: Yup.array().of(Yup.string()).required("Parent(s) is/are required"),
   address: Yup.string().required("Address is required"),
 });
 
