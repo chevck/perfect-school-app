@@ -59,3 +59,16 @@ export interface Student {
   medicalConditions: string;
   teacherId: Teacher;
 }
+
+export interface DashboardData {
+  totalStudents: number;
+  totalTeachers: number;
+  pendingFees: number;
+  upcomingExams: number;
+  logs: {
+    action: string;
+    actionType: string;
+    createdAt: string;
+    _id: string;
+  }[];
+}

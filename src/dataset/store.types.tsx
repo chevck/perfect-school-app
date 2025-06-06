@@ -3,6 +3,7 @@ import type { Student, Teacher } from "../utils/types";
 export interface TeacherStore {
   teachers: Teacher[];
   loading: boolean;
+  setLoading: (loading: boolean) => void;
   fetchTeachersApi: () => Promise<void>;
   addTeacher: (teacher: Teacher) => void;
   removeTeacher: (teacherId: string) => void;

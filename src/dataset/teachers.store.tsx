@@ -9,6 +9,7 @@ const userData = getUserData();
 const useTeachersStore = create((set) => ({
   loading: false,
   teachers: [],
+  setLoading: (loading: boolean) => set(() => ({ loading })),
   addTeacher: (teacher: Teacher) =>
     set((state) => ({ teachers: [...state.teachers, teacher] })),
   addTeachers: (teachers: Teacher[]) => set(() => ({ teachers: teachers })),

@@ -1,7 +1,7 @@
 @import "animate.css";
 
 body {
-  font-family: "Bricolage Grotesque", sans-serif !important;
+  font-family: "IBM Plex Serif", serif !important;
 }
 
 button.button {
@@ -16,6 +16,7 @@ button.button {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 100px;
 
   &:disabled {
     background-color: #d1d5db !important;
@@ -567,6 +568,107 @@ table {
       }
     }
   }
+
+  .card-big {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    min-height: 200px;
+
+    .card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .title {
+        color: #111827;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+
+      button {
+        color: #2563eb;
+        width: fit-content;
+        font-size: 12px;
+        background: none;
+        border: none;
+      }
+    }
+
+    .activity-list {
+      .activity {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        .card-icon-identifier {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #eff6ff;
+          padding: 5px;
+
+          svg {
+            width: 18px;
+            height: 18px;
+            color: #2563eb;
+          }
+
+          &.update {
+            background-color: #f0fdf4;
+            svg {
+              color: #16a34a;
+            }
+          }
+
+          &.info {
+            background-color: #fef9c3;
+
+            svg {
+              color: #ca8a04;
+            }
+          }
+
+          &.extra {
+            background-color: #faf5ff;
+            svg {
+              color: #9333ea;
+            }
+          }
+
+          &.delete {
+            background-color: #fef2f2;
+
+            svg {
+              color: #ef4444;
+            }
+          }
+        }
+
+        h5 {
+          color: #111827;
+          font-size: 14px;
+          font-weight: 500;
+          margin-bottom: 3px;
+        }
+
+        p {
+          color: #6b7280;
+          font-size: 13px;
+          font-weight: 300;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 }
 
 .card-set {
@@ -584,6 +686,7 @@ table {
     height: 140px;
     display: flex;
     justify-content: space-between;
+    flex-grow: 1;
 
     .card-content {
       width: fit-content;
@@ -621,9 +724,102 @@ table {
       background-color: #eff6ff;
       padding: 5px;
 
-      i {
-        font-size: 24px;
+      svg {
+        width: 24px;
+        height: 24px;
         color: #2563eb;
+      }
+
+      &.teacher {
+        background-color: #f0fdf4;
+
+        svg {
+          color: #16a34a;
+        }
+      }
+
+      &.fees {
+        background-color: #fef2f2;
+
+        svg {
+          color: #ef4444;
+        }
+      }
+
+      &.exams {
+        background-color: #faf5ff;
+        svg {
+          color: #9333ea;
+        }
+      }
+    }
+  }
+}
+
+.loading-page {
+  margin-top: 24px;
+  .page-title {
+    height: 2rem;
+    width: 12rem;
+  }
+  .page-description {
+    height: 1rem;
+    width: 24rem;
+    margin-top: 8px;
+  }
+
+  .card-set {
+    margin-top: 24px;
+
+    .card_o {
+      .details {
+        .card-content {
+          height: 16px;
+          width: 96px;
+          margin-bottom: 8px;
+
+          &.o-2 {
+            height: 32px;
+            width: 62px;
+          }
+        }
+
+        .o-3-container {
+          display: flex;
+          gap: 16px;
+          margin-top: 8px;
+
+          span {
+            display: block;
+          }
+
+          .card-content {
+            height: 16px;
+            width: 48px;
+            &.o-3-2 {
+              height: 16px;
+              width: 80px;
+            }
+          }
+        }
+      }
+      .icon-container {
+        .card-content {
+          height: 48px;
+          width: 48px;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .card-big {
+      .card__header {
+        width: 100%;
+        margin-bottom: 10px !important;
+        .title {
+          height: 24px;
+          width: 128px;
+        }
       }
     }
   }
@@ -635,76 +831,6 @@ table {
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 20px;
-
-    .card-big {
-      width: 100%;
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      min-height: 200px;
-
-      .card__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-
-        .title {
-          color: #111827;
-          font-size: 18px;
-          font-weight: 500;
-          margin-bottom: 0;
-        }
-
-        button {
-          color: #2563eb;
-          width: fit-content;
-          font-size: 12px;
-          background: none;
-          border: none;
-        }
-      }
-
-      .activity-list {
-        .activity {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-bottom: 20px;
-
-          .card-icon-identifier {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #eff6ff;
-            padding: 5px;
-
-            i {
-              font-size: 18px;
-              color: #2563eb;
-            }
-          }
-
-          h5 {
-            color: #111827;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 3px;
-          }
-
-          p {
-            color: #6b7280;
-            font-size: 13px;
-            font-weight: 300;
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
   }
 }
 

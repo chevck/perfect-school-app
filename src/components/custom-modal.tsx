@@ -1,3 +1,5 @@
+import { Loader } from "./loader";
+
 export function CustomModal({
   title,
   description,
@@ -5,6 +7,7 @@ export function CustomModal({
   onCancel,
   confirmButtonText,
   customId,
+  loading,
 }: {
   title: string;
   description: string;
@@ -12,6 +15,7 @@ export function CustomModal({
   onCancel: () => void;
   confirmButtonText: string;
   customId: string;
+  loading: boolean;
 }) {
   return (
     <div
@@ -48,8 +52,13 @@ export function CustomModal({
             >
               Cancel
             </button>
-            <button type="submit" className="button create" onClick={onConfirm}>
-              {confirmButtonText}
+            <button
+              type="submit"
+              className="button create"
+              onClick={onConfirm}
+              disabled={loading}
+            >
+              {loading ? <Loader /> : confirmButtonText}
             </button>
           </div>
         </div>

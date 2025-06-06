@@ -11,6 +11,7 @@ import useStudentsStore from "../dataset/students.store";
 import moment from "moment";
 import { toast } from "sonner";
 import type { Student } from "../utils/types";
+import { Loader } from "./loader";
 
 export interface SelectOption {
   label: string;
@@ -26,6 +27,8 @@ export function CreateStudentModal() {
     updateStudent,
     setSelectedStudent,
     updateStudentApi,
+    loading,
+    setLoading,
   } = useStudentsStore() as StudentStore;
   const isEditAction = !!selectedStudent;
 
@@ -93,6 +96,7 @@ export function CreateStudentModal() {
   const handleEdit = async () => {
     try {
       const { email, ...rest } = formik.values;
+      setLoading(true);
       const body = {
         ...rest,
         studentEmail: email,
@@ -109,6 +113,8 @@ export function CreateStudentModal() {
       toast.success("Student updated successfully");
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -116,6 +122,7 @@ export function CreateStudentModal() {
     try {
       const { email, ...rest } = formik.values;
       const body = { ...rest, studentEmail: email };
+      setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/student`,
         body,
@@ -126,8 +133,9 @@ export function CreateStudentModal() {
       document.getElementById("close-create-student-modal")?.click();
       toast.success("Student created successfully");
     } catch (error) {
-      console.log({ error });
-      toast.error("Something went wrong. Please try again later");
+      handleError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -370,8 +378,15 @@ export function CreateStudentModal() {
               type="submit"
               className="button create"
               onClick={() => formik.handleSubmit()}
+              disabled={loading}
             >
-              {isEditAction ? "Update Student" : "Create Student"}
+              {loading ? (
+                <Loader />
+              ) : isEditAction ? (
+                "Update Student"
+              ) : (
+                "Create Student"
+              )}
             </button>
           </div>
         </div>

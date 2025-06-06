@@ -3,11 +3,14 @@ import TeacherSchema from "../utils/schemas/teacher.schema";
 import axios from "axios";
 import { toast } from "sonner";
 import { getUserData } from "../utils";
+import { Loader } from "./loader";
 
 export function CreateTeacher({
   handleGetTeachers,
+  loading,
 }: {
   handleGetTeachers: () => void;
+  loading: boolean;
 }) {
   const userData = getUserData();
   const formik = useFormik({
@@ -151,8 +154,9 @@ export function CreateTeacher({
               type="button"
               className="btn btn-primary"
               onClick={() => formik.handleSubmit()}
+              disabled={loading}
             >
-              Send invitation
+              {loading ? <Loader /> : "Send invitation"}
             </button>
           </div>
         </div>

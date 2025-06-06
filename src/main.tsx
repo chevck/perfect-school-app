@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { AppRouter } from "./app.router.tsx";
 import { Toaster } from "sonner";
+import "react-loading-skeleton/dist/skeleton.css";
 
 createRoot(document.getElementById("root")!).render(
   <>

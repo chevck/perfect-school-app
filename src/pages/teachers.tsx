@@ -10,8 +10,14 @@ import useTeachersStore from "../dataset/teachers.store.tsx";
 import type { TeacherStore } from "../dataset/store.types.tsx";
 
 export function Teachers() {
-  const { teachers, fetchTeachersApi, removeTeacher, updateTeacher } =
-    useTeachersStore() as TeacherStore;
+  const {
+    teachers,
+    fetchTeachersApi,
+    removeTeacher,
+    updateTeacher,
+    loading,
+    setLoading,
+  } = useTeachersStore() as TeacherStore;
   const userData = getUserData();
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
 
@@ -22,6 +28,7 @@ export function Teachers() {
 
   const handleDeleteTeacher = async (teacherId: string) => {
     if (!teacherId) return toast.error("Invalid teacher ID");
+    setLoading(true);
     try {
       await axios.delete(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/teacher-delete/${teacherId}`,
@@ -34,10 +41,10 @@ export function Teachers() {
       removeTeacher(teacherId);
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   };
-
-  console.log({ selectedTeacher });
 
   const handleEditTeacher = async (
     teacherId: string,
@@ -45,6 +52,7 @@ export function Teachers() {
     customId: string
   ) => {
     try {
+      setLoading(true);
       await axios.put(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/teacher/${teacherId}`,
         body,
@@ -58,6 +66,8 @@ export function Teachers() {
       } as Teacher);
     } catch (error) {
       handleError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,8 +163,9 @@ export function Teachers() {
             </tbody>
           </table>
         )}
-        <CreateTeacher handleGetTeachers={fetchTeachersApi} />
+        <CreateTeacher loading={loading} handleGetTeachers={fetchTeachersApi} />
         <CustomModal
+          loading={loading}
           title="Deactivate Teacher"
           description="Are you sure you want to deactivate this teacher?"
           onConfirm={() =>
@@ -171,6 +182,7 @@ export function Teachers() {
           customId="remove-teacher-modal"
         />
         <CustomModal
+          loading={loading}
           title="Activate Teacher"
           description="Are you sure you want to activate this teacher?"
           onConfirm={() =>
@@ -185,6 +197,7 @@ export function Teachers() {
           customId="activate-teacher-modal"
         />
         <CustomModal
+          loading={loading}
           title="Delete Teacher"
           description="Are you sure you want to delete this teacher?"
           onConfirm={() => handleDeleteTeacher(selectedTeacher?._id || "")}
