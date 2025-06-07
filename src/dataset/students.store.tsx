@@ -33,9 +33,9 @@ const useStudentsStore = create((set) => ({
     })),
 
   fetchStudentsApi: async (filters: {
-    class: string;
-    status: string;
-    searchTerm: string;
+    class?: string;
+    status?: string;
+    searchTerm?: string;
   }) => {
     try {
       const response = await axios.get(

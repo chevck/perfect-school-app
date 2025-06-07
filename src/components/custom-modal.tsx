@@ -7,7 +7,7 @@ export function CustomModal({
   onCancel,
   confirmButtonText,
   customId,
-  loading,
+  loading = false,
 }: {
   title: string;
   description: string;
@@ -15,46 +15,46 @@ export function CustomModal({
   onCancel: () => void;
   confirmButtonText: string;
   customId: string;
-  loading: boolean;
+  loading?: boolean;
 }) {
   return (
     <div
-      className="modal fade custom-modal"
+      className='modal fade custom-modal'
       id={`${customId}`}
       tabIndex={-1}
       aria-labelledby={`custom-modal-label ${customId}-label`}
-      aria-hidden="true"
+      aria-hidden='true'
     >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
+      <div className='modal-dialog modal-dialog-centered'>
+        <div className='modal-content'>
+          <div className='modal-header'>
             <div
-              className="modal-title"
+              className='modal-title'
               id={`custom-modal-label ${customId}-label`}
             >
               <h1>{title}</h1>
               {description ? <p>{description}</p> : null}
             </div>
             <button
-              type="button"
-              className="btn-close"
+              type='button'
+              className='btn-close'
               id={`close-custom-modal-${customId}`}
-              data-bs-dismiss="modal"
-              aria-label="Close"
+              data-bs-dismiss='modal'
+              aria-label='Close'
             ></button>
           </div>
-          <div className="modal-footer">
+          <div className='modal-footer'>
             <button
-              type="button"
-              className="button cancel"
-              data-bs-dismiss="modal"
+              type='button'
+              className='button cancel'
+              data-bs-dismiss='modal'
               onClick={onCancel}
             >
               Cancel
             </button>
             <button
-              type="submit"
-              className="button create"
+              type='submit'
+              className='button create'
               onClick={onConfirm}
               disabled={loading}
             >

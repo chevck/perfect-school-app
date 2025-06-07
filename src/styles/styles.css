@@ -1,7 +1,7 @@
 @import "animate.css";
 
 body {
-  font-family: "IBM Plex Serif", serif !important;
+  font-family: "Bricolage Grotesque", serif !important;
 }
 
 button.button {
@@ -219,6 +219,27 @@ table {
       margin-bottom: 0;
       font-weight: 700;
       font-size: 23px;
+      border-right: 1px solid #e5e7eb;
+      padding-right: 10px;
+    }
+
+    .school-name-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      svg {
+        color: #4b5563;
+        width: 16px;
+        height: 16px;
+      }
+      h3 {
+        color: #4b5563;
+        font-size: 14px;
+        font-weight: 500;
+        border-right: none;
+        padding-right: 0;
+      }
     }
   }
 
@@ -1073,8 +1094,13 @@ table {
         margin-bottom: 8px;
       }
 
-      input {
+      input,
+      select {
         font-size: 14px;
+      }
+
+      .text-danger {
+        margin-top: 5px;
       }
     }
 
@@ -1151,6 +1177,7 @@ table {
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 8px;
 
         p {
           margin-bottom: 0;
@@ -1177,6 +1204,9 @@ table {
             td {
               cursor: pointer;
               height: 49.5px;
+              &:nth-child(2) {
+                text-align: right;
+              }
               &.actions {
                 display: flex;
                 justify-content: flex-end;

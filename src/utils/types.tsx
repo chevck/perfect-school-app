@@ -72,3 +72,18 @@ export interface DashboardData {
     _id: string;
   }[];
 }
+
+export interface BillItem {
+  item: string;
+  price: number;
+}
+
+export interface BillingInformation {
+  billId: string;
+  billDate: string;
+  class: string;
+  term: string;
+  parent: string;
+  student: string;
+  session: string;
+}

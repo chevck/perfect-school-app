@@ -65,78 +65,78 @@ export function Students() {
   };
 
   return (
-    <div className="students psa_d_page">
-      <div className="header_">
-        <div className="title-container">
-          <h2 className="title">Students</h2>
+    <div className='students psa_d_page'>
+      <div className='header_'>
+        <div className='title-container'>
+          <h2 className='title'>Students</h2>
           <h6>Manage student records and information</h6>
         </div>
         <button
-          className="button"
-          data-bs-toggle="modal"
-          data-bs-target="#create-student-modal"
+          className='button'
+          data-bs-toggle='modal'
+          data-bs-target='#create-student-modal'
           onClick={() => setSelectedStudent(null)}
         >
           <Plus />
           Add Student
         </button>
       </div>
-      <div className="students-body">
-        <div className="filters">
-          <div className="input-filter">
-            <SearchIcon width={14} height={14} className="search-icon" />
+      <div className='students-body'>
+        <div className='filters'>
+          <div className='input-filter'>
+            <SearchIcon width={14} height={14} className='search-icon' />
             <input
-              type="text"
-              className="form-control"
-              placeholder="Search by name"
+              type='text'
+              className='form-control'
+              placeholder='Search by name'
               value={debouncedSearchTerm}
               onChange={(e) => setDebouncedSearchTerm(e.target.value)}
             />
           </div>
-          <div className="select-filters">
+          <div className='select-filters'>
             <select
-              className="form-select"
-              name="class"
-              id="class"
+              className='form-select'
+              name='class'
+              id='class'
               onChange={(e) => {
                 setFilters({ ...filters, class: e.target.value });
               }}
             >
-              <option selected disabled value="">
+              <option selected disabled value=''>
                 All Classes
               </option>
-              <option value="Class 1">Class 1</option>
-              <option value="Class 2">Class 2</option>
-              <option value="Class 3">Class 3</option>
-              <option value="Class 4">Class 4</option>
+              <option value='Class 1'>Class 1</option>
+              <option value='Class 2'>Class 2</option>
+              <option value='Class 3'>Class 3</option>
+              <option value='Class 4'>Class 4</option>
             </select>
             <select
-              className="form-select"
-              name="status"
-              id="status"
+              className='form-select'
+              name='status'
+              id='status'
               onChange={(e) => {
                 setFilters({ ...filters, status: e.target.value });
               }}
             >
-              <option selected disabled value="">
+              <option selected disabled value=''>
                 All Status
               </option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value='active'>Active</option>
+              <option value='inactive'>Inactive</option>
             </select>
           </div>
         </div>
-        <div className="students-table table-responsive">
+        <div className='students-table table-responsive'>
           {!students.length ? (
-            <div className="empty-state">
-              <div className="icon-wrapper">
+            <div className='empty-state'>
+              <div className='icon-wrapper'>
                 <User2 />
               </div>
               <h3>No students found</h3>
               <p>Add a new student to get started</p>
             </div>
           ) : (
-            <table className="table">
+            <table className='table'>
               <thead>
                 <tr>
                   <th>Student</th>
@@ -151,15 +151,15 @@ export function Students() {
                 {students.map((student) => {
                   return (
                     <tr key={student._id}>
-                      <td className="student-info-container">
-                        <div className="student-info">
-                          <div className="student-image-container">
+                      <td className='student-info-container'>
+                        <div className='student-info'>
+                          <div className='student-image-container'>
                             <img
                               src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${student.name}`}
                               alt={student.name}
                             />
                           </div>
-                          <div className="student-name">
+                          <div className='student-name'>
                             <h6>{student.name}</h6>
                             <p>
                               {student.studentId} &#8226;{" "}
@@ -180,23 +180,23 @@ export function Students() {
                         </span>
                       </td>
                       <td>
-                        <span className="custom-status warning">Pending</span>
+                        <span className='custom-status warning'>Pending</span>
                       </td>
                       <td>
                         <button
-                          className="button no-body"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
+                          className='button no-body'
+                          data-bs-toggle='dropdown'
+                          aria-expanded='false'
                         >
                           <Ellipsis width={16} height={16} />
                         </button>
-                        <ul className="dropdown-menu">
+                        <ul className='dropdown-menu'>
                           <li>
                             <a
-                              className="dropdown-item"
-                              href="#"
-                              data-bs-toggle="modal"
-                              data-bs-target="#view-student-details-modal"
+                              className='dropdown-item'
+                              href='#'
+                              data-bs-toggle='modal'
+                              data-bs-target='#view-student-details-modal'
                               onClick={() => setSelectedStudent(student)}
                             >
                               View Details
@@ -204,10 +204,10 @@ export function Students() {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item"
-                              href="#"
-                              data-bs-toggle="modal"
-                              data-bs-target="#create-student-modal"
+                              className='dropdown-item'
+                              href='#'
+                              data-bs-toggle='modal'
+                              data-bs-target='#create-student-modal'
                               onClick={() => setSelectedStudent(student)}
                             >
                               <Edit />
@@ -216,10 +216,10 @@ export function Students() {
                           </li>
                           <li>
                             <a
-                              className="dropdown-item"
-                              href="#"
-                              data-bs-toggle="modal"
-                              data-bs-target="#edit-student-modal"
+                              className='dropdown-item'
+                              href='#'
+                              data-bs-toggle='modal'
+                              data-bs-target='#edit-student-modal'
                               onClick={() => setSelectedStudent(student)}
                             >
                               {student.status === "active" ? (
@@ -236,14 +236,14 @@ export function Students() {
                             </a>
                           </li>
                           <li>
-                            <hr className="dropdown-divider" />
+                            <hr className='dropdown-divider' />
                           </li>
                           <li>
                             <a
-                              className="dropdown-item text-danger"
-                              href="#"
-                              data-bs-toggle="modal"
-                              data-bs-target="#remove-student-modal"
+                              className='dropdown-item text-danger'
+                              href='#'
+                              data-bs-toggle='modal'
+                              data-bs-target='#remove-student-modal'
                               onClick={() => setSelectedStudent(student)}
                             >
                               <Trash /> Remove
@@ -263,12 +263,13 @@ export function Students() {
       <ViewStudentDetailsModal />
       <RemoveStudentModal />
       <CustomModal
-        title="Edit Student"
-        description="Are you sure you want to edit this student?"
+        title='Edit Student'
+        description='Are you sure you want to edit this student?'
         onConfirm={() => handleEditUser()}
         onCancel={() => setSelectedStudent(null)}
-        confirmButtonText="Edit"
-        customId="edit-student-modal"
+        confirmButtonText='Edit'
+        customId='edit-student-modal'
+        loading={false}
       />
     </div>
   );

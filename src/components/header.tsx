@@ -2,6 +2,7 @@ import { LogoComponent } from "./logo";
 import { USER_INFORMATION } from "../utils";
 import { useEffect, useState } from "react";
 import type { UserInformation } from "../utils/types";
+import { School } from "lucide-react";
 
 export function Header() {
   const [userData, setUserData] = useState<UserInformation | null>(null);
@@ -19,6 +20,10 @@ export function Header() {
         <LogoComponent />
         <h3 className="full-school-name">Perfect School App</h3>
         <h3 className="short-school-name">PSA</h3>
+        <div className="school-name-wrapper">
+          <School />
+          <h3 className="">{userData?.schoolName}</h3>
+        </div>
       </div>
       {isLoggedIn ? (
         <div className="notification-section">

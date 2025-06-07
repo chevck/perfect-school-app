@@ -5,11 +5,33 @@ export const ADMIN = "admin";
 export const TEACHER = "teacher";
 export const STUDENT = "student";
 
+export const NAIRA_SYMBOL = "₦";
+
+export const CLASSES = [
+  "DAYCARE",
+  "RECEPTION ONE",
+  "RECEPTION THREE",
+  "GRADE ONE",
+  "GRADE TWO",
+  "GRADE THREE",
+  "GRADE FOUR",
+  "GRADE FIVE",
+  "JSS ONE",
+  "JSS TWO",
+  "JSS THREE",
+  "SSS ONE",
+  "SSS TWO",
+  "SSS THREE",
+];
+
 export const USER_INFORMATION = "user_information";
 
 export const getHourInMilliseconds = (hours: number) => {
   return hours * 60 * 60 * 1000;
 };
+
+export const formatMoney = (value: number) =>
+  new Intl.NumberFormat("en-US", {}).format(value);
 
 export const logUserOut = () => {
   localStorage.removeItem(USER_INFORMATION);
@@ -40,6 +62,9 @@ export const schoolPrefix = () => {
 };
 
 export const handleError = (error: unknown) => {
+  if (axios.isAxiosError(error) && error.response?.status === 401) {
+    return logUserOut();
+  }
   if (axios.isAxiosError(error)) {
     return toast.error(
       error?.response?.data?.message ||

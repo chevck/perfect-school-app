@@ -1,9 +1,46 @@
 // there would be different formats but for now, we're gonna use the MINIMALIST
 
 import { useState } from "react";
+import type { BillItem, BillingInformation } from "../utils/types";
+import { formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
+import useStudentsStore from "../dataset/students.store";
+import type { StudentStore } from "../dataset/store.types";
 
-export function BillLayout() {
+export function BillLayout({
+  billItems,
+  billingInformation,
+}: {
+  billItems: BillItem[];
+  billingInformation: BillingInformation;
+}) {
   const [selectedLayout, setSelectedLayout] = useState("standard");
+  const userData = getUserData();
+  const { students } = useStudentsStore() as StudentStore;
+
+  const student = students.find(
+    (student) => student._id === billingInformation.student
+  );
+
+  console.log({ student });
+
+  console.log({ userData, billingInformation });
+
+  console.log({ billItems });
+
+  const total = billItems.reduce((acc, item) => acc + item.price, 0);
+
+  const BillItemsList = () => {
+    return billItems.map((item, key) => (
+      <tr key={key}>
+        <td>{item.item}</td>
+        <td>
+          {NAIRA_SYMBOL}
+          {formatMoney(item.price)}
+        </td>
+      </tr>
+    ));
+  };
+
   return (
     <div className='bill-layout-container'>
       <div className='bill-layout-options'>
@@ -27,22 +64,23 @@ export function BillLayout() {
         </button>
       </div>
       {selectedLayout === "standard" ? (
-        <div className={`bill-layout standard`}>
+        <div className={`bill-layout standard`} id='bill-preview'>
           <div className='section-a'>
             <div className='address'>
-              <h4>The Perfect School</h4>
-              <p>123 School Street</p>
-              <p>City, State, Zip Code</p>
+              <h4>{userData?.schoolName}</h4>
+              <p>{userData?.schoolAddress || "-"}</p>
+              {/* <p>{userData?.schoolCity}</p> */}
             </div>
             <div className='bill-id'>
-              <h3>Bill #BILL-5288</h3>
-              <h6>23rd June, 2025</h6>
+              <h3>Bill {billingInformation.billId}</h3>
+              <h6>{billingInformation.billDate}</h6>
             </div>
           </div>
           <div className='bill-to'>
             <h4>Bill To:</h4>
-            <p>John Doe</p>
-            <p>123 Student Street</p>
+            <p>{student?.name}</p>
+            <p>{student?.address}</p>
+            <p>{billingInformation.class}</p>
           </div>
           <div className='items-table'>
             <table className='table table-hover'>
@@ -53,13 +91,13 @@ export function BillLayout() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>School Fees</td>
-                  <td>$250</td>
-                </tr>
+                <BillItemsList />
                 <tr className='total'>
                   <td>Total</td>
-                  <td>$250</td>
+                  <td>
+                    {NAIRA_SYMBOL}
+                    {formatMoney(total)}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -78,29 +116,29 @@ export function BillLayout() {
           </div>
         </div>
       ) : selectedLayout === "modern" ? (
-        <div className={`bill-layout modern`}>
+        <div className={`bill-layout modern`} id='bill-preview'>
           <div className='school-details'>
             <div className='school-logo'>PS</div>
-            <div className='school-name'>The Perfect School</div>
-            <div className='school-address'>123 School Street</div>
+            <div className='school-name'>{userData.schoolName}</div>
+            <div className='school-address'>{userData.schoolAddress}</div>
           </div>
           <div className='bill-details'>
             <div className='_left'>
               <h6>Invoice</h6>
-              <h2>#BILL-2310</h2>
+              <h2>{billingInformation.billId}</h2>
             </div>
             <div className='_right'>
               <h6>Date Issued</h6>
-              <h2>23rd June, 2025</h2>
+              <h2>{billingInformation.billDate}</h2>
             </div>
           </div>
           <div className='bill-to'>
             <h4>Bill To:</h4>
             <p>
-              <b>Mr. John Doe </b>
+              <b>Mr. {billingInformation.parent} </b>
             </p>
             <p>
-              Student: <b>Oreofe Doe</b>
+              Student: <b>{student?.name}</b>
             </p>
           </div>
           <div className='items-table'>
@@ -112,13 +150,13 @@ export function BillLayout() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>School Fees</td>
-                  <td>$250</td>
-                </tr>
+                <BillItemsList />
                 <tr className='total'>
                   <td>Total</td>
-                  <td>$250</td>
+                  <td>
+                    {NAIRA_SYMBOL}
+                    {formatMoney(total)}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -127,11 +165,17 @@ export function BillLayout() {
             <div className='total-section'>
               <div className='subtotal'>
                 <p>Subtotal:</p>
-                <p>$34.00</p>
+                <p>
+                  {NAIRA_SYMBOL}
+                  {formatMoney(total)}
+                </p>
               </div>
               <div className='total'>
                 <p>Total:</p>
-                <p>$34.00</p>
+                <p>
+                  {NAIRA_SYMBOL}
+                  {formatMoney(total)}
+                </p>
               </div>
             </div>
           </div>
@@ -149,18 +193,18 @@ export function BillLayout() {
           </div>
         </div>
       ) : (
-        <div className={`bill-layout minimal`}>
+        <div className={`bill-layout minimal`} id='bill-preview'>
           <div className='bill-header'>
-            <div className='school-name'>The Perfect School</div>
+            <div className='school-name'>{userData?.schoolName}</div>
             <div className='bill-info'>
-              <p>#BILL-2310</p>
-              <p>23rd June, 2025</p>
+              <p>BILL {billingInformation.billId}</p>
+              <p>{billingInformation.billDate}</p>
             </div>
           </div>
           <div className='bill-to'>
-            <h4>Mr John Doe</h4>
-            <p>Parent of James Doe.</p>
-            <p>Term: 2024/2025</p>
+            <h4> {billingInformation.parent}</h4>
+            <p>Parent of {student?.name}.</p>
+            <p>Term: {billingInformation.term}</p>
           </div>
           <div className='items-table'>
             <table className='table table-hover'>
@@ -171,13 +215,13 @@ export function BillLayout() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>School Fees</td>
-                  <td>$250</td>
-                </tr>
+                <BillItemsList />
                 <tr className='total'>
                   <td>Total</td>
-                  <td>$250</td>
+                  <td>
+                    {NAIRA_SYMBOL}
+                    {formatMoney(total)}
+                  </td>
                 </tr>
               </tbody>
             </table>
