@@ -1,7 +1,4 @@
-// there would be different formats but for now, we're gonna use the MINIMALIST
-
-import { useState } from "react";
-import type { BillItem, BillingInformation } from "../utils/types";
+import type { BankAccount, BillItem, BillingInformation } from "../utils/types";
 import { formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
 import useStudentsStore from "../dataset/students.store";
 import type { StudentStore } from "../dataset/store.types";
@@ -9,23 +6,22 @@ import type { StudentStore } from "../dataset/store.types";
 export function BillLayout({
   billItems,
   billingInformation,
+  primaryBankAccount,
+  billLayout,
+  setBillLayout,
 }: {
   billItems: BillItem[];
   billingInformation: BillingInformation;
+  primaryBankAccount: BankAccount;
+  billLayout: "standard" | "minimalist" | "modern";
+  setBillLayout: (layout: "standard" | "minimalist" | "modern") => void;
 }) {
-  const [selectedLayout, setSelectedLayout] = useState("standard");
   const userData = getUserData();
   const { students } = useStudentsStore() as StudentStore;
 
   const student = students.find(
     (student) => student._id === billingInformation.student
   );
-
-  console.log({ student });
-
-  console.log({ userData, billingInformation });
-
-  console.log({ billItems });
 
   const total = billItems.reduce((acc, item) => acc + item.price, 0);
 
@@ -45,25 +41,25 @@ export function BillLayout({
     <div className='bill-layout-container'>
       <div className='bill-layout-options'>
         <button
-          className={`button ${selectedLayout === "standard" ? "active" : ""}`}
-          onClick={() => setSelectedLayout("standard")}
+          className={`button ${billLayout === "standard" ? "active" : ""}`}
+          onClick={() => setBillLayout("standard")}
         >
           Standard
         </button>
         <button
-          className={`button ${selectedLayout === "modern" ? "active" : ""}`}
-          onClick={() => setSelectedLayout("modern")}
+          className={`button ${billLayout === "modern" ? "active" : ""}`}
+          onClick={() => setBillLayout("modern")}
         >
           Modern
         </button>
         <button
-          className={`button ${selectedLayout === "minimal" ? "active" : ""}`}
-          onClick={() => setSelectedLayout("minimal")}
+          className={`button ${billLayout === "minimalist" ? "active" : ""}`}
+          onClick={() => setBillLayout("minimalist")}
         >
           Minimal
         </button>
       </div>
-      {selectedLayout === "standard" ? (
+      {billLayout === "standard" ? (
         <div className={`bill-layout standard`} id='bill-preview'>
           <div className='section-a'>
             <div className='address'>
@@ -105,17 +101,17 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>First Bank</b>
+              Bank Name: <b>{primaryBankAccount?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>The Perfect School</b>
+              Account Name: <b>{primaryBankAccount?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>1234567890</b>
+              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
         </div>
-      ) : selectedLayout === "modern" ? (
+      ) : billLayout === "modern" ? (
         <div className={`bill-layout modern`} id='bill-preview'>
           <div className='school-details'>
             <div className='school-logo'>PS</div>
@@ -182,13 +178,13 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>First Bank</b>
+              Bank Name: <b>{primaryBankAccount?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>The Perfect School</b>
+              Account Name: <b>{primaryBankAccount?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>1234567890</b>
+              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
         </div>
@@ -229,13 +225,13 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>First Bank</b>
+              Bank Name: <b>{primaryBankAccount?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>The Perfect School</b>
+              Account Name: <b>{primaryBankAccount?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>1234567890</b>
+              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
         </div>

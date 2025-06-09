@@ -5,4 +5,5 @@ export const billingSchema = Yup.object({
   parent: Yup.string().required("Parent is required"),
   class: Yup.string().required("Class is required"),
   term: Yup.string().required("Term is required"),
+  session: Yup.string().required("Session is required"),
 });

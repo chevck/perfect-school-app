@@ -114,131 +114,131 @@ export function CompleteTeacherRegistration() {
   }, [teacherCode]);
 
   return (
-    <div className="registration-page-wrapper">
+    <div className='registration-page-wrapper'>
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="registration-page"
+          className='registration-page'
         >
           <center>
             <LogoComponent />
           </center>
           <h3>Welcome {teacherDetails?.name || "to Perfect School App"}!</h3>
           <h6>Complete your registration to access your account</h6>
-          <div className="form-group">
+          <div className='form-group'>
             <label>Name</label>
             <input
-              type="text"
-              className="form-control"
-              placeholder="John Doe"
-              id="name"
+              type='text'
+              className='form-control'
+              placeholder='John Doe'
+              id='name'
               disabled={!allowFormFill}
               {...formik.getFieldProps("name")}
             />
             {formik.errors.name && formik.touched.name ? (
-              <span className="text-danger">{formik.errors.name}</span>
+              <span className='text-danger'>{formik.errors.name}</span>
             ) : null}
           </div>
-          <div className="form-group">
+          <div className='form-group'>
             <label>Qualification</label>
             <input
-              type="text"
-              className="form-control"
-              placeholder="e.g Ph.D, M.Ed, B.Ed, etc."
-              id="qualification"
+              type='text'
+              className='form-control'
+              placeholder='e.g Ph.D, M.Ed, B.Ed, etc.'
+              id='qualification'
               disabled={!allowFormFill}
               {...formik.getFieldProps("qualification")}
             />
             {formik.errors.qualification && formik.touched.qualification ? (
-              <span className="text-danger">{formik.errors.qualification}</span>
+              <span className='text-danger'>{formik.errors.qualification}</span>
             ) : null}
           </div>
-          <div className="form-group">
+          <div className='form-group'>
             <label>Years of Experience</label>
             <input
-              type="text"
-              className="form-control"
-              placeholder="e.g 5"
-              id="yearsOfExperience"
+              type='text'
+              className='form-control'
+              placeholder='e.g 5'
+              id='yearsOfExperience'
               disabled={!allowFormFill}
               {...formik.getFieldProps("yearsOfExperience")}
             />
             {formik.errors.yearsOfExperience &&
             formik.touched.yearsOfExperience ? (
-              <span className="text-danger">
+              <span className='text-danger'>
                 {formik.errors.yearsOfExperience}
               </span>
             ) : null}
           </div>
-          <div className="form-group">
+          <div className='form-group'>
             <label>Address</label>
             <input
-              type="text"
-              className="form-control"
-              placeholder="e.g 123 Main St, Anytown, USA"
-              id="address"
+              type='text'
+              className='form-control'
+              placeholder='e.g 123 Main St, Anytown, USA'
+              id='address'
               disabled={!allowFormFill}
               {...formik.getFieldProps("address")}
             />
             {formik.errors.address && formik.touched.address ? (
-              <span className="text-danger">{formik.errors.address}</span>
+              <span className='text-danger'>{formik.errors.address}</span>
             ) : null}
           </div>
-          <div className="form-group">
-            <div className="action-label-container">
+          <div className='form-group'>
+            <div className='action-label-container'>
               <label>Password</label>
             </div>
-            <div className="password-input-container">
+            <div className='password-input-container'>
               <input
                 type={showPassword ? "text" : "password"}
-                className="form-control"
-                placeholder="********"
+                className='form-control'
+                placeholder='********'
                 disabled={!allowFormFill}
-                id="password"
+                id='password'
                 {...formik.getFieldProps("password")}
               />
               <span
-                className="password-toggle-button"
+                className='password-toggle-button'
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeClosed /> : <Eye />}
               </span>
             </div>
             {formik.errors.password && formik.touched.password ? (
-              <span className="text-danger">{formik.errors.password}</span>
+              <span className='text-danger'>{formik.errors.password}</span>
             ) : null}
           </div>
-          <div className="form-group">
-            <div className="action-label-container">
+          <div className='form-group'>
+            <div className='action-label-container'>
               <label>Confirm Password</label>
             </div>
-            <div className="password-input-container">
+            <div className='password-input-container'>
               <input
                 type={showPassword ? "text" : "password"}
-                className="form-control"
-                placeholder="********"
-                id="confirmPassword"
+                className='form-control'
+                placeholder='********'
+                id='confirmPassword'
                 disabled={!allowFormFill}
                 {...formik.getFieldProps("confirmPassword")}
               />
               <span
-                className="password-toggle-button"
+                className='password-toggle-button'
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeClosed /> : <Eye />}
               </span>
             </div>
             {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
-              <span className="text-danger">
+              <span className='text-danger'>
                 {formik.errors.confirmPassword}
               </span>
             ) : null}
           </div>
           <button
-            className="button create-account"
-            type="submit"
+            className='button create-account'
+            type='submit'
             onClick={() => {
               if (!allowFormFill) return;
               formik.handleSubmit();
@@ -255,9 +255,9 @@ export function CompleteTeacherRegistration() {
           >
             {isLoading ? <Loader /> : "Complete Setup"}
           </button>
-          <h5 className="has-an-account-text">
+          <h5 className='has-an-account-text'>
             Have completed registration?{" "}
-            <a href="/sign-in">Sign in to continue</a>
+            <a href='/sign-in'>Sign in to continue</a>
           </h5>
         </motion.div>
       </AnimatePresence>

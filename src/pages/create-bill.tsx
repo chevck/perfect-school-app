@@ -5,20 +5,32 @@ import Select from "react-select";
 import type { StudentStore } from "../dataset/store.types";
 import useStudentsStore from "../dataset/students.store";
 import type { BillItem } from "../utils/types";
-import { CLASSES, formatMoney, NAIRA_SYMBOL } from "../utils";
+import { CLASSES, formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
 import { toast } from "sonner";
 import { useFormik } from "formik";
 import { billingSchema } from "../utils/schemas/billing.schema";
 import moment from "moment";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { Loader } from "../components/loader";
 
 export function CreateBill() {
   const [billItems, setBillItems] = useState<BillItem[] | []>([]);
   const [itemToEdit, setItemToEdit] = useState<BillItem | null>(null);
   const [previewing, setPreviewing] = useState(false);
+  const [billLayout, setBillLayout] = useState<
+    "standard" | "minimalist" | "modern"
+  >("standard");
   const { students, fetchStudentsApi } = useStudentsStore() as StudentStore;
+  const [school, setSchool] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [newData, setNewData] = useState<{
     [key: string]: string | number;
   } | null>(null);
+  const userData = getUserData();
+  const { billId } = useParams();
+  const isEditPage = !!billId;
+
   const formik = useFormik({
     initialValues: {
       student: "",
@@ -28,21 +40,66 @@ export function CreateBill() {
       billId: `#${Math.floor(10000 + Math.random() * 90000)}`,
       billDate: moment().format("Do MMMM, YYYY"),
       session: "",
+      saveAsDraft: true,
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: () => {
+      if (!billItems.length) {
+        toast.error("Please add at least one item to the bill");
+        return;
+      }
+      if (isEditPage) {
+        handleUpdateBill();
+      } else {
+        handleCreateBill();
+      }
     },
     validationSchema: billingSchema,
   });
 
-  console.log({ values: formik.values });
+  const primaryBankAccount = school?.schoolBankAccounts?.find(
+    (bank: any) => bank.isPrimary
+  );
+
+  const handleGetBill = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/bill/${billId}`,
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      const billDetails = response.data.bill;
+      setBillItems(billDetails.billItems);
+      formik.setFieldValue("student", billDetails.studentId);
+      // formik.setFieldValue("parent", billDetails.parentId);
+      formik.setFieldValue("class", billDetails.class);
+      formik.setFieldValue("term", billDetails.term);
+      formik.setFieldValue("session", billDetails.session);
+      formik.setFieldValue("billId", billDetails.billId);
+      formik.setFieldValue("billDate", billDetails.billDate);
+    } catch (error) {
+      toast.error("Something went wrong with getting the bill");
+    }
+  };
+
+  const handleGetSchool = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/school`,
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      setSchool(response.data.school);
+    } catch (error) {
+      toast.error(
+        "Something went wrong with getting school data. Please try again later"
+      );
+    }
+  };
 
   useEffect(() => {
     fetchStudentsApi({ class: "", status: "" });
+    handleGetSchool();
+    if (billId) handleGetBill();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log({ students });
 
   const studentOptions = students.map((student) => ({
     label: student.name,
@@ -53,8 +110,6 @@ export function CreateBill() {
     { label: "John Doe", value: "1" },
     { label: "Jane Doe", value: "2" },
   ];
-
-  console.log({ newData });
 
   const handleAddItem = () => {
     const currentData = { ...newData };
@@ -105,6 +160,71 @@ export function CreateBill() {
     html2pdf().from(element).set(opt).save();
   };
 
+  const handleCreateBill = async () => {
+    try {
+      setIsLoading(true);
+      await axios.post(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/bill`,
+        {
+          ...formik.values,
+          billItems,
+          accountDetails: primaryBankAccount,
+          totalAmount: total,
+          billLayoutType: billLayout,
+          isDraft: formik.values.saveAsDraft,
+        },
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      toast.success("Bill created successfully");
+      window.location.href = "/billing";
+    } catch (error) {
+      toast.error("Something went wrong with creating the bill");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateBill = async () => {
+    try {
+      setIsLoading(true);
+      await axios.put(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/bill/${billId}`,
+        {
+          ...formik.values,
+          billItems,
+          totalAmount: total,
+          billLayoutType: billLayout,
+          accountDetails: primaryBankAccount,
+          isDraft: formik.values.saveAsDraft,
+        },
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      toast.success("Bill updated successfully");
+      window.location.href = "/billing";
+    } catch (error) {
+      toast.error("Something went wrong with updating the bill");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePreviewBill = () => {
+    formik.validateForm().then((errors) => {
+      formik.setTouched({
+        student: true,
+        parent: true,
+        class: true,
+        term: true,
+        session: true,
+      });
+      if (Object.keys(errors).length === 0) {
+        const billItemsLength = billItems.length;
+        if (billItemsLength > 0) setPreviewing(true);
+        else toast.error("Please add at least one item to the bill");
+      }
+    });
+  };
+
   return (
     <div className='create-bill'>
       <div className='close-button-container'>
@@ -119,7 +239,7 @@ export function CreateBill() {
         <div className='create-bill-container'>
           <div className='title-section'>
             <h2>Create New Bill</h2>
-            <button className='button' onClick={() => setPreviewing(true)}>
+            <button className='button' onClick={handlePreviewBill}>
               Preview Bill
             </button>
           </div>
@@ -136,10 +256,14 @@ export function CreateBill() {
                   placeholder='Search Student'
                   isSearchable={true}
                   isClearable={true}
-                  onChange={(value) => {
-                    console.log(value);
-                    formik.setFieldValue("student", value?.value);
-                  }}
+                  onChange={(value) =>
+                    formik.setFieldValue("student", value?.value)
+                  }
+                  value={
+                    studentOptions.find(
+                      (option) => option.value === formik.values.student
+                    ) ?? null
+                  }
                 />
                 {formik.errors.student && formik.touched.student && (
                   <div className='text-danger'>{formik.errors.student}</div>
@@ -159,7 +283,6 @@ export function CreateBill() {
                   isSearchable={true}
                   isClearable={true}
                   onChange={(value) => {
-                    console.log(value);
                     formik.setFieldValue("parent", value?.value);
                   }}
                 />
@@ -375,27 +498,38 @@ export function CreateBill() {
             )}
           </div>
           <div className='footer'>
-            <button className='button clear'>Clear</button>
-            <button className='button draft'>Save as Draft</button>
             <button
-              className='button preview'
+              className='button clear'
               onClick={() => {
-                formik.validateForm().then((errors) => {
-                  formik.setTouched({
-                    student: true,
-                    parent: true,
-                    class: true,
-                    term: true,
-                  });
-                  if (Object.keys(errors).length === 0) {
-                    const billItemsLength = billItems.length;
-                    if (billItemsLength > 0) setPreviewing(true);
-                    else
-                      toast.error("Please add at least one item to the bill");
-                  }
-                });
+                formik.resetForm();
+                setBillItems([]);
+                setItemToEdit(null);
+                setNewData(null);
               }}
             >
+              Clear
+            </button>
+            {isEditPage ? (
+              <button
+                className='button draft'
+                onClick={() => formik.handleSubmit()}
+                disabled={isLoading}
+              >
+                {isLoading ? <Loader /> : "Update Bill"}
+              </button>
+            ) : (
+              <button
+                className='button draft'
+                onClick={() => {
+                  formik.setFieldValue("saveAsDraft", true);
+                  formik.handleSubmit();
+                }}
+                disabled={isLoading}
+              >
+                {isLoading ? <Loader /> : "Save as Draft"}
+              </button>
+            )}
+            <button className='button preview' onClick={handlePreviewBill}>
               Preview
             </button>
           </div>
@@ -414,14 +548,38 @@ export function CreateBill() {
           <BillLayout
             billItems={billItems}
             billingInformation={formik.values}
+            primaryBankAccount={primaryBankAccount}
+            billLayout={billLayout}
+            setBillLayout={setBillLayout}
           />
           <div className='footer'>
-            <button className='button edit'>Back to Edit</button>
-            <button className='button draft'>Save as Draft</button>
+            <button
+              className='button edit'
+              onClick={() => setPreviewing(false)}
+            >
+              Back to Edit
+            </button>
+            <button
+              className='button draft'
+              onClick={() => {
+                formik.setFieldValue("saveAsDraft", true);
+                formik.handleSubmit();
+              }}
+            >
+              Save as Draft
+            </button>
             <button className='button download' onClick={handleDownloadPdf}>
               Download PDF
             </button>
-            <button className='button process'>Process Bill</button>
+            <button
+              className='button process'
+              onClick={() => {
+                formik.setFieldValue("saveAsDraft", false);
+                formik.handleSubmit();
+              }}
+            >
+              Create Bill
+            </button>
           </div>
         </div>
       )}

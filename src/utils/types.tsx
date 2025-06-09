@@ -87,3 +87,17 @@ export interface BillingInformation {
   student: string;
   session: string;
 }
+
+export interface BankAccount {
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+  isPrimary: boolean;
+}
+
+export interface BillingStats {
+  totalBillsAmount: number;
+  totalPaidBillsAmount: number;
+  totalUnpaidBillsAmount: number;
+  totalBillsCount: number;
+}

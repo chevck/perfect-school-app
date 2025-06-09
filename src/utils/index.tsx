@@ -76,8 +76,17 @@ export const handleError = (error: unknown) => {
 };
 
 export const getStatusFamily = (status: string) => {
-  if (["active"].includes(status.toLowerCase())) return "success";
-  if (["inactive"].includes(status.toLowerCase())) return "error";
+  if (["active", "paid"].includes(status.toLowerCase())) return "success";
+  if (["inactive", "unpaid"].includes(status.toLowerCase())) return "error";
   if (["pending"].includes(status.toLowerCase())) return "primary";
+  if (["draft"].includes(status.toLowerCase())) return "draft";
   return "warning";
 };
+
+export const currencyOptions = [
+  { label: "NGN - Nigerian Naira", value: "NGN" },
+  { label: "USD - United States Dollar", value: "USD" },
+  { label: "CAD - Canadian Dollar", value: "CAD" },
+  { label: "EUR - Euro", value: "EUR" },
+  { label: "GBP - British Pound", value: "GBP" },
+];

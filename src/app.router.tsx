@@ -13,35 +13,37 @@ import { TakeExamComponent } from "./pages/take-exam";
 import { StudentExamView } from "./pages/student-exam-view";
 import { Students } from "./pages/students";
 import { CompleteTeacherRegistration } from "./pages/complete-teacher-registration";
+import { Settings } from "./pages/settings";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/sign-up" element={<RegisterPage />} />
-        <Route path="/sign-in" element={<LoginPage />} />
+        <Route path='/sign-up' element={<RegisterPage />} />
+        <Route path='/sign-in' element={<LoginPage />} />
         <Route
-          path="/complete-teacher-registration/:teacherCode"
+          path='/complete-teacher-registration/:teacherCode'
           element={<CompleteTeacherRegistration />}
         />
-        <Route path="/" element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/teachers" element={<Teachers />} />
-          <Route path="/parents" element={<Billing />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/examination" element={<Examination />} />
-          <Route path="/settings" element={<Billing />} />
+        <Route path='/' element={<DashboardLayout />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/billing' element={<Billing />} />
+          <Route path='/teachers' element={<Teachers />} />
+          <Route path='/parents' element={<Billing />} />
+          <Route path='/students' element={<Students />} />
+          <Route path='/examination' element={<Examination />} />
+          <Route path='/settings' element={<Settings />} />
         </Route>
-        <Route path="/create-bill" element={<CreateBill />} />
-        <Route path="/create-examination" element={<CreateExamination />} />
+        <Route path='/create-bill' element={<CreateBill />} />
+        <Route path='/edit-bill/:billId' element={<CreateBill />} />
+        <Route path='/create-examination' element={<CreateExamination />} />
         <Route
-          path="/view-examination-details"
+          path='/view-examination-details'
           element={<ViewExaminationDetails />}
         />
-        <Route path="/take-exam/:examId" element={<TakeExamComponent />} />
+        <Route path='/take-exam/:examId' element={<TakeExamComponent />} />
         <Route
-          path="/take-exam/:examId/questions"
+          path='/take-exam/:examId/questions'
           element={<StudentExamView />}
         />
       </Routes>
