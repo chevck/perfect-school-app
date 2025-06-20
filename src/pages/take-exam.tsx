@@ -1,44 +1,71 @@
 import { CheckCheckIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import type { ExamDetails } from "../utils/types";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import useExamsStore from "../dataset/exams.store";
+import type { ExamsStore } from "../dataset/store.types";
+import moment from "moment";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { handleError } from "../utils";
 
 export function TakeExamComponent() {
-  const [loading, setLoading] = useState(true);
-  const [examDetails, setExamDetails] = useState<null | ExamDetails>(null);
+  const { examId } = useParams();
+  const navigate = useNavigate();
+  const { fetchExamDetailsApi, examDetails, loading } =
+    useExamsStore() as ExamsStore;
 
   useEffect(() => {
-    fetchExamDetails();
-  }, []);
+    if (examId) fetchExamDetailsApi(examId);
+  }, [examId]);
 
-  const fetchExamDetails = async () => {
+  const formik = useFormik({
+    initialValues: {
+      studentId: "",
+      // password: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      handleLoginStudent();
+    },
+    validationSchema: Yup.object({
+      studentId: Yup.string().required("Student ID is required"),
+    }),
+  });
+
+  const isExamExpired = moment(examDetails?.examDate).isBefore(moment());
+
+  const handleLoginStudent = async () => {
+    // navigate(`/take-exam/${examId}/questions`);
     try {
-      setTimeout(() => {
-        setExamDetails({
-          name: "Mathematics Examination",
-          grade: "Grade 10",
-          term: "First Term",
-          year: "2023/2024",
-          teacher: "John Doe",
-          date: "26th May, 2025",
-          questions: 10,
-          totalMarks: 0,
-          id: 1,
-        });
-        setLoading(false);
-      }, 2000);
-      // const response = await fetch(
-      //   `http://localhost:3000/api/exams/${examId}`
-      // );
-      // const data = await response.json();
-      // setExamDetails(data);
-      // setLoading(false);
+      formik.setSubmitting(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/exam-login-student`,
+        {
+          examId,
+          studentId: formik.values.studentId,
+        }
+      );
+      console.log(response, "response");
+      localStorage.setItem(
+        "exam-login-student",
+        JSON.stringify(response.data.student)
+      );
+      localStorage.setItem(
+        "exam-login-student-expires-at",
+        moment()
+          .add(response.data.exam.duration + 10, "minutes")
+          .format("YYYY-MM-DD HH:mm:ss")
+      );
+      navigate(`/take-exam/${examId}/questions`, {
+        state: { exam: response.data.exam },
+      });
     } catch (error) {
-      console.error("Error fetching exam details:", error);
-      setLoading(false);
+      formik.setSubmitting(false);
+      console.log(error, "error");
+      handleError(error);
     }
   };
-
-  console.log({ examDetails });
 
   return (
     <div className='take-exam-container'>
@@ -49,35 +76,52 @@ export function TakeExamComponent() {
           </div>
           <p>Loading examination details...</p>
         </div>
-      ) : examDetails && examDetails?.id ? (
+      ) : examDetails && examDetails?._id ? (
         <div className='take-exam-loading-container'>
           <div className='iconny'>
             <CheckCheckIcon width={32} height={32} />
           </div>
-          <h2>{examDetails?.name}</h2>
+          <h2>{examDetails?.subject}</h2>
           <div className='grade'>
-            {examDetails?.grade} - {examDetails?.term} - {examDetails?.year}
+            {examDetails?.class} - {examDetails?.term} - {examDetails?.session}
           </div>
-          <div className='error-container'>
-            <h6>Student not found for this examination </h6>
-          </div>
+          {isExamExpired && (
+            <div className='error-container'>
+              <h6>This examination has expired. Please contact the teacher.</h6>
+            </div>
+          )}
           <div className='form-group'>
             <label>Student ID or Email</label>
             <input
               type='text'
               className='form-control'
               placeholder='Student ID or Email'
+              {...formik.getFieldProps("studentId")}
+              required
             />
+            {formik.touched.studentId && formik.errors.studentId && (
+              <div className='text-danger'>{formik.errors.studentId}</div>
+            )}
           </div>
-          <div className='form-group'>
+          {/* <div className='form-group'>
             <label>Password</label>
             <input
               type='password'
               className='form-control'
               placeholder='**********'
+              {...formik.getFieldProps("password")}
             />
-          </div>
-          <button className='button'>Start Examination</button>
+          </div> */}
+          <button
+            className='button'
+            onClick={() => formik.handleSubmit()}
+            // onClick={() => {
+            //   navigate(`/take-exam/${examId}/questions`);
+            // }}
+            disabled={isExamExpired || formik.isSubmitting}
+          >
+            {formik.isSubmitting ? "Logging in..." : "Start Examination"}
+          </button>
         </div>
       ) : (
         <></>

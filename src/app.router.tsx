@@ -31,14 +31,14 @@ export function AppRouter() {
           <Route path='/teachers' element={<Teachers />} />
           <Route path='/parents' element={<Billing />} />
           <Route path='/students' element={<Students />} />
-          <Route path='/examination' element={<Examination />} />
+          <Route path='/examinations' element={<Examination />} />
           <Route path='/settings' element={<Settings />} />
         </Route>
         <Route path='/create-bill' element={<CreateBill />} />
         <Route path='/edit-bill/:billId' element={<CreateBill />} />
-        <Route path='/create-examination' element={<CreateExamination />} />
+        <Route path='/create-examination/:id' element={<CreateExamination />} />
         <Route
-          path='/view-examination-details'
+          path='/view-examination-details/:id'
           element={<ViewExaminationDetails />}
         />
         <Route path='/take-exam/:examId' element={<TakeExamComponent />} />

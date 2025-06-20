@@ -1,6 +1,8 @@
 import { Copy, Mail } from "lucide-react";
+import type { Exam } from "../utils/types";
+import { toast } from "sonner";
 
-export function ShareExaminationModal() {
+export function ShareExaminationModal({ exam }: { exam: Exam | null }) {
   return (
     <div
       className='modal fade'
@@ -32,10 +34,18 @@ export function ShareExaminationModal() {
                 <input
                   type='text'
                   className='form-control'
-                  value='https://allschoolapp.netlify.app/take-exam/1'
+                  value={`${window.location.origin}/take-exam/${exam?._id}`}
                 />
               </div>
-              <button className='button copy'>
+              <button
+                className='button copy'
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}/take-exam/${exam?._id}`
+                  );
+                  toast.success("Link copied to clipboard");
+                }}
+              >
                 <Copy />
               </button>
             </div>

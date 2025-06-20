@@ -1,17 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionsList } from "./create-examination";
 import { ChartColumnIncreasing, CircleHelp, UserCircle } from "lucide-react";
-import type { Question } from "../utils/types";
+import type { Exam, Question } from "../utils/types";
 import { ShareExaminationModal } from "../components/share-examination";
+import useExamsStore from "../dataset/exams.store";
+import type { ExamsStore } from "../dataset/store.types";
+import { useParams } from "react-router-dom";
+import moment from "moment";
 
 export function ViewExaminationDetails() {
+  const { id } = useParams();
   const [selectedTab, setSelectedTab] = useState("questions");
+  const { exams, fetchExamsApi } = useExamsStore() as ExamsStore;
+  const [examDetails, setExamDetails] = useState<Exam | null>(null);
+
+  useEffect(() => {
+    if (!exams.length) fetchExamsApi();
+  }, []);
+
+  useEffect(() => {
+    if (id && exams.length)
+      setExamDetails(exams.find((exam) => exam._id === id) || null);
+  }, [exams, id]);
+
   return (
     <div className='view-examination-details'>
       <div className='header_'>
         <div className='title__'>
-          <h3>Mathematics Examination</h3>
-          <h6>Grade 10 - First Term - 2023/2024</h6>
+          <h3>{examDetails?.subject}</h3>
+          <h6>
+            {examDetails?.class} - {examDetails?.term} - {examDetails?.session}
+          </h6>
         </div>
         <div className='controls'>
           <button className='button'>Upcoming</button>
@@ -22,10 +41,15 @@ export function ViewExaminationDetails() {
           >
             <i className='bi bi-share'></i>Share
           </button>
-          <button className='button'>Edit Questions</button>
           <button
             className='button'
-            onClick={() => (window.location.href = "/examination")}
+            onClick={() => (window.location.href = `/create-examination/${id}`)}
+          >
+            Edit Questions
+          </button>
+          <button
+            className='button'
+            onClick={() => (window.location.href = "/examinations")}
           >
             Back to List
           </button>
@@ -35,19 +59,19 @@ export function ViewExaminationDetails() {
         <div className='exam-dets'>
           <div className=''>
             <h5>Teacher</h5>
-            <p>John Doe</p>
+            <p>{examDetails?.createdBy?.name}</p>
           </div>
           <div className=''>
             <h5>Date</h5>
-            <p>26th May, 2025</p>
+            <p>{moment(examDetails?.examDate).format("Do MMM, YYYY")}</p>
           </div>
           <div className=''>
             <h5>Questions</h5>
-            <p>10</p>
+            <p>{examDetails?.examQuestions.length}</p>
           </div>
           <div className=''>
             <h5>Total Marks</h5>
-            <p>0/100</p>
+            <p>{examDetails?.totalMarks}</p>
           </div>
           <div></div>
         </div>
@@ -92,23 +116,24 @@ export function ViewExaminationDetails() {
           </p>
         </div>
         <div className='content_body'>
-          {selectedTab === "questions" && <QuestionComponent />}
+          {selectedTab === "questions" && (
+            <QuestionComponent questions={examDetails?.examQuestions || []} />
+          )}
           {selectedTab === "students" && <StudentsComponent />}
           {selectedTab === "result" && <ResultsComponent />}
         </div>
       </div>
-      <ShareExaminationModal />
+      <ShareExaminationModal exam={examDetails} />
     </div>
   );
 }
 
-function QuestionComponent() {
-  const questions: [] | Question[] = [];
+function QuestionComponent({ questions }: { questions: [] | Question[] }) {
   return (
     <div className=''>
       {questions.length ? (
         <div className='questions-container'>
-          <QuestionsList questions={questions} />
+          <QuestionsList viewMode={true} questions={questions || []} />
         </div>
       ) : (
         <div className='no-question-container'>

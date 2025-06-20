@@ -19,7 +19,7 @@ const SideBar = () => {
   const hasTeacherAccess = userRole === TEACHER;
 
   return (
-    <div className="dashboard-sidebar">
+    <div className='dashboard-sidebar'>
       <ul>
         <li
           className={selectedPage === "dashboard" ? "active" : ""}
@@ -39,7 +39,7 @@ const SideBar = () => {
         )}
         <li
           className={selectedPage === "examination" ? "active" : ""}
-          onClick={() => navigate("/examination")}
+          onClick={() => navigate("/examinations")}
         >
           <Book width={18} height={18} />
           <a>Examination</a>
@@ -101,32 +101,32 @@ export function DashboardLayout() {
   }
 
   return (
-    <div className="dashboard-layout">
+    <div className='dashboard-layout'>
       <Header />
-      <div className="dashboard-container">
-        <div className="row">
-          <div className="col-md-2 col-12 dashboard-sidebar-container">
+      <div className='dashboard-container'>
+        <div className='row'>
+          <div className='col-md-2 col-12 dashboard-sidebar-container'>
             <SideBar />
           </div>
-          <div className="col-md-10 col-12">
+          <div className='col-md-10 col-12'>
             <Outlet />
           </div>
         </div>
         <div
-          className="offcanvas offcanvas-start header-menu"
+          className='offcanvas offcanvas-start header-menu'
           tabIndex={-1}
-          id="offcanvasExample"
-          aria-labelledby="offcanvasExampleLabel"
+          id='offcanvasExample'
+          aria-labelledby='offcanvasExampleLabel'
         >
-          <div className="offcanvas-header">
+          <div className='offcanvas-header'>
             <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
+              type='button'
+              className='btn-close'
+              data-bs-dismiss='offcanvas'
+              aria-label='Close'
             ></button>
           </div>
-          <div className="offcanvas-body">
+          <div className='offcanvas-body'>
             <SideBar />
           </div>
         </div>

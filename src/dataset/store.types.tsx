@@ -1,4 +1,4 @@
-import type { Student, Teacher } from "../utils/types";
+import type { Exam, Question, Student, Teacher } from "../utils/types";
 
 export interface TeacherStore {
   teachers: Teacher[];
@@ -29,4 +29,19 @@ export interface StudentStore {
   removeStudent: (studentId: string) => void;
   updateStudent: (student: Student) => void;
   addStudents: (students: Student[]) => void;
+}
+
+export interface ExamsStore {
+  exams: Exam[];
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  fetchExamsApi: () => Promise<void>;
+  createExamsApi: (exam: Exam, closeModal: () => void) => Promise<void>;
+  saveQuestionsApi: (questions: {
+    questions: Question[];
+    examId: string;
+  }) => Promise<void>;
+  fetchExamDetailsApi: (examId: string) => Promise<void>;
+  examDetails: Exam | null;
+  setExamDetails: (examDetails: Exam | null) => void;
 }

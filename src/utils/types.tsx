@@ -1,9 +1,8 @@
 export interface Question {
+  _id?: string;
   questionText: string;
-  options: {
-    text: string;
-    correct: boolean;
-  }[];
+  options: string[];
+  correctOptionIndex: number | null;
   correctOption: string;
   marks: number;
 }
@@ -100,4 +99,23 @@ export interface BillingStats {
   totalPaidBillsAmount: number;
   totalUnpaidBillsAmount: number;
   totalBillsCount: number;
+}
+
+export interface Exam {
+  _id: string;
+  name: string;
+  subject: string;
+  session: string;
+  class: string;
+  term: string;
+  createdBy?: Teacher;
+  teacher: string;
+  examDate: string;
+  isReviewed: boolean;
+  totalMarks: number;
+  duration: number;
+  examInstructions: string;
+  createdAt: string;
+  updatedAt: string;
+  examQuestions: Question[];
 }

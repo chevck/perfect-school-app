@@ -46,6 +46,7 @@ export function LoginPage() {
       formik.values.verificationCode = "";
       setStep(2);
     } catch (error) {
+      console.log(error);
       handleError(error);
     }
     setIsLoading(false);
@@ -133,68 +134,68 @@ export function LoginPage() {
   };
 
   return (
-    <div className="registration-page-wrapper">
+    <div className='registration-page-wrapper'>
       {step === 1 ? (
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="registration-page"
+            className='registration-page'
           >
             <center>
               <LogoComponent />
             </center>
             <h3>Welcome back!</h3>
             <h6>Sign in to access your Perfect School App account</h6>
-            <div className="form-group">
+            <div className='form-group'>
               <label>I am a </label>
-              <select className="form-select" {...formik.getFieldProps("role")}>
-                <option value="" disabled selected>
+              <select className='form-select' {...formik.getFieldProps("role")}>
+                <option value='' disabled selected>
                   --Select--
                 </option>
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="parent">Parent</option>
+                <option value='student'>Student</option>
+                <option value='teacher'>Teacher</option>
+                <option value='parent'>Parent</option>
               </select>
-              <span className="text-danger">{formik.errors.role}</span>
+              <span className='text-danger'>{formik.errors.role}</span>
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Email</label>
               <input
-                type="email"
-                className="form-control"
-                placeholder="John Doe"
+                type='email'
+                className='form-control'
+                placeholder='John Doe'
                 {...formik.getFieldProps("email")}
               />
-              <span className="text-danger">{formik.errors.email}</span>
+              <span className='text-danger'>{formik.errors.email}</span>
             </div>
-            <div className="form-group">
-              <div className="action-label-container">
+            <div className='form-group'>
+              <div className='action-label-container'>
                 <label>Password</label>
-                <a href="/forgot-password" className="forgot-password">
+                <a href='/forgot-password' className='forgot-password'>
                   Forgot Password?
                 </a>
               </div>
-              <div className="password-input-container">
+              <div className='password-input-container'>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="form-control"
-                  placeholder="********"
+                  className='form-control'
+                  placeholder='********'
                   {...formik.getFieldProps("password")}
                 />
                 <span
-                  className="password-toggle-button"
+                  className='password-toggle-button'
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeClosed /> : <Eye />}
                 </span>
               </div>
-              <span className="text-danger">{formik.errors.password}</span>
+              <span className='text-danger'>{formik.errors.password}</span>
             </div>
             <button
-              className="button create-account"
-              type="submit"
+              className='button create-account'
+              type='submit'
               onClick={() => formik.handleSubmit()}
               disabled={
                 isLoading ||
@@ -205,8 +206,8 @@ export function LoginPage() {
             >
               {isLoading ? <Loader /> : "Continue with email verification"}
             </button>
-            <h5 className="has-an-account-text">
-              Don't have an account? <a href="/sign-up">Sign up</a>
+            <h5 className='has-an-account-text'>
+              Don't have an account? <a href='/sign-up'>Sign up</a>
             </h5>
           </motion.div>
         </AnimatePresence>
@@ -216,33 +217,33 @@ export function LoginPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="registration-page"
+            className='registration-page'
           >
             <center>
               <LogoComponent />
             </center>
             <h3>Welcome back, Piggy!</h3>
             <h6>Sign in to access your Perfect School App account</h6>
-            <div className="verification-code-container">
+            <div className='verification-code-container'>
               <h5>Verification code sent!</h5>
               <p>
                 We've sent a 6-digit code to your email address. Please enter it
                 below to continue.
               </p>
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Verification Code</label>
               <input
-                type="text"
-                className="form-control verification-code-input"
-                placeholder="123456"
+                type='text'
+                className='form-control verification-code-input'
+                placeholder='123456'
                 {...formik.getFieldProps("verificationCode")}
               />
               {/* <span className="text-danger">{formik.errors.verificationCode}</span> */}
             </div>
             <button
-              className="button create-account"
-              type="submit"
+              className='button create-account'
+              type='submit'
               onClick={
                 formik.values.role === "teacher"
                   ? handleTeacherVerifyAndSignIn
@@ -253,15 +254,15 @@ export function LoginPage() {
               {isLoading ? <Loader /> : "Verify & Sign in"}
             </button>
             <button
-              className="button no-body create-account"
-              type="submit"
+              className='button no-body create-account'
+              type='submit'
               onClick={handleBackToLogin}
               disabled={isLoading}
             >
               Back to login
             </button>
-            <h5 className="has-an-account-text">
-              Don't have an account? <a href="/sign-up">Sign up</a>
+            <h5 className='has-an-account-text'>
+              Don't have an account? <a href='/sign-up'>Sign up</a>
             </h5>
           </motion.div>
         </AnimatePresence>

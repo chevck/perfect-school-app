@@ -50,6 +50,7 @@ button.button {
 .form-group {
   .text-danger {
     font-size: 13px;
+    margin-top: 4px;
   }
 }
 
@@ -1982,6 +1983,13 @@ table {
       height: 36px;
       background-color: #16a34a;
       white-space: nowrap;
+
+      &.back {
+        background-color: transparent;
+        color: #111827;
+        border: 1px solid #e2e8f0;
+        box-shadow: none;
+      }
     }
   }
 
@@ -2381,6 +2389,9 @@ table {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 15px;
 
         .actions {
           display: flex;
@@ -3547,13 +3558,20 @@ table {
         &.send {
           background-color: #0f172a;
           color: white;
+          min-width: 77px;
         }
 
         &.copy {
           background-color: transparent;
           border: 1px solid #e2e8f0;
           color: #0f172a;
-          width: 42px;
+          min-width: 42px;
+          height: 32px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
         }
       }
     }

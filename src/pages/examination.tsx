@@ -1,7 +1,18 @@
 import { CreateExaminationModal } from "../components/create-examination";
 import { motion } from "motion/react";
+import useExamsStore from "../dataset/exams.store";
+import type { ExamsStore } from "../dataset/store.types";
+import { useEffect } from "react";
+import moment from "moment";
+import { CLASSES, getStatusFamily } from "../utils";
 
 export function Examination() {
+  const { exams, fetchExamsApi } = useExamsStore() as ExamsStore;
+
+  useEffect(() => {
+    fetchExamsApi();
+  }, []);
+
   return (
     <div className='examination psa_d_page'>
       <div className='header_'>
@@ -29,27 +40,28 @@ export function Examination() {
           <label>Class</label>
           <select className='form-select'>
             <option selected>All Classes</option>
-            <option>Mathematics</option>
-            <option>English</option>
-            <option>Science</option>
+            {CLASSES.map((cls) => (
+              <option key={cls} value={cls}>
+                {cls}
+              </option>
+            ))}
           </select>
         </div>
         <div className='form-filter'>
           <label>Status</label>
           <select className='form-select'>
             <option selected>All Status</option>
-            <option>Mathematics</option>
-            <option>English</option>
-            <option>Science</option>
+            <option value='reviewed'>Reviewed</option>
+            <option value='pending'>Pending</option>
           </select>
         </div>
         <div className='form-filter'>
           <label>Term</label>
           <select className='form-select'>
             <option selected>All Terms</option>
-            <option>Mathematics</option>
-            <option>English</option>
-            <option>Science</option>
+            <option value='first'>First Term</option>
+            <option value='second'>Second Term</option>
+            <option value='third'>Third Term</option>
           </select>
         </div>
       </div>
@@ -66,36 +78,67 @@ export function Examination() {
             </tr>
           </thead>
           <tbody>
-            {[1, 3, 3, 5, 6].map((_, index) => (
-              <motion.tr
-                key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <td>
-                  <h3>Mathematics</h3>
-                  <p>First Term - 2023/2024</p>
+            {!exams.length ? (
+              <tr>
+                <td colSpan={6} className='text-center'>
+                  No exams found
                 </td>
-                <td>Grade 10</td>
-                <td>John Smith</td>
-                <td>June 14, 2020</td>
-                <td>
-                  <span className='custom-status'>Active</span>
-                </td>
-                <td className='actions'>
-                  <button className='button'>Set Questions</button>
-                  <button
-                    className='button'
-                    onClick={() =>
-                      (location.href = "/view-examination-details")
-                    }
-                  >
-                    View
-                  </button>
-                </td>
-              </motion.tr>
-            ))}
+              </tr>
+            ) : (
+              exams.map((exam, index) => (
+                <motion.tr
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <td>
+                    <h3>{exam.subject}</h3>
+                    <p>
+                      {exam.term} - {exam.session}
+                    </p>
+                  </td>
+                  <td>{exam.class}</td>
+                  <td>{exam.createdBy?.name}</td>
+                  <td>{moment(exam.examDate).format("Do MMM, YYYY")}</td>
+                  <td>
+                    <span
+                      className={`custom-status ${getStatusFamily(
+                        exam.isReviewed ? "active" : "pending"
+                      )}`}
+                    >
+                      {exam.isReviewed ? "Reviewed" : "Pending"}
+                    </span>
+                  </td>
+                  <td className='actions'>
+                    <button
+                      className='button'
+                      onClick={() =>
+                        (location.href = `/create-examination/${exam._id}`)
+                      }
+                    >
+                      Set Questions
+                    </button>
+                    <button
+                      className='button'
+                      onClick={() =>
+                        (location.href = `/view-examination-details/${exam._id}`)
+                      }
+                    >
+                      Review
+                    </button>
+                    <button
+                      className='button'
+                      onClick={() =>
+                        (location.href = `/view-examination-details/${exam._id}`)
+                      }
+                    >
+                      View
+                    </button>
+                  </td>
+                </motion.tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
