@@ -90,3 +90,24 @@ export const currencyOptions = [
   { label: "EUR - Euro", value: "EUR" },
   { label: "GBP - British Pound", value: "GBP" },
 ];
+
+export const failedReviews = [
+  "Oh no! You got this one wrong",
+  "You didn’t get this one right.",
+  "That’s not correct.",
+  "This was missed.",
+  "Incorrect answer.",
+  "Not quite right.",
+];
+
+export const goodReviews = [
+  "Good job!",
+  "Wow! Excellent.",
+  "You are a genius!",
+  "That was a smart answer",
+  "Great job — you got it right!",
+  "Well done, that’s the correct answer.",
+  "Nice work, you really understood this!",
+  "Correct — you’re thinking smart!",
+  "That’s right! You’re doing very well.",
+];

@@ -119,3 +119,15 @@ export interface Exam {
   updatedAt: string;
   examQuestions: Question[];
 }
+
+export interface StudentAnswer {
+  questionId: string;
+  selectedOption: number | null;
+  isCorrect: boolean | null;
+  marks: number | null;
+}
+
+export interface ReviewObject {
+  correctAnswer: boolean;
+  text: string;
+}
