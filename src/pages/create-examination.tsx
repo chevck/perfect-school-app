@@ -13,11 +13,16 @@ export function CreateExamination() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [exam, setExam] = useState<Exam | null>(null);
-  const { exams, fetchExamsApi, saveQuestionsApi } =
-    useExamsStore() as ExamsStore;
-  const [questions, setQuestions] = useState<Question[]>(
-    exam?.examQuestions || []
-  );
+  const {
+    exams,
+    fetchExamsApi,
+    saveQuestionsApi,
+    saveDraftExamQuestions,
+    getDraftExamQuestions,
+  } = useExamsStore() as ExamsStore;
+  const [questions, setQuestions] = useState<Question[]>([
+    ...(exam?.examQuestions || []),
+  ]);
   const [newQuestions, setNewQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
@@ -26,7 +31,14 @@ export function CreateExamination() {
       setExam(exams.find((exam) => exam._id === id) || null);
       setQuestions(exams.find((exam) => exam._id === id)?.examQuestions || []);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exams, id]);
+
+  useEffect(() => {
+    const draftQuestions = getDraftExamQuestions();
+    if (draftQuestions) setNewQuestions(draftQuestions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -34,7 +46,7 @@ export function CreateExamination() {
       options: [],
       correctOption: "",
       marks: 0,
-      correctOptionIndexIndex: null,
+      correctOptionIndex: null,
     },
     validationSchema: QuestionSchema,
     onSubmit: (values) => {
@@ -50,7 +62,7 @@ export function CreateExamination() {
       return toast.error("Please add all options");
     if (formik.values.options.some((option) => option === ""))
       return toast.error("Please add all options");
-    if (formik.values.correctOptionIndexIndex === null)
+    if (formik.values.correctOptionIndex === null)
       return toast.error("Please select a correct option");
     if (formik.values.marks === 0) return toast.error("Please add marks");
     if (
@@ -64,16 +76,18 @@ export function CreateExamination() {
       options: formik.values.options,
       correctOption: formik.values.correctOption,
       marks: formik.values.marks,
-      correctOptionIndexIndex: formik.values.correctOptionIndexIndex,
+      correctOptionIndex: formik.values.correctOptionIndex,
     };
     setNewQuestions([...newQuestions, newQuestion]);
+    saveDraftExamQuestions([...newQuestions, newQuestion]);
+    toast.success("Question added!");
     formik.resetForm();
   };
 
   const resetCorrectOption = () => {
     // this runs when the user changes the an option. Just to be safe, we reset the correct option selected
     formik.setFieldValue("correctOption", "");
-    formik.setFieldValue("correctOptionIndexIndex", null);
+    formik.setFieldValue("correctOptionIndex", null);
   };
 
   const handleSaveExamination = async () => {
@@ -93,13 +107,14 @@ export function CreateExamination() {
         questionText: question.questionText,
         options: question.options,
         correctOption: question.correctOption,
-        correctOptionIndexIndex: question.correctOptionIndexIndex,
+        correctOptionIndex: question.correctOptionIndex,
         marks: question.marks,
       }));
       saveQuestionsApi({ questions: body, examId: id || "" }).then(() => {
         setNewQuestions([]);
         setQuestions([...questions, ...newQuestions]);
         toast.success("Questions saved successfully");
+        localStorage.removeItem("draftExamQuestions");
       });
     } catch (error) {
       console.log("sdsds", error);
@@ -127,9 +142,9 @@ export function CreateExamination() {
           <div className='det'>
             <h6>Subject</h6>
             <h3>{exam?.subject}</h3>
-            {formik.errors.questionText && formik.touched.questionText && (
+            {/* {formik.errors.questionText && formik.touched.questionText && (
               <p className='text-danger'>{formik.errors.questionText}</p>
-            )}
+            )} */}
           </div>
           <div className='det'>
             <h6>Class</h6>
@@ -243,7 +258,7 @@ export function CreateExamination() {
                       type='radio'
                       id={`correct-option-${index + 1}`}
                       value={el}
-                      checked={formik.values.correctOptionIndexIndex === index}
+                      checked={formik.values.correctOptionIndex === index}
                       onChange={() => {
                         if (
                           formik.values.options.length < 4 ||
@@ -254,7 +269,7 @@ export function CreateExamination() {
                           "correctOption",
                           formik.values.options[index]
                         );
-                        formik.setFieldValue("correctOptionIndexIndex", index);
+                        formik.setFieldValue("correctOptionIndex", index);
                       }}
                       onBlur={formik.handleBlur}
                     />
@@ -338,15 +353,13 @@ export function QuestionsList({
                 {question.options.map((option, index) => (
                   <div
                     className={`option ${
-                      question.correctOptionIndexIndex === index
-                        ? "correct"
-                        : ""
+                      question.correctOptionIndex === index ? "correct" : ""
                     }`}
                     key={index}
                   >
                     <p>{String.fromCharCode(65 + index)}</p>
                     <label>{option}</label>
-                    {question.correctOptionIndexIndex === index ? (
+                    {question.correctOptionIndex === index ? (
                       <span>Correct</span>
                     ) : null}
                   </div>

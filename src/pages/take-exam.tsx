@@ -57,6 +57,7 @@ export function TakeExamComponent() {
           .add(response.data.exam.duration + 10, "minutes")
           .format("YYYY-MM-DD HH:mm:ss")
       );
+      localStorage.setItem("exam-login-auth-token", response.data.authToken);
       navigate(`/take-exam/${examId}/questions`, {
         state: { exam: response.data.exam },
       });

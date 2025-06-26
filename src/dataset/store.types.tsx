@@ -44,4 +44,7 @@ export interface ExamsStore {
   fetchExamDetailsApi: (examId: string) => Promise<void>;
   examDetails: Exam | null;
   setExamDetails: (examDetails: Exam | null) => void;
+  draftExamQuestions: Question[];
+  saveDraftExamQuestions: (questions: Question[]) => void;
+  getDraftExamQuestions: () => Question[];
 }

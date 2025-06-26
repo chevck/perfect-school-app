@@ -9,11 +9,22 @@ const userData = getUserData();
 const useExamsStore = create((set) => ({
   exams: [],
   loading: false,
+  draftExamQuestions: [],
   savingQuestions: false,
   examDetails: null,
   setExamDetails: (examDetails: Exam | null) => set(() => ({ examDetails })),
   updateExams: (exams: Exam[]) => set(() => ({ exams })),
   setLoading: (loading: boolean) => set(() => ({ loading })),
+  saveDraftExamQuestions: (questions: Question[]) => {
+    set(() => ({ draftExamQuestions: questions }));
+    localStorage.setItem("draftExamQuestions", JSON.stringify(questions));
+    return;
+  },
+  getDraftExamQuestions: () => {
+    const draftExamQuestions = localStorage.getItem("draftExamQuestions");
+    if (draftExamQuestions) return JSON.parse(draftExamQuestions);
+    return [];
+  },
   createExamsApi: async (exam: Exam, closeModal: () => void) => {
     console.log("exam to create", exam);
     try {

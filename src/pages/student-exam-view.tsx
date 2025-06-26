@@ -38,6 +38,7 @@ export function StudentExamView() {
     );
     if (!examLoginStudent || !examLoginStudentExpiresAt) {
       navigate(`/take-exam/${examId}`);
+      return;
     }
     if (examLoginStudentExpiresAt && examLoginStudent) {
       const expiresAt = moment(examLoginStudentExpiresAt);
@@ -46,17 +47,46 @@ export function StudentExamView() {
         localStorage.removeItem("exam-login-student");
         localStorage.removeItem("exam-login-student-expires-at");
         navigate(`/take-exam/${examId}`);
+        return;
       }
     }
-  }, [examId]);
+    const answers = sessionStorage.getItem("answers");
+    if (answers && questions.length > 0) {
+      const parsedAnswers = JSON.parse(answers);
+      const lastAnswer = parsedAnswers[parsedAnswers.length - 1];
+      setAnswers([...parsedAnswers]);
+      // pick the index of the last answer and add 1 to it. If it's greater than the number of questions, set it to the number of questions
+      const nextIndex =
+        questions.findIndex(
+          (question) => question._id === lastAnswer.questionId
+        ) + 1;
+      if (nextIndex >= questions.length) handleSubmitExam();
+      else setCurrentQuestionIndex(nextIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [examId, questions]);
+
+  console.log({ answers });
 
   useEffect(() => {
-    if (exam) {
-      setQuestions(exam.examQuestions);
-    }
+    if (exam) return setQuestions(exam.examQuestions);
   }, [exam]);
 
-  console.log({ questions });
+  // useEffect(() => {
+  //   const answers = sessionStorage.getItem("answers");
+  //   if (answers && questions.length > 0) {
+  //     const parsedAnswers = JSON.parse(answers);
+  //     const lastAnswer = parsedAnswers[parsedAnswers.length - 1];
+  //     setAnswers(parsedAnswers);
+  //     // pick the index of the last answer and add 1 to it. If it's greater than the number of questions, set it to the number of questions
+  //     const nextIndex =
+  //       questions.findIndex(
+  //         (question) => question._id === lastAnswer.questionId
+  //       ) + 1;
+  //     if (nextIndex >= questions.length) handleSubmitExam();
+  //     else setCurrentQuestionIndex(nextIndex);
+  //   }
+  // }, [questions]);
 
   // Timer countdown
   useEffect(() => {
@@ -84,6 +114,14 @@ export function StudentExamView() {
     setSelectedOption(optionIndex);
     const isAnswerCorrect =
       optionIndex === questions[currentQuestionIndex].correctOptionIndex;
+    const answer: StudentAnswer = {
+      questionId: questions[currentQuestionIndex]._id || "",
+      selectedOption: optionIndex,
+      isCorrect: isAnswerCorrect,
+      marks: isAnswerCorrect ? questions[currentQuestionIndex].marks : 0,
+    };
+    setAnswers([...answers, answer]);
+    sessionStorage.setItem("answers", JSON.stringify([...answers, answer]));
     setReviewText({
       correctAnswer: isAnswerCorrect,
       text: isAnswerCorrect
@@ -107,13 +145,6 @@ export function StudentExamView() {
       selectedOption === currentQuestion.correctOptionIndex;
     console.log({ isAnswerCorrect });
     // Save answer
-    const answer: StudentAnswer = {
-      questionId: currentQuestion._id || "",
-      selectedOption,
-      isCorrect: isAnswerCorrect,
-      marks: isAnswerCorrect ? currentQuestion.marks : 0,
-    };
-    setAnswers([...answers, answer]);
     //     Move to next question after delay
     if (isLastQuestion) handleSubmitExam();
     else setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -123,10 +154,24 @@ export function StudentExamView() {
 
   const handleFinishExam = async () => {
     try {
+      const answers = JSON.parse(sessionStorage.getItem("answers") || "[]");
+      const student = JSON.parse(
+        localStorage.getItem("exam-login-student") || "{}"
+      );
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/psa/exams/${examId}/submit`,
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/exam/${examId}/submit`,
         {
-          answers,
+          studentId: student._id,
+          examId,
+          schoolId: student.schoolId,
+          score: answers.reduce((acc, answer) => acc + (answer.marks || 0), 0),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(
+              "exam-login-auth-token"
+            )}`,
+          },
         }
       );
       console.log({ response });
@@ -141,6 +186,7 @@ export function StudentExamView() {
     setSelectedOption(null);
     setExamSubmitted(true);
     setShowResult(true);
+    handleFinishExam();
   };
 
   if (examSubmitted)

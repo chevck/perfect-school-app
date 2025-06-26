@@ -38,7 +38,7 @@ const SideBar = () => {
           </li>
         )}
         <li
-          className={selectedPage === "examination" ? "active" : ""}
+          className={selectedPage === "examinations" ? "active" : ""}
           onClick={() => navigate("/examinations")}
         >
           <Book width={18} height={18} />

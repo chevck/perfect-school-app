@@ -2435,9 +2435,9 @@ table {
       }
 
       .options {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
         gap: 16px;
+        grid-template-columns: 1fr 1fr;
 
         .option {
           display: flex;
