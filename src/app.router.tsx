@@ -4,16 +4,17 @@ import { LoginPage } from "./pages/login";
 import { Dashboard } from "./pages/dashboard";
 import { DashboardLayout } from "./components/dashboard-layout";
 import { Billing } from "./pages/billing";
-import { CreateBill } from "./pages/create-bill";
+import { CreateBill } from "./pages/billing/create-bill";
 import { Teachers } from "./pages/teachers";
-import { Examination } from "./pages/examination";
-import { CreateExamination } from "./pages/create-examination";
-import { ViewExaminationDetails } from "./pages/view-examination-details";
+import { Examination } from "./pages/examination/examination";
+import { CreateExamination } from "./pages/examination/create-examination";
+import { ViewExaminationDetails } from "./pages/examination/view-examination-details";
 import { TakeExamComponent } from "./pages/take-exam";
-import { StudentExamView } from "./pages/student-exam-view";
+import { StudentExamView } from "./pages/examination/student-exam-view";
 import { Students } from "./pages/students";
 import { CompleteTeacherRegistration } from "./pages/complete-teacher-registration";
 import { Settings } from "./pages/settings";
+import { ReviewExamination } from "./pages/examination/review-examination";
 
 export function AppRouter() {
   return (
@@ -37,6 +38,7 @@ export function AppRouter() {
         <Route path='/create-bill' element={<CreateBill />} />
         <Route path='/edit-bill/:billId' element={<CreateBill />} />
         <Route path='/create-examination/:id' element={<CreateExamination />} />
+        <Route path='/review-examination/:id' element={<ReviewExamination />} />
         <Route
           path='/view-examination-details/:id'
           element={<ViewExaminationDetails />}

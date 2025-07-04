@@ -1,19 +1,23 @@
-import { CreateExaminationModal } from "../components/create-examination";
+import { CreateExaminationModal } from "../../components/create-examination";
 import { motion } from "motion/react";
-import useExamsStore from "../dataset/exams.store";
-import type { ExamsStore } from "../dataset/store.types";
+import useExamsStore from "../../dataset/exams.store";
+import type { ExamsStore } from "../../dataset/store.types";
 import { useEffect } from "react";
 import moment from "moment";
-import { CLASSES, getStatusFamily } from "../utils";
+import { CLASSES, getStatusFamily } from "../../utils";
+import { LoadingPage } from "../../components/loadingPage";
 
 export function Examination() {
-  const { exams, fetchExamsApi } = useExamsStore() as ExamsStore;
+  const { exams, fetchExamsApi, pageLoading, updateExaminationApi } =
+    useExamsStore() as ExamsStore;
 
   useEffect(() => {
     fetchExamsApi();
   }, []);
 
-  return (
+  return pageLoading ? (
+    <LoadingPage />
+  ) : (
     <div className='examination psa_d_page'>
       <div className='header_'>
         <h2 className='title'>Examination</h2>
@@ -107,26 +111,43 @@ export function Examination() {
                         exam.isReviewed ? "active" : "pending"
                       )}`}
                     >
-                      {exam.isReviewed ? "Reviewed" : "Pending"}
+                      {exam.isReviewed ? "Approved" : "Pending"}
                     </span>
                   </td>
                   <td className='actions'>
-                    <button
-                      className='button'
-                      onClick={() =>
-                        (location.href = `/create-examination/${exam._id}`)
-                      }
-                    >
-                      Set Questions
-                    </button>
-                    <button
-                      className='button'
-                      onClick={() =>
-                        (location.href = `/view-examination-details/${exam._id}`)
-                      }
-                    >
-                      Review
-                    </button>
+                    {exam?.hasStarted ? null : (
+                      <button
+                        className='button'
+                        onClick={() =>
+                          (location.href = `/create-examination/${exam._id}`)
+                        }
+                      >
+                        Set Questions
+                      </button>
+                    )}
+                    {exam?.isReviewed && !exam?.hasStarted ? (
+                      <button
+                        className='button review'
+                        onClick={() => {
+                          updateExaminationApi(
+                            { ...exam, hasStarted: true },
+                            "You can start your exams now!! 🎉"
+                          );
+                        }}
+                      >
+                        Start Exam
+                      </button>
+                    ) : null}
+                    {exam?.isReviewed ? null : (
+                      <button
+                        className='button review'
+                        onClick={() =>
+                          (location.href = `/review-examination/${exam._id}`)
+                        }
+                      >
+                        Review
+                      </button>
+                    )}
                     <button
                       className='button'
                       onClick={() =>

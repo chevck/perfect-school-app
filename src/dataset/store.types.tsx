@@ -18,8 +18,9 @@ export interface StudentStore {
   setLoading: (loading: boolean) => void;
   setSelectedStudent: (student: Student | null) => void;
   fetchStudentsApi: (filters: {
-    class: string;
-    status: string;
+    class?: string;
+    status?: string;
+    searchTerm?: string;
   }) => Promise<void>;
   fetchStudentApi: (studentId: string) => Promise<Student>;
   createStudentApi: (student: Student) => Promise<Student>;
@@ -34,6 +35,7 @@ export interface StudentStore {
 export interface ExamsStore {
   exams: Exam[];
   loading: boolean;
+  pageLoading: boolean;
   setLoading: (loading: boolean) => void;
   fetchExamsApi: () => Promise<void>;
   createExamsApi: (exam: Exam, closeModal: () => void) => Promise<void>;
@@ -47,4 +49,7 @@ export interface ExamsStore {
   draftExamQuestions: Question[];
   saveDraftExamQuestions: (questions: Question[]) => void;
   getDraftExamQuestions: () => Question[];
+  clearDraftExamQuestions: () => void;
+  savingQuestions: boolean;
+  updateExaminationApi: (details: Exam, successMessage?: string) => void;
 }

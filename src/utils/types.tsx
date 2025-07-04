@@ -5,6 +5,8 @@ export interface Question {
   correctOptionIndex: number | null;
   correctOption: string;
   marks: number;
+  reviewNote?: string;
+  status?: string;
 }
 
 export interface ExamDetails {
@@ -57,6 +59,9 @@ export interface Student {
   bloodGroup: string;
   medicalConditions: string;
   teacherId: Teacher;
+  examStatus?: string;
+  score?: number;
+  examScore?: number;
 }
 
 export interface DashboardData {
@@ -118,6 +123,8 @@ export interface Exam {
   createdAt: string;
   updatedAt: string;
   examQuestions: Question[];
+  students: Student[];
+  hasStarted: boolean;
 }
 
 export interface StudentAnswer {

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
-import { BillLayout } from "../components/bill-layout";
+import { BillLayout } from "../../components/bill-layout";
 import Select from "react-select";
-import type { StudentStore } from "../dataset/store.types";
-import useStudentsStore from "../dataset/students.store";
-import type { BillItem } from "../utils/types";
-import { CLASSES, formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
+import type { StudentStore } from "../../dataset/store.types";
+import useStudentsStore from "../../dataset/students.store";
+import type { BillItem } from "../../utils/types";
+import { CLASSES, formatMoney, getUserData, NAIRA_SYMBOL } from "../../utils";
 import { toast } from "sonner";
 import { useFormik } from "formik";
-import { billingSchema } from "../utils/schemas/billing.schema";
+import { billingSchema } from "../../utils/schemas/billing.schema";
 import moment from "moment";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Loader } from "../components/loader";
+import { Loader } from "../../components/loader";
 
 export function CreateBill() {
   const [billItems, setBillItems] = useState<BillItem[] | []>([]);

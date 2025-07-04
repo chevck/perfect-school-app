@@ -12,12 +12,12 @@ import {
   CreateStudentModal,
   ViewStudentDetailsModal,
   RemoveStudentModal,
-} from "../components/student.modal";
+} from "../components/student.modal.tsx";
 import type { StudentStore } from "../dataset/store.types.tsx";
 import useStudentsStore from "../dataset/students.store.tsx";
 import type { Student } from "../utils/types.tsx";
 import { CustomModal } from "../components/custom-modal.tsx";
-import { getStatusFamily } from "../utils/index.tsx";
+import { CLASSES, getStatusFamily } from "../utils/index.tsx";
 import { toast } from "sonner";
 
 export function Students() {
@@ -102,13 +102,14 @@ export function Students() {
                 setFilters({ ...filters, class: e.target.value });
               }}
             >
-              <option selected disabled value=''>
+              <option selected disabled defaultChecked>
                 All Classes
               </option>
-              <option value='Class 1'>Class 1</option>
-              <option value='Class 2'>Class 2</option>
-              <option value='Class 3'>Class 3</option>
-              <option value='Class 4'>Class 4</option>
+              {CLASSES.map((cls) => (
+                <option key={cls} value={cls}>
+                  {cls}
+                </option>
+              ))}
             </select>
             <select
               className='form-select'

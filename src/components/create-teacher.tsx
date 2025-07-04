@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import TeacherSchema from "../utils/schemas/teacher.schema";
 import axios from "axios";
 import { toast } from "sonner";
-import { getUserData } from "../utils";
+import { CLASSES, getUserData } from "../utils";
 import { Loader } from "./loader";
 
 export function CreateTeacher({
@@ -49,110 +49,113 @@ export function CreateTeacher({
 
   return (
     <div
-      className="modal fade"
-      id="create-teacher-modal"
+      className='modal fade'
+      id='create-teacher-modal'
       tabIndex={-1}
-      aria-labelledby="create-teacher-modal-label"
-      aria-hidden="true"
+      aria-labelledby='create-teacher-modal-label'
+      aria-hidden='true'
     >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <div className="modal-title fs-5" id="create-teacher-modal-label">
+      <div className='modal-dialog modal-dialog-centered'>
+        <div className='modal-content'>
+          <div className='modal-header'>
+            <div className='modal-title fs-5' id='create-teacher-modal-label'>
               <h1>Invite Teacher</h1>
               <p>
                 Send an invitation to a new teacher to join the school platform.
               </p>
             </div>
             <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              id="close-create-teacher-modal"
+              type='button'
+              className='btn-close'
+              data-bs-dismiss='modal'
+              aria-label='Close'
+              id='close-create-teacher-modal'
             ></button>
           </div>
-          <div className="modal-body">
-            <div className="form-group">
+          <div className='modal-body'>
+            <div className='form-group'>
               <label>Name</label>
               <input
-                className="form-control"
-                placeholder="Full name"
-                id="name"
+                className='form-control'
+                placeholder='Full name'
+                id='name'
                 value={formik.values.name}
                 onChange={formik.handleChange}
               />
               {formik.errors.name && formik.touched.name ? (
-                <span className="text-danger">{formik.errors.name}</span>
+                <span className='text-danger'>{formik.errors.name}</span>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Email</label>
               <input
-                className="form-control"
-                placeholder="email@example.com"
-                id="email"
+                className='form-control'
+                placeholder='email@example.com'
+                id='email'
                 value={formik.values.email}
                 onChange={formik.handleChange}
               />
               {formik.errors.email && formik.touched.email ? (
-                <span className="text-danger">{formik.errors.email}</span>
+                <span className='text-danger'>{formik.errors.email}</span>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Subject</label>
               <input
-                className="form-control"
-                placeholder="Subject to teach"
-                id="subject"
+                className='form-control'
+                placeholder='Subject to teach'
+                id='subject'
                 value={formik.values.subject}
                 onChange={formik.handleChange}
               />
               {formik.errors.subject && formik.touched.subject ? (
-                <span className="text-danger">{formik.errors.subject}</span>
+                <span className='text-danger'>{formik.errors.subject}</span>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Class</label>
               <select
-                className="form-select"
-                id="class"
+                className='form-select'
+                id='class'
                 value={formik.values.class}
                 onChange={formik.handleChange}
               >
-                {["Class 1", "Class 2", "Class 3"].map((el) => (
-                  <option key={el}>Class 1</option>
+                <option selected disabled defaultChecked>
+                  Select Class
+                </option>
+                {CLASSES.map((el) => (
+                  <option key={el}>{el}</option>
                 ))}
               </select>
               {formik.errors.class && formik.touched.class ? (
-                <span className="text-danger">{formik.errors.class}</span>
+                <span className='text-danger'>{formik.errors.class}</span>
               ) : null}
             </div>
-            <div className="form-group">
+            <div className='form-group'>
               <label>Phone</label>
               <input
-                className="form-control"
-                placeholder="(555) 123-2300"
-                id="phone"
+                className='form-control'
+                placeholder='(555) 123-2300'
+                id='phone'
                 value={formik.values.phone}
                 onChange={formik.handleChange}
               />
               {formik.errors.phone && formik.touched.phone ? (
-                <span className="text-danger">{formik.errors.phone}</span>
+                <span className='text-danger'>{formik.errors.phone}</span>
               ) : null}
             </div>
           </div>
-          <div className="modal-footer">
+          <div className='modal-footer'>
             <button
-              type="button"
-              className="btn btn-secondary cancel"
-              data-bs-dismiss="modal"
+              type='button'
+              className='btn btn-secondary cancel'
+              data-bs-dismiss='modal'
             >
               Cancel
             </button>
             <button
-              type="button"
-              className="btn btn-primary"
+              type='button'
+              className='btn btn-primary'
               onClick={() => formik.handleSubmit()}
               disabled={loading}
             >

@@ -76,9 +76,14 @@ export const handleError = (error: unknown) => {
 };
 
 export const getStatusFamily = (status: string) => {
-  if (["active", "paid"].includes(status.toLowerCase())) return "success";
-  if (["inactive", "unpaid"].includes(status.toLowerCase())) return "error";
-  if (["pending"].includes(status.toLowerCase())) return "primary";
+  if (
+    ["active", "paid", "completed", "approved"].includes(status.toLowerCase())
+  )
+    return "success";
+  if (["inactive", "unpaid", "rejected"].includes(status.toLowerCase()))
+    return "error";
+  if (["pending", "in-progress"].includes(status.toLowerCase()))
+    return "primary";
   if (["draft"].includes(status.toLowerCase())) return "draft";
   return "warning";
 };

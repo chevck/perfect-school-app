@@ -6,11 +6,11 @@ import type {
   Question,
   ReviewObject,
   StudentAnswer,
-} from "../utils/types";
+} from "../../utils/types";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { toast } from "sonner";
-import { failedReviews, goodReviews } from "../utils";
+import { failedReviews, goodReviews } from "../../utils";
 import axios from "axios";
 
 export function StudentExamView() {
@@ -71,22 +71,6 @@ export function StudentExamView() {
   useEffect(() => {
     if (exam) return setQuestions(exam.examQuestions);
   }, [exam]);
-
-  // useEffect(() => {
-  //   const answers = sessionStorage.getItem("answers");
-  //   if (answers && questions.length > 0) {
-  //     const parsedAnswers = JSON.parse(answers);
-  //     const lastAnswer = parsedAnswers[parsedAnswers.length - 1];
-  //     setAnswers(parsedAnswers);
-  //     // pick the index of the last answer and add 1 to it. If it's greater than the number of questions, set it to the number of questions
-  //     const nextIndex =
-  //       questions.findIndex(
-  //         (question) => question._id === lastAnswer.questionId
-  //       ) + 1;
-  //     if (nextIndex >= questions.length) handleSubmitExam();
-  //     else setCurrentQuestionIndex(nextIndex);
-  //   }
-  // }, [questions]);
 
   // Timer countdown
   useEffect(() => {
@@ -205,10 +189,7 @@ export function StudentExamView() {
                     (acc, answer) => acc + (answer.marks || 0),
                     0
                   ) /
-                    questions.reduce(
-                      (acc, question) => acc + question.marks,
-                      0
-                    )) *
+                    exam.totalMarks) *
                   100
                 ).toFixed(1)}
                 %
@@ -220,7 +201,7 @@ export function StudentExamView() {
               <h6>Score</h6>
               <h2>
                 {answers.reduce((acc, answer) => acc + (answer.marks || 0), 0)}/
-                {questions.reduce((acc, question) => acc + question.marks, 0)}
+                {exam.totalMarks}
               </h2>
             </div>
             <div className='score-box'>
@@ -230,8 +211,17 @@ export function StudentExamView() {
                 {questions.length} questions
               </h2>
             </div>
-            <button className='button return-button'>
-              Return to Dashboard
+            <button
+              className='button return-button'
+              onClick={() => {
+                localStorage.removeItem("exam-login-student");
+                localStorage.removeItem("exam-login-student-expires-at");
+                localStorage.removeItem("exam-login-auth-token");
+                sessionStorage.removeItem("answers");
+                navigate(`/take-exam/${examId}`);
+              }}
+            >
+              Restart Exam
             </button>
           </div>
         </div>
@@ -277,12 +267,6 @@ export function StudentExamView() {
           <div className='options'>
             <AnimatePresence>
               {questions[currentQuestionIndex]?.options.map((option, index) => {
-                console.log({
-                  selectedOption,
-                  index,
-                  correctOptionIndex:
-                    questions[currentQuestionIndex]?.correctOptionIndex,
-                });
                 const isCorrect =
                   (selectedOption !== null &&
                     questions[currentQuestionIndex]?.correctOptionIndex ===

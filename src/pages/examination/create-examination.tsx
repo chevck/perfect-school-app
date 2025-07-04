@@ -1,13 +1,37 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
-import type { Exam, Question } from "../utils/types.tsx";
+import type { Exam, Question } from "../../utils/types.tsx";
 import { useParams } from "react-router-dom";
-import useExamsStore from "../dataset/exams.store.tsx";
-import type { ExamsStore } from "../dataset/store.types.tsx";
+import useExamsStore from "../../dataset/exams.store.tsx";
+import type { ExamsStore } from "../../dataset/store.types.tsx";
 import { useFormik } from "formik";
-import { QuestionSchema } from "../utils/schemas/exams.schema.tsx";
+import { QuestionSchema } from "../../utils/schemas/exams.schema.tsx";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill-new";
+import parse from "html-react-parser";
+
+export const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ script: "sub" }, { script: "super" }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["formula"],
+    ["clean"],
+  ],
+};
+
+export const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "script",
+  "list",
+  "formula",
+];
 
 export function CreateExamination() {
   const { id } = useParams();
@@ -19,6 +43,7 @@ export function CreateExamination() {
     saveQuestionsApi,
     saveDraftExamQuestions,
     getDraftExamQuestions,
+    clearDraftExamQuestions,
   } = useExamsStore() as ExamsStore;
   const [questions, setQuestions] = useState<Question[]>([
     ...(exam?.examQuestions || []),
@@ -47,6 +72,8 @@ export function CreateExamination() {
       correctOption: "",
       marks: 0,
       correctOptionIndex: null,
+      isEditing: false,
+      editIndex: null,
     },
     validationSchema: QuestionSchema,
     onSubmit: (values) => {
@@ -55,13 +82,18 @@ export function CreateExamination() {
   });
 
   const handleAddQuestion = () => {
-    console.log("valuesss", formik.values);
     if (formik.values.questionText === "")
       return toast.error("Please add a question");
     if (formik.values.options.length < 4)
       return toast.error("Please add all options");
     if (formik.values.options.some((option) => option === ""))
       return toast.error("Please add all options");
+    const normalized = (formik?.values?.options as string[]).map((opt) =>
+      opt.trim().toLowerCase()
+    );
+    const hasDuplicateOptions = new Set(normalized).size !== normalized.length;
+    if (hasDuplicateOptions)
+      return toast.error("There are similar options, change them");
     if (formik.values.correctOptionIndex === null)
       return toast.error("Please select a correct option");
     if (formik.values.marks === 0) return toast.error("Please add marks");
@@ -91,7 +123,6 @@ export function CreateExamination() {
   };
 
   const handleSaveExamination = async () => {
-    console.log("saving examination", questions);
     if (newQuestions.length === 0)
       return toast.error("You deh whine? Add Questions First");
     if (!id) return toast.error("Something went wrong. Please try again later");
@@ -101,6 +132,15 @@ export function CreateExamination() {
     )
       return toast.error(
         "The total marks of the questions should not exceed the total marks of the examination"
+      );
+    if (
+      [...questions, ...newQuestions].reduce(
+        (acc, question) => acc + Number(question.marks),
+        0
+      ) < Number(exam?.totalMarks)
+    )
+      return toast.error(
+        "The total marks of the questions should not be less than the total marks of the examination"
       );
     try {
       const body = [...questions, ...newQuestions].map((question) => ({
@@ -121,6 +161,26 @@ export function CreateExamination() {
     }
   };
 
+  const handleUpdateQuestion = () => {
+    if (!formik.values.editIndex || formik.values.editIndex < 0)
+      return toast.error("Something went wrong");
+    const question = questions[formik.values.editIndex];
+    const updatedQuestion = {
+      ...question,
+      questionText: formik.values.questionText,
+      options: formik.values.options,
+      correctOption: formik.values.correctOption,
+      correctOptionIndex: formik.values.correctOptionIndex,
+      marks: formik.values.marks,
+    };
+    questions[formik.values.editIndex] = updatedQuestion;
+    setQuestions([...questions]);
+    toast.success("Question updated successfully");
+    formik.resetForm();
+    formik.setFieldValue("isEditing", false);
+    formik.setFieldValue("editIndex", null);
+  };
+
   return (
     <div className='create-examination'>
       <div className='title'>
@@ -131,7 +191,15 @@ export function CreateExamination() {
           </button>
           <button
             className='button back'
-            onClick={() => navigate("/examinations")}
+            onClick={() => {
+              if (!id) return;
+              saveQuestionsApi({
+                examId: id,
+                questions: [...questions, ...newQuestions],
+              });
+              clearDraftExamQuestions();
+              navigate("/examinations");
+            }}
           >
             Back to Examinations
           </button>
@@ -176,14 +244,16 @@ export function CreateExamination() {
         <div className='question-text'>
           <div className='form-group'>
             <label htmlFor='question-text'>Question Text</label>
-            <textarea
-              id='questionText'
-              name='questionText'
-              rows={4}
-              className='form-control'
+            <ReactQuill
+              theme='snow'
               value={formik.values.questionText}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              onChange={(e) => {
+                formik.setFieldValue("questionText", e);
+              }}
+              modules={quillModules}
+              formats={quillFormats}
+              placeholder='Enter your question here... Use the toolbar for formatting, including superscripts for expressions like 5²'
+              style={{ minHeight: "120px" }}
             />
           </div>
         </div>
@@ -298,15 +368,36 @@ export function CreateExamination() {
           </div>
         </div>
         <div className='button-container'>
-          <button className='button' onClick={handleAddQuestion}>
-            Add Question
-          </button>
+          {formik.values.isEditing ? (
+            <>
+              <button
+                className='button cancel'
+                onClick={() => {
+                  formik.resetForm();
+                  formik.setFieldValue("isEditing", false);
+                  formik.setFieldValue("editIndex", null);
+                }}
+              >
+                Cancel Edit
+              </button>
+              <button className='button' onClick={handleUpdateQuestion}>
+                Update Question
+              </button>
+            </>
+          ) : (
+            <button className='button' onClick={handleAddQuestion}>
+              Add Question
+            </button>
+          )}
         </div>
       </div>
       <div className='questions-container'>
         <h3>Questions ({[...questions, ...newQuestions].length})</h3>
         {[...questions, ...newQuestions].length ? (
-          <QuestionsList questions={[...questions, ...newQuestions]} />
+          <QuestionsList
+            questions={[...questions, ...newQuestions]}
+            formik={formik}
+          />
         ) : (
           <p className='no-questions'>
             No questions added yet. Use the form above to add questions.
@@ -320,9 +411,11 @@ export function CreateExamination() {
 export function QuestionsList({
   questions,
   viewMode,
+  formik,
 }: {
   questions: [] | Question[];
   viewMode?: boolean;
+  formik: any;
 }) {
   return (
     <div className='questions'>
@@ -343,12 +436,27 @@ export function QuestionsList({
                 </h4>
                 {!viewMode && (
                   <div className='actions'>
-                    <button className='button'>Edit</button>
+                    <button
+                      className='button'
+                      onClick={() => {
+                        formik.setValues({
+                          questionText: question.questionText,
+                          options: question.options,
+                          correctOption: question.correctOption,
+                          correctOptionIndex: question.correctOptionIndex,
+                          marks: question.marks,
+                          isEditing: true,
+                          editIndex: index,
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
                     <button className='button'>Delete</button>
                   </div>
                 )}
               </div>
-              <h6>{question.questionText}</h6>
+              <h6>{parse(question.questionText)}</h6>
               <div className='options'>
                 {question.options.map((option, index) => (
                   <div

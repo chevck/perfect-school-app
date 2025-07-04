@@ -2,12 +2,13 @@ import { createRoot } from "react-dom/client";
 import { AppRouter } from "./app.router.tsx";
 import { Toaster } from "sonner";
 import "react-loading-skeleton/dist/skeleton.css";
+import "react-quill-new/dist/quill.snow.css";
 
 createRoot(document.getElementById("root")!).render(
   <>
     <Toaster
       visibleToasts={1}
-      position="top-center"
+      position='top-center'
       toastOptions={{
         style: {
           background: "#1d1d1d",
