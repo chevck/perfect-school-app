@@ -26,9 +26,9 @@ export function StudentExamView() {
   const [examSubmitted, setExamSubmitted] = useState(false);
   const [reviewText, setReviewText] = useState<ReviewObject | null>(null);
   const [answers, setAnswers] = useState<StudentAnswer[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [minutes, setMinutes] = useState(Math.floor(exam?.duration || 0));
-  const [seconds, setSeconds] = useState(0);
+  const [loading] = useState(false);
+  const [minutes] = useState(Math.floor(exam?.duration || 0));
+  const [seconds] = useState(0);
   //   const [answers, setAnswers] = useState<StudentAnswer[]>([]);
 
   useEffect(() => {

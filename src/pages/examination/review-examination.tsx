@@ -9,7 +9,6 @@ import {
   Calendar,
   CheckCircle,
   CircleX,
-  Eye,
   Plus,
   SquarePen,
   StepBack,
