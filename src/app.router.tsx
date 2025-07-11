@@ -15,6 +15,7 @@ import { Students } from "./pages/students";
 import { CompleteTeacherRegistration } from "./pages/complete-teacher-registration";
 import { Settings } from "./pages/settings";
 import { ReviewExamination } from "./pages/examination/review-examination";
+import Landing from "./pages/landing/landing";
 
 export function AppRouter() {
   return (
@@ -26,15 +27,16 @@ export function AppRouter() {
           path='/complete-teacher-registration/:teacherCode'
           element={<CompleteTeacherRegistration />}
         />
-        <Route path='/' element={<DashboardLayout />}>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/billing' element={<Billing />} />
-          <Route path='/teachers' element={<Teachers />} />
-          <Route path='/parents' element={<Billing />} />
-          <Route path='/students' element={<Students />} />
-          <Route path='/examinations' element={<Examination />} />
-          <Route path='/settings' element={<Settings />} />
-        </Route>
+        <Route path='/' element={<Landing />} />
+        {/* <Route path='/' element={<DashboardLayout />}> */}
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/billing' element={<Billing />} />
+        <Route path='/teachers' element={<Teachers />} />
+        <Route path='/parents' element={<Billing />} />
+        <Route path='/students' element={<Students />} />
+        <Route path='/examinations' element={<Examination />} />
+        <Route path='/settings' element={<Settings />} />
+        {/* </Route> */}
         <Route path='/create-bill' element={<CreateBill />} />
         <Route path='/edit-bill/:billId' element={<CreateBill />} />
         <Route path='/create-examination/:id' element={<CreateExamination />} />
