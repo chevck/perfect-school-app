@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { QuestionsList } from "./create-examination";
 import {
   BookOpen,
-  Calendar,
   ChartColumnIncreasing,
+  ChartGantt,
   CircleHelp,
-  User,
+  Settings2,
   UserCircle,
 } from "lucide-react";
 import type { Question, Student } from "../../utils/types";
@@ -67,17 +67,23 @@ export function ViewExaminationDetails() {
               {examDetails?.class}
             </p>
             <p>
-              <User />
-              {examDetails?.createdBy?.name}
+              <Settings2 />
+              {examDetails?.session}
             </p>
             <p>
-              <Calendar />
-              {moment(examDetails?.createdAt).format("Do MMM, YYYY")}
+              <ChartGantt />
+              {examDetails?.term}
             </p>
           </div>
         </div>
         <div className='controls'>
-          <button className='button'>Upcoming</button>
+          <span
+            className={`custom-status ${getStatusFamily(
+              examDetails?.isReviewed ? "approved" : "pending"
+            )}`}
+          >
+            {examDetails?.isReviewed ? "Approved" : "Pending Review"}
+          </span>
           <button
             className='button'
             data-bs-toggle='modal'
@@ -85,12 +91,16 @@ export function ViewExaminationDetails() {
           >
             <i className='bi bi-share'></i>Share
           </button>
-          <button
-            className='button'
-            onClick={() => (window.location.href = `/create-examination/${id}`)}
-          >
-            Edit Questions
-          </button>
+          {examDetails?.isReviewed ? null : (
+            <button
+              className='button'
+              onClick={() =>
+                (window.location.href = `/create-examination/${id}`)
+              }
+            >
+              Edit Questions
+            </button>
+          )}
           <button
             className='button'
             onClick={() => (window.location.href = "/examinations")}
