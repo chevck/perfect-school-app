@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Menu, X, GraduationCap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <header className='bg-white shadow-sm sticky top-0 z-50 transition-all duration-300 hover:shadow-md'>
@@ -20,26 +22,29 @@ const Header = () => {
           <nav className='hidden md:flex space-x-8 animate-fade-in-up animation-delay-200'>
             <a
               href='#features'
-              className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+              className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
             >
               Features
             </a>
             <a
               href='#about'
-              className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+              className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105 text-decoration-none'
             >
               About
             </a>
             <a
               href='#contact'
-              className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+              className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
             >
               Contact
             </a>
           </nav>
 
           <div className='hidden md:flex items-center space-x-4 animate-fade-in-right animation-delay-400'>
-            <button className='text-blue-600 hover:text-blue-700 font-medium transition-all duration-300 hover:scale-105'>
+            <button
+              className='text-blue-600 hover:text-blue-700 font-medium transition-all duration-300 hover:scale-105'
+              onClick={() => navigate("/sign-in")}
+            >
               Login
             </button>
             <button className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-110 hover:shadow-lg'>

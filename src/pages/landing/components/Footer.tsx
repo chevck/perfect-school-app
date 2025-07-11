@@ -51,11 +51,11 @@ const Footer = () => {
 
           <div className='animate-fade-in-up animation-delay-200'>
             <h4 className='font-semibold mb-4'>Product</h4>
-            <ul className='space-y-2 text-gray-400'>
+            <ul className='space-y-2 text-gray-400 pl-0'>
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Features
                 </a>
@@ -63,7 +63,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Pricing
                 </a>
@@ -71,7 +71,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Security
                 </a>
@@ -79,7 +79,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Integrations
                 </a>
@@ -89,11 +89,11 @@ const Footer = () => {
 
           <div className='animate-fade-in-up animation-delay-400'>
             <h4 className='font-semibold mb-4'>Support</h4>
-            <ul className='space-y-2 text-gray-400'>
+            <ul className='space-y-2 text-gray-400 pl-0'>
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Help Center
                 </a>
@@ -101,7 +101,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Documentation
                 </a>
@@ -109,7 +109,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Contact Us
                 </a>
@@ -117,7 +117,7 @@ const Footer = () => {
               <li>
                 <a
                   href='#'
-                  className='hover:text-white transition-all duration-300 hover:translate-x-2'
+                  className='text-decoration-none text-[#e5e7eb] hover:text-white transition-all duration-300 hover:translate-x-2'
                 >
                   Training
                 </a>

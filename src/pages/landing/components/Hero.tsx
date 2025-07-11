@@ -6,11 +6,11 @@ const Hero = () => {
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
           <div className='text-center lg:text-left'>
-            <h1 className='text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in-up'>
+            <h1 className='text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in-up text-left'>
               Transform Your School with{" "}
               <span className='text-blue-600'>THE PERFECT SCHOOL APP</span>
             </h1>
-            <p className='text-xl text-gray-600 mb-8 max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in-up animation-delay-200'>
+            <p className='text-xl text-gray-600 mb-8 max-w-3xl mx-auto lg:mx-0 leading-relaxed animate-fade-in-up animation-delay-200 text-left'>
               Streamline operations, enhance learning, and manage your
               institution efficiently with our comprehensive school management
               platform featuring AI-powered tutoring.
