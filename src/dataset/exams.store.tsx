@@ -7,7 +7,7 @@ import moment from "moment";
 
 const userData = getUserData();
 
-const useExamsStore = create((set, get) => ({
+const useExamsStore = create((set) => ({
   exams: [],
   loading: false,
   pageLoading: false,
