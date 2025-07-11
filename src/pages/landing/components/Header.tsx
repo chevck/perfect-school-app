@@ -47,7 +47,10 @@ const Header = () => {
             >
               Login
             </button>
-            <button className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-110 hover:shadow-lg'>
+            <button
+              className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-110 hover:shadow-lg'
+              onClick={() => navigate("sign-up")}
+            >
               Get Started
             </button>
           </div>
@@ -69,27 +72,33 @@ const Header = () => {
             <nav className='flex flex-col space-y-4'>
               <a
                 href='#features'
-                className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2'
+                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
               >
                 Features
               </a>
               <a
                 href='#about'
-                className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2'
+                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
               >
                 About
               </a>
               <a
                 href='#contact'
-                className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:translate-x-2'
+                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
               >
                 Contact
               </a>
               <div className='flex flex-col space-y-2 pt-4'>
-                <button className='text-blue-600 hover:text-blue-700 font-medium text-left transition-all duration-300 hover:translate-x-2'>
+                <button
+                  className='text-blue-600 hover:text-blue-700 font-medium text-left transition-all duration-300 hover:translate-x-2'
+                  onClick={() => navigate("sign-in")}
+                >
                   Login
                 </button>
-                <button className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-105'>
+                <button
+                  onClick={() => navigate("sign-up")}
+                  className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-105'
+                >
                   Get Started
                 </button>
               </div>
