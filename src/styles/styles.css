@@ -3007,8 +3007,9 @@ table {
         border-radius: 8px;
       }
 
-      &.review_pending {
+      &.needs-revision {
         background-color: #fefce8;
+        border-color: #fef08a;
       }
 
       &.pending {

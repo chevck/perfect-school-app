@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Exam, Question } from "../../utils/types.tsx";
 import { useParams } from "react-router-dom";
 import useExamsStore from "../../dataset/exams.store.tsx";
 import type { ExamsStore } from "../../dataset/store.types.tsx";
-import { useFormik } from "formik";
+import { useFormik, type FormikProps } from "formik";
 import { QuestionSchema } from "../../utils/schemas/exams.schema.tsx";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -83,28 +83,68 @@ export function CreateExamination() {
     },
   });
 
-  const handleAddQuestion = () => {
-    if (formik.values.questionText === "")
-      return toast.error("Please add a question");
-    if (formik.values.options.length < 4)
-      return toast.error("Please add all options");
-    if (formik.values.options.some((option) => option === ""))
-      return toast.error("Please add all options");
+  const hasQuestionExceededTotalMarks = (newQuestion) => {
+    let allQuestions = [...questions, ...newQuestions];
+    if (newQuestion.isEditing)
+      allQuestions = allQuestions.filter(
+        (el) => el.localId !== newQuestion.localId
+      );
+    let totalMarks = allQuestions.reduce(
+      (acc, question) => acc + Number(question.marks),
+      0
+    );
+    totalMarks = totalMarks + Number(newQuestion.marks);
+    return totalMarks > Number(exam?.totalMarks);
+  };
+
+  const isQuestionValidToBeAdded = () => {
+    if (formik.values.questionText === "") {
+      toast.error("Please add a question");
+      return false;
+    }
+    if (formik.values.options.length < 4) {
+      toast.error("Please add all options");
+      return false;
+    }
+    if (formik.values.options.some((option) => option === "")) {
+      toast.error("Please add all options");
+      return false;
+    }
     const normalized = (formik?.values?.options as string[]).map((opt) =>
       opt.trim().toLowerCase()
     );
     const hasDuplicateOptions = new Set(normalized).size !== normalized.length;
-    if (hasDuplicateOptions)
-      return toast.error("There are similar options, change them");
-    if (formik.values.correctOptionIndex === null)
-      return toast.error("Please select a correct option");
-    if (!formik.values.marks) return toast.error("Please add marks");
+    if (hasDuplicateOptions) {
+      toast.error("There are similar options, change them");
+      return false;
+    }
+    if (formik.values.correctOptionIndex === null) {
+      toast.error("Please select a correct option");
+      return false;
+    }
+    if (!formik.values.marks) {
+      toast.error("Please add marks");
+      return false;
+    }
     if (
       !formik.values.options.some(
         (option) => option === formik.values.correctOption
       )
-    )
-      return toast.error("Your selected option is not in the options list");
+    ) {
+      toast.error("Your selected option is not in the options list");
+      return false;
+    }
+    if (hasQuestionExceededTotalMarks(formik.values)) {
+      toast.error(
+        "The total marks of the questions should not exceed the total marks of the examination"
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleAddQuestion = () => {
+    if (!isQuestionValidToBeAdded()) return;
     const newQuestion: Question = {
       questionText: formik.values.questionText,
       options: formik.values.options,
@@ -158,6 +198,7 @@ export function CreateExamination() {
         setQuestions([...questions, ...newQuestions]);
         toast.success("Questions saved successfully");
         localStorage.removeItem("draftExamQuestions");
+        navigate("/examinations");
       });
     } catch (error) {
       console.log("sdsds", error);
@@ -165,8 +206,8 @@ export function CreateExamination() {
   };
 
   const handleUpdateQuestion = () => {
-    console.log("sds", formik.values);
-    if (formik.values.localId) return toast.error("Something went wrong");
+    if (!formik.values.localId) return toast.error("Something went wrong");
+    if (!isQuestionValidToBeAdded()) return;
     const allQuestions = [
       ...questions.map((el) => ({ ...el, base: "questions" })),
       ...newQuestions.map((el) => ({ ...el, base: "new-questions" })),
@@ -182,7 +223,6 @@ export function CreateExamination() {
       correctOptionIndex: formik.values.correctOptionIndex,
       marks: formik.values.marks,
     };
-
     if (question?.base === "questions") {
       // Handle updating existing question from questions array
       const questionIndex = questions.findIndex(
@@ -211,8 +251,25 @@ export function CreateExamination() {
     formik.setFieldValue("editIndex", null);
   };
 
-  const handleDeleteQuestion = (question) => {
-    console.log("question to delete", question);
+  const handleDeleteQuestion = (q) => {
+    const allQuestions = [
+      ...questions.map((el) => ({ ...el, base: "questions" })),
+      ...newQuestions.map((el) => ({ ...el, base: "new-questions" })),
+    ];
+    const question = allQuestions.find((el) => el.localId === q.localId);
+    if (question?.base === "questions") {
+      const updatedQuestions = questions.filter(
+        (el) => el.localId !== q.localId
+      );
+      setQuestions(updatedQuestions);
+    } else if (question?.base === "new-questions") {
+      const updatedNewQuestions = newQuestions.filter(
+        (el) => el.localId !== q.localId
+      );
+      setNewQuestions(updatedNewQuestions);
+      saveDraftExamQuestions(updatedNewQuestions);
+    }
+    toast.success("Question deleted successfully");
   };
 
   return (
@@ -425,14 +482,13 @@ export function CreateExamination() {
           )}
         </div>
       </div>
-      {console.log({ questions, newQuestions })}
       <div className='questions-container'>
         <h3>Questions ({[...questions, ...newQuestions].length})</h3>
         {[...questions, ...newQuestions].length ? (
           <QuestionsList
             questions={[...questions, ...newQuestions]}
             formik={formik}
-            handleDeleteQuestion={handleDeleteQuestion}
+            handleDeleteQuestion={(q) => handleDeleteQuestion(q)}
           />
         ) : (
           <p className='no-questions'>
@@ -452,8 +508,8 @@ export function QuestionsList({
 }: {
   questions: [] | Question[];
   viewMode?: boolean;
-  formik: any;
-  handleDeleteQuestion: (question) => void;
+  formik: FormikProps<any>;
+  handleDeleteQuestion: (q: Question) => void;
 }) {
   return (
     <div className='questions'>
