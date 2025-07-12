@@ -50,7 +50,6 @@ const useExamsStore = create((set) => ({
     return [];
   },
   createExamsApi: async (exam: Exam, closeModal: () => void) => {
-    console.log("exam to create", exam);
     try {
       set(() => ({ loading: true }));
       const response = await axios.post(
@@ -58,7 +57,6 @@ const useExamsStore = create((set) => ({
         exam,
         { headers: { Authorization: `Bearer ${userData?.token}` } }
       );
-      console.log("response", response);
       set((state) => ({ exams: [...state.exams, response.data.exam] }));
       toast.success("Exam created successfully");
       closeModal();
@@ -69,11 +67,12 @@ const useExamsStore = create((set) => ({
       set(() => ({ loading: false }));
     }
   },
-  fetchExamsApi: async () => {
+  fetchExamsApi: async (statuses) => {
     try {
+      const paramsString = new URLSearchParams(statuses as any).toString();
       set(() => ({ pageLoading: true }));
       const response = await axios.get(
-        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/exams`,
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/exams?${paramsString}`,
         { headers: { Authorization: `Bearer ${userData?.token}` } }
       );
       set(() => ({ exams: response.data.exams }));
@@ -126,7 +125,6 @@ const useExamsStore = create((set) => ({
           response?.data?.message ??
           "Questions saved successfully"
       );
-      // set((state) => ({ examDetails: response.data.response, exams: state.exams }));
       set((state) => {
         const examIndex = state.exams.findIndex(
           (el) => el._id === response.data.response._id
@@ -137,6 +135,24 @@ const useExamsStore = create((set) => ({
     } catch (error) {
       handleError(error);
       toast.error("Something went wrong. Please try again later");
+    } finally {
+      set(() => ({ pageLoading: false }));
+    }
+  },
+  deleteExaminationApi: async (examId: string) => {
+    try {
+      set(() => ({ pageLoading: true }));
+      await axios.delete(
+        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/exam/${examId}`,
+        { headers: { Authorization: `Bearer ${userData?.token}` } }
+      );
+      set((state) => ({
+        exams: state.exams.filter((el) => el._id !== examId),
+      }));
+      toast.success("Deleted exam successfully!");
+    } catch (error) {
+      console.log("dfs", error);
+      handleError(error);
     } finally {
       set(() => ({ pageLoading: false }));
     }

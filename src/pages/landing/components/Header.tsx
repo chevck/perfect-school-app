@@ -7,48 +7,48 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className='bg-white shadow-sm sticky top-0 z-50 transition-all duration-300 hover:shadow-md'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex justify-between items-center h-16'>
+    <header className='sticky top-0 z-50 transition-all duration-300 bg-white shadow-sm hover:shadow-md'>
+      <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
+        <div className='flex items-center justify-between h-16'>
           <div className='flex items-center space-x-2 animate-fade-in-left'>
-            <div className='bg-blue-600 p-2 rounded-lg transition-all duration-500 hover:bg-blue-700 hover:scale-110 hover:rotate-3'>
-              <GraduationCap className='h-6 w-6 text-white transition-transform duration-300 hover:scale-110' />
+            <div className='p-2 transition-all duration-500 bg-blue-600 rounded-lg hover:bg-blue-700 hover:scale-110 hover:rotate-3'>
+              <GraduationCap className='w-6 h-6 text-white transition-transform duration-300 hover:scale-110' />
             </div>
             <span className='text-xl font-bold text-gray-900 transition-colors duration-300 hover:text-blue-600'>
               THE PERFECT SCHOOL APP
             </span>
           </div>
 
-          <nav className='hidden md:flex space-x-8 animate-fade-in-up animation-delay-200'>
+          <nav className='hidden space-x-8 md:flex animate-fade-in-up animation-delay-200'>
             <a
               href='#features'
-              className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+              className='text-gray-600 transition-all duration-300 text-decoration-none hover:text-blue-600 hover:scale-105'
             >
               Features
             </a>
             <a
               href='#about'
-              className='text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105 text-decoration-none'
+              className='text-gray-600 transition-all duration-300 hover:text-blue-600 hover:scale-105 text-decoration-none'
             >
               About
             </a>
             <a
               href='#contact'
-              className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+              className='text-gray-600 transition-all duration-300 text-decoration-none hover:text-blue-600 hover:scale-105'
             >
               Contact
             </a>
           </nav>
 
-          <div className='hidden md:flex items-center space-x-4 animate-fade-in-right animation-delay-400'>
+          <div className='items-center hidden space-x-4 md:flex animate-fade-in-right animation-delay-400'>
             <button
-              className='text-blue-600 hover:text-blue-700 font-medium transition-all duration-300 hover:scale-105'
+              className='font-medium text-blue-600 transition-all duration-300 hover:text-blue-700 hover:scale-105'
               onClick={() => navigate("/sign-in")}
             >
               Login
             </button>
             <button
-              className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-110 hover:shadow-lg'
+              className='px-4 py-2 text-white transition-all duration-500 transform bg-blue-600 rounded-lg hover:bg-blue-700 hover:scale-110 hover:shadow-lg'
               onClick={() => navigate("sign-up")}
             >
               Get Started
@@ -56,48 +56,48 @@ const Header = () => {
           </div>
 
           <button
-            className='md:hidden transition-all duration-300 hover:scale-110'
+            className='transition-all duration-300 md:hidden hover:scale-110'
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
-              <X className='h-6 w-6' />
+              <X className='w-6 h-6' />
             ) : (
-              <Menu className='h-6 w-6' />
+              <Menu className='w-6 h-6' />
             )}
           </button>
         </div>
 
         {isMenuOpen && (
-          <div className='md:hidden py-4 border-t'>
+          <div className='py-4 border-t md:hidden'>
             <nav className='flex flex-col space-y-4'>
               <a
                 href='#features'
-                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+                className='text-gray-600 transition-all duration-300 text-decoration-none hover:text-blue-600 hover:scale-105'
               >
                 Features
               </a>
               <a
                 href='#about'
-                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+                className='text-gray-600 transition-all duration-300 text-decoration-none hover:text-blue-600 hover:scale-105'
               >
                 About
               </a>
               <a
                 href='#contact'
-                className='text-decoration-none text-gray-600 hover:text-blue-600 transition-all duration-300 hover:scale-105'
+                className='text-gray-600 transition-all duration-300 text-decoration-none hover:text-blue-600 hover:scale-105'
               >
                 Contact
               </a>
-              <div className='flex flex-col space-y-2 pt-4'>
+              <div className='flex flex-col pt-4 space-y-2'>
                 <button
-                  className='text-blue-600 hover:text-blue-700 font-medium text-left transition-all duration-300 hover:translate-x-2'
+                  className='font-medium text-left text-blue-600 transition-all duration-300 hover:text-blue-700 hover:translate-x-2'
                   onClick={() => navigate("sign-in")}
                 >
                   Login
                 </button>
                 <button
                   onClick={() => navigate("sign-up")}
-                  className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-500 transform hover:scale-105'
+                  className='px-4 py-2 text-white transition-all duration-500 transform bg-blue-600 rounded-lg hover:bg-blue-700 hover:scale-105'
                 >
                   Get Started
                 </button>

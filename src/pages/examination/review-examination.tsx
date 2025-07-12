@@ -126,6 +126,7 @@ export function ReviewExamination() {
       })),
     };
     updateExaminationApi(details);
+    fetchExamDetailsApi(examDetails._id);
   };
 
   return pageLoading ? (
@@ -169,27 +170,27 @@ export function ReviewExamination() {
             <>
               <button
                 className='button finalize'
-                onClick={handleSaveQuestions}
-                disabled={savingQuestions}
-              >
-                {savingQuestions ? (
-                  <Loader />
-                ) : (
-                  <>
-                    <CheckCircle /> Save Updates
-                  </>
-                )}
-              </button>
-              <button
-                className='button save'
                 onClick={handleApproveAllQuestions}
-                disabled={loading}
+                disabled={loading || !examDetails?.examQuestions.length}
               >
                 {loading ? (
                   <Loader />
                 ) : (
                   <>
                     <CheckCircle /> Approve All Questions
+                  </>
+                )}
+              </button>
+              <button
+                className='button save'
+                onClick={handleSaveQuestions}
+                disabled={savingQuestions || !examDetails?.examQuestions.length}
+              >
+                {savingQuestions ? (
+                  <Loader />
+                ) : (
+                  <>
+                    <CheckCircle /> Save Updates
                   </>
                 )}
               </button>

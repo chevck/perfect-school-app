@@ -71,6 +71,8 @@ export function Settings() {
     }
   };
 
+  // TODO: Create a place where the SCHOOL inputs the subjects they do - as opposed to having static subjects
+
   return pageLoading ? (
     <LoadingPage />
   ) : (

@@ -37,7 +37,7 @@ export interface ExamsStore {
   loading: boolean;
   pageLoading: boolean;
   setLoading: (loading: boolean) => void;
-  fetchExamsApi: () => Promise<void>;
+  fetchExamsApi: (statuses) => Promise<void>;
   createExamsApi: (exam: Exam, closeModal: () => void) => Promise<void>;
   saveQuestionsApi: (questions: {
     questions: Question[];
@@ -52,4 +52,5 @@ export interface ExamsStore {
   clearDraftExamQuestions: () => void;
   savingQuestions: boolean;
   updateExaminationApi: (details: Exam, successMessage?: string) => void;
+  deleteExaminationApi: (examId: string) => void;
 }

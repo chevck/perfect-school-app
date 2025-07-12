@@ -7,6 +7,7 @@ export interface Question {
   marks: number;
   reviewNote?: string;
   status?: string;
+  localId?: string;
 }
 
 export interface ExamDetails {

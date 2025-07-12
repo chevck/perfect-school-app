@@ -1,59 +1,39 @@
-import { CreateExaminationModal } from "../../components/create-examination";
-import { motion } from "motion/react";
-import useExamsStore from "../../dataset/exams.store";
-import type { ExamsStore } from "../../dataset/store.types";
 import { useEffect, useState } from "react";
+import useExamsStore from "../dataset/exams.store";
+import type { ExamsStore } from "../dataset/store.types";
+import { LoadingPage } from "../components/loadingPage";
+import { CLASSES, getStatusFamily } from "../utils";
+import { motion } from "motion/react";
 import moment from "moment";
-import { CLASSES, getStatusFamily } from "../../utils";
-import { LoadingPage } from "../../components/loadingPage";
-import type { Exam, ExamDetails } from "../../utils/types";
-import { toast } from "sonner";
+// import { CreateExaminationModal } from "../components/create-examination";
 
-export function Examination() {
+export function AdminReviewExamination() {
   const [statuses, setStatuses] = useState({
     subject: "",
     term: "",
     class: "",
-    status: "",
+    status: "pending",
   });
-  const {
-    exams,
-    fetchExamsApi,
-    pageLoading,
-    updateExaminationApi,
-    deleteExaminationApi,
-  } = useExamsStore() as ExamsStore;
+  const { exams, fetchExamsApi, pageLoading } = useExamsStore() as ExamsStore;
 
   useEffect(() => {
     fetchExamsApi(statuses);
   }, [statuses]);
-
-  const handleStartExamination = (exam: Exam) => {
-    const totalScores = exam.examQuestions.reduce(
-      (acc, curr) => acc + Number(curr.marks) || 0,
-      0
-    );
-    console.log({ totalScores });
-    if (exam.totalMarks > totalScores)
-      return toast.error(
-        "You cannot start your exam until you have reached the score limit"
-      );
-  };
 
   return pageLoading ? (
     <LoadingPage />
   ) : (
     <div className='examination psa_d_page'>
       <div className='header_'>
-        <h2 className='title'>Examination</h2>
-        <button
+        <h2 className='title'>Review Examination</h2>
+        {/* <button
           className='button'
           data-bs-toggle='modal'
           data-bs-target='#create-examination-modal'
         >
           <i className='bi bi-plus-lg'></i>
           New Examination
-        </button>
+        </button> */}
       </div>
       <div className='filters'>
         <div className='form-filter'>
@@ -142,12 +122,7 @@ export function Examination() {
             {!exams.length ? (
               <tr>
                 <td colSpan={6} className='text-center'>
-                  {statuses.class ||
-                  statuses.status ||
-                  statuses.subject ||
-                  statuses.term
-                    ? "No exams found matching your filter"
-                    : "No exams found"}
+                  No exams found
                 </td>
               </tr>
             ) : (
@@ -177,29 +152,16 @@ export function Examination() {
                     </span>
                   </td>
                   <td className='actions'>
-                    {exam?.hasStarted || exam.isReviewed ? null : (
-                      <button
-                        className='button'
-                        onClick={() =>
-                          (location.href = `/create-examination/${exam._id}`)
-                        }
-                      >
-                        Set Questions
-                      </button>
-                    )}
-                    {exam?.isReviewed && !exam?.hasStarted ? (
+                    {exam?.isReviewed ? null : (
                       <button
                         className='button review'
-                        onClick={() => {
-                          updateExaminationApi(
-                            { ...exam, hasStarted: true },
-                            "You can start your exams now!! 🎉"
-                          );
-                        }}
+                        onClick={() =>
+                          (location.href = `/review-examination/${exam._id}`)
+                        }
                       >
-                        Start Exam
+                        Review
                       </button>
-                    ) : null}
+                    )}
                     <button
                       className='button'
                       onClick={() =>
@@ -208,14 +170,6 @@ export function Examination() {
                     >
                       View
                     </button>
-                    {!exam.isReviewed ? (
-                      <button
-                        className='button delete'
-                        onClick={() => deleteExaminationApi(exam._id)}
-                      >
-                        Delete
-                      </button>
-                    ) : null}
                   </td>
                 </motion.tr>
               ))
@@ -223,7 +177,7 @@ export function Examination() {
           </tbody>
         </table>
       </div>
-      <CreateExaminationModal />
+      {/* <CreateExaminationModal /> */}
     </div>
   );
 }

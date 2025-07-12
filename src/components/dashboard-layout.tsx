@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "../components/header";
 import {
   Book,
+  BookOpenText,
   CreditCard,
   LayoutDashboard,
   LogOut,
@@ -37,6 +38,13 @@ const SideBar = () => {
             <a>Billing</a>
           </li>
         )}
+        <li
+          className={selectedPage === "review-examination" ? "active" : ""}
+          onClick={() => navigate("/review-examination")}
+        >
+          <BookOpenText width={18} height={18} />
+          <a>Review Exams</a>
+        </li>
         <li
           className={selectedPage === "examinations" ? "active" : ""}
           onClick={() => navigate("/examinations")}

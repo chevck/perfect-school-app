@@ -16,6 +16,7 @@ import { Settings } from "./pages/settings";
 import { ReviewExamination } from "./pages/examination/review-examination";
 import Landing from "./pages/landing/landing";
 import { DashboardLayout } from "./components/dashboard-layout";
+import { AdminReviewExamination } from "./pages/admin.review.examination";
 
 export function AppRouter() {
   return (
@@ -36,6 +37,10 @@ export function AppRouter() {
           <Route path='/students' element={<Students />} />
           <Route path='/examinations' element={<Examination />} />
           <Route path='/settings' element={<Settings />} />
+          <Route
+            path='/review-examination'
+            element={<AdminReviewExamination />}
+          />
         </Route>
         <Route path='/create-bill' element={<CreateBill />} />
         <Route path='/edit-bill/:billId' element={<CreateBill />} />
