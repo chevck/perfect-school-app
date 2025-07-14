@@ -38,13 +38,15 @@ const SideBar = () => {
             <a>Billing</a>
           </li>
         )}
-        <li
-          className={selectedPage === "review-examination" ? "active" : ""}
-          onClick={() => navigate("/review-examination")}
-        >
-          <BookOpenText width={18} height={18} />
-          <a>Review Exams</a>
-        </li>
+        {!hasTeacherAccess && (
+          <li
+            className={selectedPage === "review-examination" ? "active" : ""}
+            onClick={() => navigate("/review-examination")}
+          >
+            <BookOpenText width={18} height={18} />
+            <a>Review Exams</a>
+          </li>
+        )}
         <li
           className={selectedPage === "examinations" ? "active" : ""}
           onClick={() => navigate("/examinations")}
@@ -77,13 +79,15 @@ const SideBar = () => {
             <a>Teachers</a>
           </li>
         )}
-        <li
-          className={selectedPage === "settings" ? "active" : ""}
-          onClick={() => navigate("/settings")}
-        >
-          <Settings width={18} height={18} />
-          <a>Settings</a>
-        </li>
+        {!hasTeacherAccess && (
+          <li
+            className={selectedPage === "settings" ? "active" : ""}
+            onClick={() => navigate("/settings")}
+          >
+            <Settings width={18} height={18} />
+            <a>Settings</a>
+          </li>
+        )}
         <li onClick={() => logUserOut()}>
           <LogOut width={18} height={18} />
           <a>Logout</a>

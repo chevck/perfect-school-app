@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { currencyOptions, getUserData, handleError } from "../utils";
 import axios from "axios";
@@ -5,6 +6,7 @@ import { toast } from "sonner";
 import { LoadingPage } from "../components/loadingPage";
 import { PlusIcon, StarIcon, Trash2Icon } from "lucide-react";
 import { BankAccountModal } from "../components/bank-account-modal";
+import { AddSubjectModal } from "../components/AddSubjectModal";
 
 export function Settings() {
   const userData = getUserData();
@@ -16,6 +18,7 @@ export function Settings() {
 
   useEffect(() => {
     handleGetSchool();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -45,14 +48,17 @@ export function Settings() {
     }
   };
 
-  const handleUpdateSchool = async () => {
+  const handleUpdateSchool = async (customEditBody?: Record<string, any>) => {
+    console.log({ customEditBody }, "this is what to edit");
     if (Object.keys(editBody).length === 0)
       return toast.error("Please try to edit something");
     try {
       setLoading(true);
+      console.log({ editBody }, "this is what to edit");
       const update = await axios.put(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/school/edit`,
         {
+          ...customEditBody,
           ...editBody,
         },
         {
@@ -127,7 +133,13 @@ export function Settings() {
               school={school}
             />
           )}
-          {activeTab === "academic" && <AcademicTab />}
+          {activeTab === "academic" && (
+            <AcademicTab
+              editBody={editBody}
+              handleUpdateSchool={handleUpdateSchool}
+              school={school}
+            />
+          )}
           {activeTab === "notifications" && <NotificationsTab />}
           {activeTab === "appearance" && <AppearanceTab />}
         </div>
@@ -191,6 +203,7 @@ function BillingTab({
     });
     setEditBody({ ...editBody, schoolBankAccounts: accounts });
   };
+
   return (
     <div>
       <p className='title'>Billing Settings</p>
@@ -301,8 +314,78 @@ function BillingTab({
   );
 }
 
-function AcademicTab() {
-  return <div>Academic</div>;
+function AcademicTab({
+  editBody,
+  handleUpdateSchool,
+  school,
+}: {
+  editBody: Record<string, any>;
+  handleUpdateSchool: (customEditBody?: Record<string, any>) => void;
+  school: any;
+}) {
+  console.log({ editBody, school });
+
+  const handleAddSubject = (subject: { name: string; description: string }) => {
+    if (school.subjects.some((s: any) => s.name === subject.name)) {
+      toast.error("Subject already exists. Put in a new subject");
+      return;
+    }
+    handleUpdateSchool({
+      subjects: [...(school.subjects ?? []), subject],
+    });
+    document.getElementById("close-add-subject-modal")?.click();
+  };
+
+  const handleDeleteSubject = (name: string) => {
+    handleUpdateSchool({
+      subjects: school.subjects.filter((subject: any) => subject.name !== name),
+    });
+  };
+
+  return (
+    <div className='academic-settings'>
+      <p className='title'>Academic Settings</p>
+      <p className='sub-title'>
+        Configure your school&apos;s academic year, grading system, and other
+        academic preferences.
+      </p>
+      <div className='section'>
+        <p className='title'>Subjects</p>
+        <p className='sub-title'>Manage the subjects offered by your school.</p>
+        <button
+          className='button add'
+          data-bs-toggle='modal'
+          data-bs-target='#add-subject-modal'
+        >
+          <PlusIcon />
+          Add Subject
+        </button>
+        <div className='subject-list'>
+          {school.subjects.map((subject: any, key: number) => (
+            <div className='subject-item' key={key}>
+              <div className='subject-item-details'>
+                <div>
+                  <h5>Title</h5>
+                  <p>{subject.name}</p>
+                </div>
+                <div>
+                  <h5>Description</h5>
+                  <p>{subject.description || "-"}</p>
+                </div>
+              </div>
+              <button
+                className='button delete'
+                onClick={() => handleDeleteSubject(subject.name)}
+              >
+                <Trash2Icon />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <AddSubjectModal handleAddSubject={(s) => handleAddSubject(s)} />
+    </div>
+  );
 }
 
 function NotificationsTab() {

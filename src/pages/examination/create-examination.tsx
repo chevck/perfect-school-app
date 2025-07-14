@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Exam, Question } from "../../utils/types.tsx";
 import { useParams } from "react-router-dom";
 import useExamsStore from "../../dataset/exams.store.tsx";
