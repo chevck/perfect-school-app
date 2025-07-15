@@ -4135,7 +4135,8 @@ table {
   }
 }
 
-.modal#add-subject-modal {
+.modal#add-subject-modal,
+.modal#add-class-modal {
   .modal-title {
     p {
       width: 100%;

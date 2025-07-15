@@ -1,4 +1,4 @@
-import type { Exam, Question, Student, Teacher } from "../utils/types";
+import type { Exam, Question, School, Student, Teacher } from "../utils/types";
 
 export interface TeacherStore {
   teachers: Teacher[];
@@ -53,4 +53,9 @@ export interface ExamsStore {
   savingQuestions: boolean;
   updateExaminationApi: (details: Exam, successMessage?: string) => void;
   deleteExaminationApi: (examId: string) => void;
+}
+
+export interface SchoolStore {
+  school: School | null;
+  setSchool: (school: School | null) => void;
 }

@@ -7,6 +7,10 @@ import { LoadingPage } from "../components/loadingPage";
 import { PlusIcon, StarIcon, Trash2Icon } from "lucide-react";
 import { BankAccountModal } from "../components/bank-account-modal";
 import { AddSubjectModal } from "../components/AddSubjectModal";
+import { AddClassModal } from "../components/AddClassModal";
+import useSchoolStore from "../dataset/school.store";
+import type { SchoolStore } from "../dataset/store.types";
+import type { School } from "../utils/types";
 
 export function Settings() {
   const userData = getUserData();
@@ -14,7 +18,9 @@ export function Settings() {
   const [editBody, setEditBody] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
-  const [school, setSchool] = useState<any>(null);
+  const [school, setSchool] = useState<School | null>(null);
+
+  const { setSchool: setSchoolStore } = useSchoolStore() as SchoolStore;
 
   useEffect(() => {
     handleGetSchool();
@@ -28,6 +34,8 @@ export function Settings() {
         schoolBankAccounts: school.schoolBankAccounts,
       });
     }
+    setSchoolStore(school);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [school]);
 
   const handleGetSchool = async () => {
@@ -135,7 +143,6 @@ export function Settings() {
           )}
           {activeTab === "academic" && (
             <AcademicTab
-              editBody={editBody}
               handleUpdateSchool={handleUpdateSchool}
               school={school}
             />
@@ -162,7 +169,7 @@ export function Settings() {
               Object.keys(editBody).length === 0 ||
               !editBody?.schoolBankAccounts?.length ||
               JSON.stringify(editBody.schoolBankAccounts) ===
-                JSON.stringify(school.schoolBankAccounts)
+                JSON.stringify(school?.schoolBankAccounts)
             }
             id='save-changes-button'
           >
@@ -315,16 +322,12 @@ function BillingTab({
 }
 
 function AcademicTab({
-  editBody,
   handleUpdateSchool,
   school,
 }: {
-  editBody: Record<string, any>;
   handleUpdateSchool: (customEditBody?: Record<string, any>) => void;
   school: any;
 }) {
-  console.log({ editBody, school });
-
   const handleAddSubject = (subject: { name: string; description: string }) => {
     if (school.subjects.some((s: any) => s.name === subject.name)) {
       toast.error("Subject already exists. Put in a new subject");
@@ -336,11 +339,31 @@ function AcademicTab({
     document.getElementById("close-add-subject-modal")?.click();
   };
 
+  const handleAddClass = (className: string) => {
+    console.log({ className });
+    if (school.classes.some((c: any) => c.className === className)) {
+      toast.error("Class already exists. Put in a new class");
+      return;
+    }
+    handleUpdateSchool({
+      classes: [...(school.classes ?? []), { className }],
+    });
+    document.getElementById("close-add-class-modal")?.click();
+  };
+
+  const handleDeleteClass = (name: string) => {
+    handleUpdateSchool({
+      classes: school.classes.filter((c: any) => c.className !== name),
+    });
+  };
+
   const handleDeleteSubject = (name: string) => {
     handleUpdateSchool({
       subjects: school.subjects.filter((subject: any) => subject.name !== name),
     });
   };
+
+  console.log({ school });
 
   return (
     <div className='academic-settings'>
@@ -383,7 +406,42 @@ function AcademicTab({
           ))}
         </div>
       </div>
+      <div className='section'>
+        <p className='title'>Classes</p>
+        <p className='sub-title'>Manage the classes you have in your school.</p>
+        <button
+          className='button add'
+          data-bs-toggle='modal'
+          data-bs-target='#add-class-modal'
+        >
+          <PlusIcon />
+          Add Class
+        </button>
+        <div className='subject-list'>
+          {school.classes.map((c: any, key: number) => (
+            <div className='subject-item' key={key}>
+              <div className='subject-item-details'>
+                <div>
+                  <h5>Class Name</h5>
+                  <p>{c.className}</p>
+                </div>
+                <div>
+                  <h5>Teacher</h5>
+                  <p>{c.teacher?.name || "-"}</p>
+                </div>
+              </div>
+              <button
+                className='button delete'
+                onClick={() => handleDeleteClass(c.className)}
+              >
+                <Trash2Icon />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
       <AddSubjectModal handleAddSubject={(s) => handleAddSubject(s)} />
+      <AddClassModal handleAddClass={(c) => handleAddClass(c)} />
     </div>
   );
 }
