@@ -37,6 +37,7 @@ export function CreateExaminationModal() {
 
   useEffect(() => {
     if (!teachers.length) fetchTeachersApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

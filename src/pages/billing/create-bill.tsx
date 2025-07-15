@@ -4,8 +4,13 @@ import { BillLayout } from "../../components/bill-layout";
 import Select from "react-select";
 import type { StudentStore } from "../../dataset/store.types";
 import useStudentsStore from "../../dataset/students.store";
-import type { BillItem } from "../../utils/types";
-import { CLASSES, formatMoney, getUserData, NAIRA_SYMBOL } from "../../utils";
+import type { BankAccount, BillItem, School } from "../../utils/types";
+import {
+  formatMoney,
+  getUserData,
+  handleError,
+  NAIRA_SYMBOL,
+} from "../../utils";
 import { toast } from "sonner";
 import { useFormik } from "formik";
 import { billingSchema } from "../../utils/schemas/billing.schema";
@@ -22,7 +27,7 @@ export function CreateBill() {
     "standard" | "minimalist" | "modern"
   >("standard");
   const { students, fetchStudentsApi } = useStudentsStore() as StudentStore;
-  const [school, setSchool] = useState<any>(null);
+  const [school, setSchool] = useState<School | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [newData, setNewData] = useState<{
     [key: string]: string | number;
@@ -57,7 +62,7 @@ export function CreateBill() {
   });
 
   const primaryBankAccount = school?.schoolBankAccounts?.find(
-    (bank: any) => bank.isPrimary
+    (bank: BankAccount) => bank.isPrimary
   );
 
   const handleGetBill = async () => {
@@ -76,7 +81,8 @@ export function CreateBill() {
       formik.setFieldValue("billId", billDetails.billId);
       formik.setFieldValue("billDate", billDetails.billDate);
     } catch (error) {
-      toast.error("Something went wrong with getting the bill");
+      handleError(error);
+      // toast.error("Something went wrong with getting the bill");
     }
   };
 
@@ -88,9 +94,10 @@ export function CreateBill() {
       );
       setSchool(response.data.school);
     } catch (error) {
-      toast.error(
-        "Something went wrong with getting school data. Please try again later"
-      );
+      handleError(error);
+      // toast.error(
+      //   "Something went wrong with getting school data. Please try again later"
+      // );
     }
   };
 
@@ -100,6 +107,8 @@ export function CreateBill() {
     if (billId) handleGetBill();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const classes = school?.classes.map((c) => c.className) ?? [];
 
   const studentOptions = students.map((student) => ({
     label: student.name,
@@ -124,6 +133,8 @@ export function CreateBill() {
   };
 
   const total = billItems.reduce((acc, item) => acc + item.price, 0);
+
+  console.log({ school });
 
   const handleSaveItem = () => {
     if (!itemToEdit) return;
@@ -150,7 +161,7 @@ export function CreateBill() {
 
   const handleDownloadPdf = () => {
     const element = document.getElementById("bill-preview");
-    var opt = {
+    const opt = {
       margin: 0.1,
       filename: "bill.pdf",
       image: { type: "jpeg", quality: 500 },
@@ -178,7 +189,8 @@ export function CreateBill() {
       toast.success("Bill created successfully");
       window.location.href = "/billing";
     } catch (error) {
-      toast.error("Something went wrong with creating the bill");
+      handleError(error);
+      // toast.error("Something went wrong with creating the bill");
     } finally {
       setIsLoading(false);
     }
@@ -202,7 +214,8 @@ export function CreateBill() {
       toast.success("Bill updated successfully");
       window.location.href = "/billing";
     } catch (error) {
-      toast.error("Something went wrong with updating the bill");
+      handleError(error);
+      // toast.error("Something went wrong with updating the bill");
     } finally {
       setIsLoading(false);
     }
@@ -302,7 +315,7 @@ export function CreateBill() {
                   }}
                 >
                   <option value=''>Select Class</option>
-                  {CLASSES.map((classItem, key) => (
+                  {classes.map((classItem, key) => (
                     <option key={key} value={classItem}>
                       {classItem}
                     </option>
@@ -548,7 +561,7 @@ export function CreateBill() {
           <BillLayout
             billItems={billItems}
             billingInformation={formik.values}
-            primaryBankAccount={primaryBankAccount}
+            primaryBankAccount={primaryBankAccount as BankAccount}
             billLayout={billLayout}
             setBillLayout={setBillLayout}
           />

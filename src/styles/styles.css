@@ -5,7 +5,8 @@ a {
 }
 
 body {
-  font-family: "Bricolage Grotesque", serif !important;
+  /* font-family: "Bricolage Grotesque", serif !important; */
+  font-family: "Geist", serif !important;
 }
 
 h1 {
@@ -3790,6 +3791,97 @@ table {
           margin-bottom: 0px;
         }
       }
+
+      .academic-settings {
+        .sub-title {
+          border-bottom: 1px solid #e2e8f0;
+          padding-bottom: 16px;
+          margin-bottom: 16px;
+        }
+
+        button.add {
+          margin-bottom: 16px;
+          width: fit-content;
+          padding: 0 16px;
+          height: 32px;
+          font-size: 14px;
+          line-height: 20px;
+          margin-left: auto;
+          background-color: #fff;
+          color: #020817;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 20px;
+          box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+          svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+          }
+        }
+
+        .subject-list {
+          .subject-item {
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
+              0 1px 2px -1px rgb(0 0 0 / 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+
+            p,
+            h4,
+            h5 {
+              margin-bottom: 0;
+            }
+
+            .subject-item-details {
+              display: flex;
+              gap: 40%;
+              align-items: center;
+
+              h5 {
+                font-size: 14px;
+                font-weight: 500;
+              }
+
+              p {
+                color: #64748b;
+                font-size: 14px;
+                width: 250px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+              }
+            }
+
+            button {
+              position: absolute;
+              right: 24px;
+              top: 24px;
+              height: 32px;
+              min-width: 42px;
+              box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+              background-color: #fff;
+              border: 1px solid #e2e8f0;
+              border-radius: 8px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              svg {
+                width: 16px;
+                height: 16px;
+                stroke: red;
+              }
+            }
+          }
+        }
+      }
     }
 
     .section-content {
@@ -4041,6 +4133,20 @@ table {
         width: 60px;
       }
     }
+  }
+}
+
+.modal#add-subject-modal,
+.modal#add-class-modal {
+  .modal-title {
+    p {
+      width: 100%;
+    }
+  }
+
+  .text-danger {
+    margin-top: -12px;
+    margin-bottom: 8px;
   }
 }
 

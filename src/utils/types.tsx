@@ -139,3 +139,20 @@ export interface ReviewObject {
   correctAnswer: boolean;
   text: string;
 }
+
+export interface School {
+  _id: string;
+  classes: {
+    className: string;
+    teacher?: Teacher;
+  }[];
+  subjects: {
+    name: string;
+    description?: string;
+  }[];
+  schoolBankAccounts: BankAccount[];
+  schoolName: string;
+  adminName: string;
+  expiresAt: number;
+  logoUrl: string;
+}
