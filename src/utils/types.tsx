@@ -87,6 +87,7 @@ export interface DashboardData {
 export interface BillItem {
   item: string;
   price: number;
+  include?: boolean;
 }
 
 export interface BillingInformation {
@@ -97,6 +98,7 @@ export interface BillingInformation {
   parent: string;
   student: string;
   session: string;
+  notes: string;
 }
 
 export interface BankAccount {
@@ -148,17 +150,17 @@ export interface ReviewObject {
 
 export interface School {
   _id: string;
-  classes: {
+  classes?: {
     className: string;
     teacher?: Teacher;
   }[];
-  subjects: {
+  subjects?: {
     name: string;
     description?: string;
   }[];
-  schoolBankAccounts: BankAccount[];
-  schoolName: string;
-  adminName: string;
-  expiresAt: number;
-  logoUrl: string;
+  schoolBankAccounts?: BankAccount[];
+  schoolName?: string;
+  adminName?: string;
+  expiresAt?: number;
+  logoUrl?: string;
 }

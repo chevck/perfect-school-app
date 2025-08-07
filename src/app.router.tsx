@@ -17,6 +17,7 @@ import { ReviewExamination } from "./pages/examination/review-examination";
 import Landing from "./pages/landing/landing";
 import { DashboardLayout } from "./components/dashboard-layout";
 import { AdminReviewExamination } from "./pages/admin.review.examination";
+import { UnauthCreateBill } from "./pages/billing/unauth-bill-create";
 
 export function AppRouter() {
   return (
@@ -28,6 +29,9 @@ export function AppRouter() {
           path='/complete-teacher-registration/:teacherCode'
           element={<CompleteTeacherRegistration />}
         />
+        {/* Exclusive Billing */}
+        <Route path='/crystal/bill' element={<UnauthCreateBill />} />
+        {/* Exclusive Billing */}
         <Route path='/' element={<Landing />} />
         <Route element={<DashboardLayout />}>
           <Route path='/dashboard' element={<Dashboard />} />

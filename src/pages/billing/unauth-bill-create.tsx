@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import { BillLayout } from "../../components/bill-layout";
-import Select from "react-select";
-import type { StudentStore } from "../../dataset/store.types";
-import useStudentsStore from "../../dataset/students.store";
+// import Select from "react-select";
+// import type { StudentStore } from "../../dataset/store.types";
+// import useStudentsStore from "../../dataset/students.store";
 import type { BankAccount, BillItem, School } from "../../utils/types";
 import {
   formatMoney,
@@ -13,24 +13,24 @@ import {
 } from "../../utils";
 import { toast } from "sonner";
 import { useFormik } from "formik";
-import { billingSchema } from "../../utils/schemas/billing.schema";
+// import { billingSchema } from "../../utils/schemas/billing.schema";
 import moment from "moment";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Loader } from "../../components/loader";
+// import { Loader } from "../../components/loader";
 
-export function CreateBill() {
+export function UnauthCreateBill() {
   const [billItems, setBillItems] = useState<BillItem[] | []>([]);
   const [itemToEdit, setItemToEdit] = useState<BillItem | null>(null);
   const [previewing, setPreviewing] = useState(false);
   const [billLayout, setBillLayout] = useState<
     "standard" | "minimalist" | "modern"
   >("standard");
-  const { students, fetchStudentsApi } = useStudentsStore() as StudentStore;
+  // const { students, fetchStudentsApi } = useStudentsStore() as StudentStore;
   const [school, setSchool] = useState<School | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [newData, setNewData] = useState<{
-    [key: string]: string | number;
+    [key: string]: string | number | boolean;
   } | null>(null);
   const userData = getUserData();
   const { billId } = useParams();
@@ -46,9 +46,11 @@ export function CreateBill() {
       billDate: moment().format("Do MMMM, YYYY"),
       session: "",
       saveAsDraft: true,
-      notes: "",
+      notes:
+        "Please note that all payments are NON-REFUNDABLE. We kindly request that parents/guardians pay at least 70% of the school fees into the school account at the start of the term.",
     },
     onSubmit: () => {
+      console.log(isLoading);
       if (!billItems.length) {
         toast.error("Please add at least one item to the bill");
         return;
@@ -59,67 +61,80 @@ export function CreateBill() {
         handleCreateBill();
       }
     },
-    validationSchema: billingSchema,
+    // validationSchema: billingSchema,
   });
 
   const primaryBankAccount = school?.schoolBankAccounts?.find(
     (bank: BankAccount) => bank.isPrimary
-  );
-
-  const handleGetBill = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/bill/${billId}`,
-        { headers: { Authorization: `Bearer ${userData?.token}` } }
-      );
-      const billDetails = response.data.bill;
-      setBillItems(billDetails.billItems);
-      formik.setFieldValue("student", billDetails.studentId);
-      // formik.setFieldValue("parent", billDetails.parentId);
-      formik.setFieldValue("class", billDetails.class);
-      formik.setFieldValue("term", billDetails.term);
-      formik.setFieldValue("session", billDetails.session);
-      formik.setFieldValue("billId", billDetails.billId);
-      formik.setFieldValue("billDate", billDetails.billDate);
-    } catch (error) {
-      handleError(error);
-      // toast.error("Something went wrong with getting the bill");
-    }
-  };
-
-  const handleGetSchool = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/school`,
-        { headers: { Authorization: `Bearer ${userData?.token}` } }
-      );
-      setSchool(response.data.school);
-    } catch (error) {
-      handleError(error);
-      // toast.error(
-      //   "Something went wrong with getting school data. Please try again later"
-      // );
-    }
+  ) || {
+    accountName: "The Crystal School",
+    accountNumber: 2035951377,
+    bankName: "First Bank of Nigeria",
   };
 
   useEffect(() => {
-    fetchStudentsApi({ class: "", status: "" });
-    handleGetSchool();
-    if (billId) handleGetBill();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setSchool({
+      schoolName: "The Crystal School",
+      _id: "The Crystal Height School",
+    });
   }, []);
 
-  const classes = school?.classes?.map((c) => c.className) ?? [];
+  // const handleGetBill = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/bill/${billId}`,
+  //       { headers: { Authorization: `Bearer ${userData?.token}` } }
+  //     );
+  //     const billDetails = response.data.bill;
+  //     setBillItems(billDetails.billItems);
+  //     formik.setFieldValue("student", billDetails.studentId);
+  //     // formik.setFieldValue("parent", billDetails.parentId);
+  //     formik.setFieldValue("class", billDetails.class);
+  //     formik.setFieldValue("term", billDetails.term);
+  //     formik.setFieldValue("session", billDetails.session);
+  //     formik.setFieldValue("billId", billDetails.billId);
+  //     formik.setFieldValue("billDate", billDetails.billDate);
+  //   } catch (error) {
+  //     handleError(error);
+  //     // toast.error("Something went wrong with getting the bill");
+  //   }
+  // };
 
-  const studentOptions = students.map((student) => ({
-    label: student.name,
-    value: student._id,
-  }));
+  // const handleGetSchool = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/school`,
+  //       { headers: { Authorization: `Bearer ${userData?.token}` } }
+  //     );
+  //     setSchool(response.data.school);
+  //   } catch (error) {
+  //     handleError(error);
+  //     // toast.error(
+  //     //   "Something went wrong with getting school data. Please try again later"
+  //     // );
+  //   }
+  // };
 
-  const parentOptions = [
-    { label: "John Doe", value: "1" },
-    { label: "Jane Doe", value: "2" },
-  ];
+  // useEffect(() => {
+  //   fetchStudentsApi({ class: "", status: "" });
+  //   handleGetSchool();
+  //   if (billId) handleGetBill();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const classes = school?.classes.map((c) => c.className) ?? [];
+
+  // const classes = ["Pre Nursery", "Reception One"];
+
+  // const studentOptions = students.map((student) => ({
+  //   label: student.name,
+  //   value: student._id,
+  // }));
+
+  // const parentOptions = [
+  //   { label: "John Doe", value: "1" },
+  //   { label: "Jane Doe", value: "2" },
+  // ];
 
   const handleAddItem = () => {
     const currentData = { ...newData };
@@ -129,11 +144,15 @@ export function CreateBill() {
       {
         item: currentData["item-description"] as string,
         price: Number(currentData["item-amount"]),
+        include: true,
       },
     ]);
   };
 
-  const total = billItems.reduce((acc, item) => acc + item.price, 0);
+  const total = billItems.reduce(
+    (acc, item) => acc + (item.include ? item.price : 0),
+    0
+  );
 
   console.log({ school });
 
@@ -163,13 +182,22 @@ export function CreateBill() {
   const handleDownloadPdf = () => {
     const element = document.getElementById("bill-preview");
     const opt = {
-      margin: 0.1,
-      filename: "bill.pdf",
-      image: { type: "jpeg", quality: 500 },
-      html2canvas: { scale: 2, dpi: 192, letterRendering: true },
+      margin: 0,
+      filename: `${school?.schoolName}-Bill-${formik.values.class}.pdf`,
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: { scale: 2, dpi: 300, letterRendering: true },
       jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
     };
     html2pdf().from(element).set(opt).save();
+  };
+
+  const handleSubtractItemFromBill = (itemIndex: number, item: BillItem) => {
+    const updatedBillItems = [...billItems];
+    updatedBillItems[itemIndex] = {
+      ...item,
+      include: !item.include,
+    };
+    setBillItems(updatedBillItems);
   };
 
   const handleCreateBill = async () => {
@@ -225,8 +253,8 @@ export function CreateBill() {
   const handlePreviewBill = () => {
     formik.validateForm().then((errors) => {
       formik.setTouched({
-        student: true,
-        parent: true,
+        // student: true,
+        // parent: true,
         class: true,
         term: true,
         session: true,
@@ -238,6 +266,8 @@ export function CreateBill() {
       }
     });
   };
+
+  console.log("sds", formik.errors);
 
   return (
     <div className='create-bill'>
@@ -258,7 +288,7 @@ export function CreateBill() {
             </button>
           </div>
           <div className='row user-information'>
-            <div className='col-12 col-md-6'>
+            {/* <div className='col-12 col-md-6'>
               <div className='form-group'>
                 <label>
                   Student's Name <span className='required'>*</span>
@@ -283,8 +313,8 @@ export function CreateBill() {
                   <div className='text-danger'>{formik.errors.student}</div>
                 )}
               </div>
-            </div>
-            <div className='col-12 col-md-6'>
+            </div> */}
+            {/* <div className='col-12 col-md-6'>
               <div className='form-group'>
                 <label>
                   Parent's Name <span className='required'>*</span>
@@ -304,11 +334,20 @@ export function CreateBill() {
                   <div className='text-danger'>{formik.errors.parent}</div>
                 )}
               </div>
-            </div>
+            </div> */}
             <div className='col-12 col-md-6'>
               <div className='form-group'>
                 <label>Class</label>
-                <select
+                <input
+                  className='form-control'
+                  type='text'
+                  value={formik.values.class}
+                  onChange={(e) => {
+                    formik.setFieldValue("class", e.target.value);
+                  }}
+                  placeholder='Input class Name e.g Grade One'
+                />
+                {/* <select
                   className='form-select'
                   value={formik.values.class}
                   onChange={(e) => {
@@ -321,7 +360,7 @@ export function CreateBill() {
                       {classItem}
                     </option>
                   ))}
-                </select>
+                </select> */}
                 {formik.errors.class && formik.touched.class && (
                   <div className='text-danger'>{formik.errors.class}</div>
                 )}
@@ -410,6 +449,28 @@ export function CreateBill() {
                   });
                 }}
               />
+              {/* <div className='form-check form-switch'>
+                <input
+                  className='form-check-input'
+                  type='checkbox'
+                  role='switch'
+                  id='flexSwitchCheckChecked'
+                  checked={newData?.include}
+                  onChange={(e) => {
+                    console.log("cjec", e.target.checked);
+                    setNewData({
+                      ...newData,
+                      include: e.target.checked,
+                    });
+                  }}
+                />
+                <label
+                  className='form-check-label'
+                  htmlFor='flexSwitchCheckChecked'
+                >
+                  Include in Bill
+                </label>
+              </div> */}
               <button
                 className='button'
                 disabled={
@@ -488,6 +549,14 @@ export function CreateBill() {
                             onClick={() => setItemToEdit(item)}
                           />
                           <i
+                            className={
+                              item.include ? "bi bi-dash-lg" : "bi bi-plus-lg"
+                            }
+                            onClick={() =>
+                              handleSubtractItemFromBill(key, item)
+                            }
+                          />
+                          <i
                             className='bi bi-trash'
                             onClick={() => handleDeleteItem(item)}
                           ></i>
@@ -511,6 +580,14 @@ export function CreateBill() {
               </div>
             )}
           </div>
+          <textarea
+            className='form-control'
+            placeholder='Add any additional notes here'
+            value={formik.values.notes}
+            onChange={formik.handleChange}
+            name='notes'
+            style={{ marginTop: "16px", fontSize: 14, minHeight: 100 }}
+          />
           <div className='footer'>
             <button
               className='button clear'
@@ -523,7 +600,7 @@ export function CreateBill() {
             >
               Clear
             </button>
-            {isEditPage ? (
+            {/* {isEditPage ? (
               <button
                 className='button draft'
                 onClick={() => formik.handleSubmit()}
@@ -542,7 +619,7 @@ export function CreateBill() {
               >
                 {isLoading ? <Loader /> : "Save as Draft"}
               </button>
-            )}
+            )} */}
             <button className='button preview' onClick={handlePreviewBill}>
               Preview
             </button>
@@ -573,7 +650,7 @@ export function CreateBill() {
             >
               Back to Edit
             </button>
-            <button
+            {/* <button
               className='button draft'
               onClick={() => {
                 formik.setFieldValue("saveAsDraft", true);
@@ -581,11 +658,11 @@ export function CreateBill() {
               }}
             >
               Save as Draft
-            </button>
+            </button> */}
             <button className='button download' onClick={handleDownloadPdf}>
               Download PDF
             </button>
-            <button
+            {/* <button
               className='button process'
               onClick={() => {
                 formik.setFieldValue("saveAsDraft", false);
@@ -593,7 +670,7 @@ export function CreateBill() {
               }}
             >
               Create Bill
-            </button>
+            </button> */}
           </div>
         </div>
       )}

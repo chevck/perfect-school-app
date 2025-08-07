@@ -1,8 +1,8 @@
 import type { BankAccount, BillItem, BillingInformation } from "../utils/types";
 import { formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
-import useStudentsStore from "../dataset/students.store";
-import type { StudentStore } from "../dataset/store.types";
-import { useState } from "react";
+// import useStudentsStore from "../dataset/students.store";
+// import type { StudentStore } from "../dataset/store.types";
+// import { useState } from "react";
 
 export function BillLayout({
   billItems,
@@ -17,27 +17,33 @@ export function BillLayout({
   billLayout: "standard" | "minimalist" | "modern";
   setBillLayout: (layout: "standard" | "minimalist" | "modern") => void;
 }) {
-  const userData = getUserData();
-  const { students } = useStudentsStore() as StudentStore;
-  const [paymentLink, setPaymentLink] = useState("");
+  const userData = getUserData() || {
+    schoolName: "The Crystal School",
+    schoolAddress: "Alafara Road, Ile tuntun, Nihort Road, Ibadan",
+  };
+  // const { students } = useStudentsStore() as StudentStore;
+  // const [paymentLink, setPaymentLink] = useState("");
   // const paymentLink = "https://paystack.shop/pay/l79p1dbb8b";
 
-  const student = students.find(
-    (student) => student._id === billingInformation.student
+  // const student = students.find(
+  //   (student) => student._id === billingInformation.student
+  // );
+
+  const total = billItems.reduce(
+    (acc, item) => acc + (item.include ? item.price : 0),
+    0
   );
 
-  const total = billItems.reduce((acc, item) => acc + item.price, 0);
-
-  const getLink = () => {
-    const link = `${paymentLink}?amount=${total}&email=${
-      student?.email
-    }&first_name=${student?.name?.split(" ")[0]}&last_name=${
-      student?.name?.split(" ")[1]
-    }&amount=${total}`;
-    console.log({ link });
-    setPaymentLink(link);
-    return link;
-  };
+  // const getLink = () => {
+  //   const link = `${paymentLink}?amount=${total}&email=${
+  //     student?.email
+  //   }&first_name=${student?.name?.split(" ")[0]}&last_name=${
+  //     student?.name?.split(" ")[1]
+  //   }&amount=${total}`;
+  //   console.log({ link });
+  //   setPaymentLink(link);
+  //   return link;
+  // };
 
   const BillItemsList = () => {
     return billItems.map((item, key) => (
@@ -82,16 +88,16 @@ export function BillLayout({
               {/* <p>{userData?.schoolCity}</p> */}
             </div>
             <div className='bill-id'>
-              <h3>Bill {billingInformation.billId}</h3>
-              <h6>{billingInformation.billDate}</h6>
+              <h3>{billingInformation.term}</h3>
+              <h6>Class: {billingInformation.class}</h6>
             </div>
           </div>
-          <div className='bill-to'>
+          {/* <div className='bill-to'>
             <h4>Bill To:</h4>
             <p>{student?.name}</p>
             <p>{student?.address}</p>
             <p>{billingInformation.class}</p>
-          </div>
+          </div> */}
           <div className='items-table'>
             <table className='table table-hover'>
               <thead>
@@ -124,25 +130,49 @@ export function BillLayout({
               Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
+          {billingInformation.notes ? (
+            <div className='notes' style={{ marginTop: "16px" }}>
+              <p
+                style={{
+                  marginBottom: "0px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: "#b4063b",
+                }}
+              >
+                NOTE: {billingInformation.notes}
+              </p>
+            </div>
+          ) : null}
         </div>
       ) : billLayout === "modern" ? (
         <div className={`bill-layout modern`} id='bill-preview'>
           <div className='school-details'>
-            <div className='school-logo'>PS</div>
+            {/* <div className='school-logo'>CS</div> */}
             <div className='school-name'>{userData.schoolName}</div>
             <div className='school-address'>{userData.schoolAddress}</div>
           </div>
           <div className='bill-details'>
             <div className='_left'>
-              <h6>Invoice</h6>
-              <h2>{billingInformation.billId}</h2>
+              {/* <h6>Invoice</h6>
+              <h2>{billingInformation.billId}</h2> */}
+              <h6>Term</h6>
+              <h2
+                style={{
+                  fontSize: "16px",
+                  textTransform: "uppercase",
+                  fontWeight: 500,
+                }}
+              >
+                {billingInformation.term}
+              </h2>
             </div>
             <div className='_right'>
-              <h6>Date Issued</h6>
-              <h2>{billingInformation.billDate}</h2>
+              <h6>Class</h6>
+              <h2>{billingInformation.class}</h2>
             </div>
           </div>
-          <div className='bill-to'>
+          {/* <div className='bill-to'>
             <h4>Bill To:</h4>
             <p>
               <b>Mr. {billingInformation.parent} </b>
@@ -150,7 +180,7 @@ export function BillLayout({
             <p>
               Student: <b>{student?.name}</b>
             </p>
-          </div>
+          </div> */}
           <div className='items-table'>
             <table className='table table-hover'>
               <thead>
@@ -201,21 +231,38 @@ export function BillLayout({
               Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
+          {billingInformation.notes ? (
+            <div className='notes'>
+              <b>NOTE:</b>
+              <ul>
+                <li>All textbooks and stationeries are included</li>
+                <li>
+                  Please note that all payments are <b>NON-REFUNDABLE</b>.
+                </li>
+                <li>
+                  We kindly request that parents/guardians pay at least 70% of
+                  the school fees into the school account at the start of the
+                  term
+                </li>
+              </ul>
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className={`bill-layout minimal`} id='bill-preview'>
           <div className='bill-header'>
             <div className='school-name'>{userData?.schoolName}</div>
             <div className='bill-info'>
-              <p>BILL {billingInformation.billId}</p>
-              <p>{billingInformation.billDate}</p>
+              {/* <p>BILL {billingInformation.billId}</p> */}
+              <p>{billingInformation.term}</p>
+              <p>{billingInformation.class}</p>
             </div>
           </div>
-          <div className='bill-to'>
-            <h4> {billingInformation.parent}</h4>
-            <p>Parent of {student?.name}.</p>
-            <p>Term: {billingInformation.term}</p>
-          </div>
+          {/* <div className='bill-to'> */}
+          {/* <h4> {billingInformation.parent}</h4> */}
+          {/* <p>Parent of {student?.name}.</p> */}
+          {/* <p>Term: {billingInformation.term}</p>
+          </div> */}
           <div className='items-table'>
             <table className='table table-hover'>
               <thead>
@@ -248,6 +295,20 @@ export function BillLayout({
               Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
+          {billingInformation.notes ? (
+            <div className='notes' style={{ marginTop: "16px" }}>
+              <p
+                style={{
+                  marginBottom: "0px",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: "#b4063b",
+                }}
+              >
+                NOTE: {billingInformation.notes}
+              </p>
+            </div>
+          ) : null}
         </div>
       )}
     </div>
