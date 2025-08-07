@@ -53,7 +53,13 @@ export interface Student {
   admissionNumber: string;
   dob: string;
   gender: string;
-  parents: string[];
+  parents: {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    isPrimaryContact: boolean;
+    studentIds?: { _id: string; isPrimaryContact: boolean }[];
+  }[];
   address: string;
   joinDate: string;
   studentId: string;

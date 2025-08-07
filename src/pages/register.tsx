@@ -23,6 +23,7 @@ export function RegisterPage() {
       terms: false,
       schoolThemeColor: "",
       acceptedTerms: false,
+      address: "",
     },
     onSubmit: () => {
       handleRegisterSchool();
@@ -77,6 +78,7 @@ export function RegisterPage() {
         schoolEmail: formik.values.email,
         role: formik.values.role,
         adminPassword: formik.values.password,
+        address: formik.values.address,
       };
       await axios.post(
         `${import.meta.env.VITE_GLOBAL_BE_URL}/psa/register`,
@@ -97,37 +99,37 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="registration-page-wrapper">
+    <div className='registration-page-wrapper'>
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="registration-page"
+          className='registration-page register'
         >
           <center>
             <LogoComponent />
           </center>
           <h3>Create your account</h3>
           <h6>Get started with The Perfect School App</h6>
-          <div className="form-group">
+          <div className='form-group'>
             <label>School Logo</label>
             <div
-              className="upload-image-wrapper"
+              className='upload-image-wrapper'
               onClick={handleOpenImageUploader}
             >
               {formik.values.schoolLogo ? (
                 <img
                   src={formik?.values?.schoolLogo}
-                  alt="school-logo"
-                  className="school-logo-img"
+                  alt='school-logo'
+                  className='school-logo-img'
                 />
               ) : (
                 <>
                   <input
-                    type="file"
-                    id="upload-school-logo"
-                    accept="image/*"
+                    type='file'
+                    id='upload-school-logo'
+                    accept='image/*'
                     onChange={handleImageUpload}
                   />
                   <p>
@@ -138,7 +140,7 @@ export function RegisterPage() {
             </div>
             {imageFile ? (
               <span
-                className="remove-image-btn text-danger"
+                className='remove-image-btn text-danger'
                 onClick={() => {
                   setImageFile(null);
                   formik.setFieldValue("schoolLogo", null);
@@ -147,104 +149,135 @@ export function RegisterPage() {
                 Remove Image
               </span>
             ) : null}
-            <span className="text-danger">{formik.errors.schoolLogo}</span>
+            <span className='text-danger'>{formik.errors.schoolLogo}</span>
           </div>
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="John Doe"
-              {...formik.getFieldProps("fullName")}
-            />
-            <span className="text-danger">{formik.errors.fullName}</span>
+          <div className='row'>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Full Name</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  placeholder='John Doe'
+                  {...formik.getFieldProps("fullName")}
+                />
+                <span className='text-danger'>{formik.errors.fullName}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Email</label>
+                <input
+                  type='email'
+                  className='form-control'
+                  placeholder='john.doe@example.com'
+                  {...formik.getFieldProps("email")}
+                />
+                <span className='text-danger'>{formik.errors.email}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Address</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  placeholder='123 Main St, Anytown, USA'
+                  {...formik.getFieldProps("address")}
+                />
+                <span className='text-danger'>{formik.errors.address}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>School Name</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  placeholder='ABC School'
+                  {...formik.getFieldProps("schoolName")}
+                />
+                <span className='text-danger'>{formik.errors.schoolName}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>School Theme Color</label>
+                <input
+                  type='color'
+                  className='form-control'
+                  {...formik.getFieldProps("schoolThemeColor")}
+                  value={formik.values.schoolThemeColor || "#ffffff"}
+                />
+                <span className='text-danger'>
+                  {formik.errors.schoolThemeColor}
+                </span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Your Role</label>
+                <input
+                  type='text'
+                  value='Administrator'
+                  className='form-control'
+                  disabled
+                />
+                <span className='text-danger'>{formik.errors.role}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Password</label>
+                <input
+                  type='password'
+                  className='form-control'
+                  {...formik.getFieldProps("password")}
+                />
+                <span className='text-danger'>{formik.errors.password}</span>
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div className='form-group'>
+                <label>Confirm Password</label>
+                <input
+                  type='password'
+                  className='form-control'
+                  {...formik.getFieldProps("confirmPassword")}
+                />
+                <span className='text-danger'>
+                  {formik.errors.confirmPassword}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Email</label>
+
+          <div className='form-check'>
             <input
-              type="email"
-              className="form-control"
-              placeholder="john.doe@example.com"
-              {...formik.getFieldProps("email")}
-            />
-            <span className="text-danger">{formik.errors.email}</span>
-          </div>
-          <div className="form-group">
-            <label>School Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="ABC School"
-              {...formik.getFieldProps("schoolName")}
-            />
-            <span className="text-danger">{formik.errors.schoolName}</span>
-          </div>
-          <div className="form-group">
-            <label>School Theme Color</label>
-            <input
-              type="color"
-              className="form-control"
-              {...formik.getFieldProps("schoolThemeColor")}
-              value={formik.values.schoolThemeColor || "#ffffff"}
-            />
-            <span className="text-danger">
-              {formik.errors.schoolThemeColor}
-            </span>
-          </div>
-          <div className="form-group">
-            <label>Your Role</label>
-            <input
-              type="text"
-              value="Administrator"
-              className="form-control"
-              disabled
-            />
-            <span className="text-danger">{formik.errors.role}</span>
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              className="form-control"
-              {...formik.getFieldProps("password")}
-            />
-            <span className="text-danger">{formik.errors.password}</span>
-          </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              className="form-control"
-              {...formik.getFieldProps("confirmPassword")}
-            />
-            <span className="text-danger">{formik.errors.confirmPassword}</span>
-          </div>
-          <div className="form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
+              type='checkbox'
+              className='form-check-input'
               {...formik.getFieldProps("acceptedTerms")}
               checked={formik.values.acceptedTerms}
               onChange={(e) => {
                 formik.setFieldValue("acceptedTerms", e.target.checked);
               }}
             />
-            <label className="form-check-label">
-              I agree to the <a href="#">Terms of Service</a> and{" "}
-              <a href="#">Privacy Policy</a>
+            <label className='form-check-label'>
+              I agree to the <a href='#'>Terms of Service</a> and{" "}
+              <a href='#'>Privacy Policy</a>
             </label>
-            <span className="text-danger">{formik.errors.acceptedTerms}</span>
+            <span className='text-danger'>{formik.errors.acceptedTerms}</span>
           </div>
           <button
-            className="button create-account"
-            type="submit"
+            className='button create-account'
+            type='submit'
             onClick={() => formik.handleSubmit()}
             disabled={isLoading}
           >
             {isLoading ? <Loader /> : "Create Account"}
           </button>
-          <h5 className="has-an-account-text">
-            Already have an account? <a href="/sign-in">Login</a>
+          <h5 className='has-an-account-text'>
+            Already have an account? <a href='/sign-in'>Login</a>
           </h5>
         </motion.div>
       </AnimatePresence>

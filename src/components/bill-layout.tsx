@@ -2,6 +2,7 @@ import type { BankAccount, BillItem, BillingInformation } from "../utils/types";
 import { formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
 import useStudentsStore from "../dataset/students.store";
 import type { StudentStore } from "../dataset/store.types";
+import { useState } from "react";
 
 export function BillLayout({
   billItems,
@@ -18,12 +19,25 @@ export function BillLayout({
 }) {
   const userData = getUserData();
   const { students } = useStudentsStore() as StudentStore;
+  const [paymentLink, setPaymentLink] = useState("");
+  // const paymentLink = "https://paystack.shop/pay/l79p1dbb8b";
 
   const student = students.find(
     (student) => student._id === billingInformation.student
   );
 
   const total = billItems.reduce((acc, item) => acc + item.price, 0);
+
+  const getLink = () => {
+    const link = `${paymentLink}?amount=${total}&email=${
+      student?.email
+    }&first_name=${student?.name?.split(" ")[0]}&last_name=${
+      student?.name?.split(" ")[1]
+    }&amount=${total}`;
+    console.log({ link });
+    setPaymentLink(link);
+    return link;
+  };
 
   const BillItemsList = () => {
     return billItems.map((item, key) => (

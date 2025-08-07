@@ -12,6 +12,9 @@ import {
   Users,
 } from "lucide-react";
 import { getUserRole, logUserOut, TEACHER, USER_INFORMATION } from "../utils";
+import { useEffect } from "react";
+import useSchoolStore from "../dataset/school.store";
+import type { SchoolStore } from "../dataset/store.types";
 
 const SideBar = () => {
   const selectedPage = location.pathname.split("/")[1];
@@ -100,6 +103,8 @@ const SideBar = () => {
 export function DashboardLayout() {
   const nonAuthedRoutes = ["/sign-in", "/sign-up"];
   const userInformation = localStorage.getItem(USER_INFORMATION);
+  const { fetchSchoolApi, classes, subjects } = useSchoolStore() as SchoolStore;
+
   if (userInformation) {
     const { expiresAt } = JSON.parse(userInformation);
     if (expiresAt < new Date().getTime()) logUserOut();
@@ -111,6 +116,10 @@ export function DashboardLayout() {
   if (!userInformation && !nonAuthedRoutes.includes(window.location.pathname)) {
     window.location.href = "/sign-in";
   }
+
+  useEffect(() => {
+    if (classes.length === 0 && subjects.length === 0) fetchSchoolApi();
+  }, [fetchSchoolApi, classes, subjects]);
 
   return (
     <div className='dashboard-layout'>

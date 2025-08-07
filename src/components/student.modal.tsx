@@ -2,16 +2,20 @@ import { useFormik } from "formik";
 import { FileChartColumn, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import StudentRegistrationSchema from "../utils/schemas/studentRegistration.schema";
-import { CLASSES, getUserData, handleError, schoolPrefix } from "../utils";
+import { getUserData, handleError, schoolPrefix } from "../utils";
 import axios from "axios";
 import useTeachersStore from "../dataset/teachers.store";
-import type { StudentStore, TeacherStore } from "../dataset/store.types";
-import Select from "react-select";
+import type {
+  SchoolStore,
+  StudentStore,
+  TeacherStore,
+} from "../dataset/store.types";
 import useStudentsStore from "../dataset/students.store";
 import moment from "moment";
 import { toast } from "sonner";
 import type { Student } from "../utils/types";
 import { Loader } from "./loader";
+import useSchoolStore from "../dataset/school.store";
 
 export interface SelectOption {
   label: string;
@@ -21,6 +25,7 @@ export interface SelectOption {
 export function CreateStudentModal() {
   const userData = getUserData();
   const { teachers, fetchTeachersApi } = useTeachersStore() as TeacherStore;
+  const { classes } = useSchoolStore() as SchoolStore;
   const {
     addStudent,
     selectedStudent,
@@ -49,16 +54,23 @@ export function CreateStudentModal() {
       teacherId: "",
       class: "",
       joinDate: "",
-      parents: [] as string[],
+      primaryParent: "",
+      primaryParentEmail: "",
       address: "",
+      primaryParentPhoneNumber: "",
     },
     onSubmit: () => (isEditAction ? handleEdit() : handleSubmit()),
     validationSchema: StudentRegistrationSchema,
   });
 
+  console.log("values", formik.values);
+
   useEffect(() => {
     if (!isEditAction) return formik.resetForm();
     if (isEditAction && selectedStudent) {
+      const primaryParent = selectedStudent?.parents.find(
+        (el: { isPrimaryContact: boolean }) => el.isPrimaryContact
+      );
       formik.setValues({
         firstName: selectedStudent?.name.split(" ")[0] ?? "",
         lastName: selectedStudent?.name.split(" ")[1] ?? "",
@@ -74,7 +86,9 @@ export function CreateStudentModal() {
         joinDate: selectedStudent?.joinDate
           ? moment(selectedStudent.joinDate).format("YYYY-MM-DD")
           : new Date().toISOString().split("T")[0],
-        parents: selectedStudent?.parents ?? [],
+        primaryParent: primaryParent?.name ?? "",
+        primaryParentEmail: primaryParent?.email ?? "",
+        primaryParentPhoneNumber: primaryParent?.phoneNumber ?? "",
         address: selectedStudent?.address ?? "",
       });
     }
@@ -138,13 +152,6 @@ export function CreateStudentModal() {
       setLoading(false);
     }
   };
-
-  const parentOptions: SelectOption[] = [
-    { label: "Parent 1", value: "1" },
-    { label: "Parent 2", value: "2" },
-    { label: "Parent 3", value: "3" },
-    { label: "Parent 4", value: "4" },
-  ];
 
   return (
     <div
@@ -248,7 +255,7 @@ export function CreateStudentModal() {
                     <option disabled selected value=''>
                       Select Class
                     </option>
-                    {CLASSES.map((cls, index) => (
+                    {classes.map((cls, index) => (
                       <option key={index} value={cls}>
                         {cls}
                       </option>
@@ -315,43 +322,56 @@ export function CreateStudentModal() {
                   ) : null}
                 </div>
                 <div className='col-12 col-md-6 form-group'>
-                  <label htmlFor='parent-name'>Parent Name</label>
-                  <Select
-                    options={parentOptions}
-                    // value={parentOptions.filter((option) =>
-                    //   formik.values.parents.includes(option.value as string)
-                    // )}
-                    onChange={(value) =>
-                      formik.setFieldValue(
-                        "parents",
-                        value?.map((o) => o.value) ?? []
-                      )
-                    }
-                    className='custom-react-select'
-                    classNamePrefix='select'
-                    placeholder='Search Parent'
-                    isSearchable={true}
-                    isClearable={true}
-                    isMulti={true}
+                  <label htmlFor='parent-name'>Primary Parent Name</label>
+                  <input
+                    type='text'
+                    id='primaryParent'
+                    className='form-control'
+                    value={formik.values.primaryParent}
+                    onChange={formik.handleChange}
                   />
-                  {formik.errors?.parents && formik.touched.parents ? (
-                    <span className='text-danger'>{formik.errors.parents}</span>
+                  {formik.errors?.primaryParent &&
+                  formik.touched.primaryParent ? (
+                    <span className='text-danger'>
+                      {formik.errors.primaryParent}
+                    </span>
                   ) : null}
                 </div>
                 <div className='col-12 col-md-6 form-group'>
-                  <label htmlFor='email'>Email</label>
+                  <label htmlFor='primaryParentEmail'>
+                    Primary Parent Email
+                  </label>
                   <input
                     type='text'
-                    id='email'
+                    id='primaryParentEmail'
                     className='form-control'
-                    value={formik.values.email}
+                    value={formik.values.primaryParentEmail}
                     onChange={formik.handleChange}
                   />
-                  {formik.errors?.email && formik.touched.email ? (
-                    <span className='text-danger'>{formik.errors.email}</span>
+                  {formik.errors?.primaryParentEmail &&
+                  formik.touched.primaryParentEmail ? (
+                    <span className='text-danger'>
+                      {formik.errors.primaryParentEmail}
+                    </span>
                   ) : null}
                 </div>
-                <div className='col-12 form-group'>
+                <div className='col-12 col-md-6 form-group'>
+                  <label htmlFor='address'>Primary Parent P hone Number</label>
+                  <input
+                    type='text'
+                    id='primaryParentPhoneNumber'
+                    className='form-control'
+                    value={formik.values.primaryParentPhoneNumber}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors?.primaryParentPhoneNumber &&
+                  formik.touched.primaryParentPhoneNumber ? (
+                    <span className='text-danger'>
+                      {formik.errors.primaryParentPhoneNumber}
+                    </span>
+                  ) : null}
+                </div>
+                <div className='col-12 col-md-6 form-group'>
                   <label htmlFor='address'>Address</label>
                   <input
                     type='text'
@@ -396,9 +416,7 @@ export function CreateStudentModal() {
   );
 }
 
-function StudentDetailsTab() {
-  const { selectedStudent } = useStudentsStore() as StudentStore;
-
+function StudentDetailsTab({ selectedStudent }) {
   return (
     <div className='student-details-tab'>
       <div className='info-cards-container'>
@@ -444,7 +462,10 @@ function StudentDetailsTab() {
             </div>
             <div className='info-card-item'>
               <h4>Emergency Contact</h4>
-              <p>{selectedStudent?.parents?.[0] ?? "-"}</p>
+              <p>
+                {selectedStudent?.parents?.find((el) => el.isPrimaryContact)
+                  ?.name ?? "-"}
+              </p>
             </div>
           </div>
         </div>
@@ -497,37 +518,36 @@ function StudentDetailsTab() {
   );
 }
 
-function StudentParentsTab() {
+function StudentParentsTab({ parents }) {
+  console.log({ parents });
   return (
     <div className='student-details-tab'>
       <div className='info-cards-container'>
-        <div className='info-card'>
-          <div className='info-card-header'>
-            <h3>Parent Information</h3>
-          </div>
-          <div className='info-card-body'>
-            <div className='info-card-item'>
-              <h4>Full Name</h4>
-              <p>John Doe</p>
+        {parents.map((parent) => (
+          <div className='info-card' key={parent._id}>
+            <div className='info-card-header'>
+              <h3>Parent Information</h3>
             </div>
-            <div className='info-card-item'>
-              <h4>Date of Birth</h4>
-              <p>21/02/2023</p>
-            </div>
-            <div className='info-card-item'>
-              <h4>Gender</h4>
-              <p>Male</p>
-            </div>
-            <div className='info-card-item'>
-              <h4>Blood Group</h4>
-              <p>A+</p>
-            </div>
-            <div className='info-card-item'>
-              <h4>Medical Conditions</h4>
-              <p>None</p>
+            <div className='info-card-body'>
+              <div className='info-card-item'>
+                <h4>Full Name</h4>
+                <p>{parent?.name ?? "-"}</p>
+              </div>
+              <div className='info-card-item'>
+                <h4>Email</h4>
+                <p>{parent?.email ?? "-"}</p>
+              </div>
+              <div className='info-card-item'>
+                <h4>Phone Number</h4>
+                <p>{parent?.phoneNumber ?? "-"}</p>
+              </div>
+              <div className='info-card-item'>
+                <h4>Address</h4>
+                <p>{parent?.address ?? "-"}</p>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
@@ -675,6 +695,18 @@ export function ViewStudentDetailsModal() {
   const [activeTab, setActiveTab] = useState("details");
   const { selectedStudent } = useStudentsStore() as StudentStore;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const studentParents = selectedStudent?.parents.reduce((acc: any, curr) => {
+    const currentStudent = (curr?.studentIds ?? []).find(
+      (el) => el._id === selectedStudent._id
+    );
+    delete curr.studentIds;
+    return [
+      ...acc,
+      { ...curr, isPrimaryContact: currentStudent?.isPrimaryContact },
+    ];
+  }, []);
+
   return (
     <div
       className='modal fade'
@@ -759,8 +791,17 @@ export function ViewStudentDetailsModal() {
                 Academic
               </div>
             </div>
-            {activeTab === "details" && <StudentDetailsTab />}
-            {activeTab === "parents" && <StudentParentsTab />}
+            {activeTab === "details" && (
+              <StudentDetailsTab
+                selectedStudent={{
+                  ...selectedStudent,
+                  parents: studentParents,
+                }}
+              />
+            )}
+            {activeTab === "parents" && (
+              <StudentParentsTab parents={studentParents} />
+            )}
             {activeTab === "siblings" && <StudentSiblingsTab />}
             {activeTab === "academic" && <StudentAcademicTab />}
           </div>

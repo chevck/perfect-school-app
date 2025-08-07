@@ -157,6 +157,7 @@ export function LoginPage() {
                 <option value='student'>Student</option>
                 <option value='teacher'>Teacher</option>
                 <option value='parent'>Parent</option>
+                <option value='admin'>Administrator</option>
               </select>
               <span className='text-danger'>{formik.errors.role}</span>
             </div>

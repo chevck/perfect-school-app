@@ -57,5 +57,10 @@ export interface ExamsStore {
 
 export interface SchoolStore {
   school: School | null;
+  classes: string[];
+  subjects: string[];
   setSchool: (school: School | null) => void;
+  setClasses: (classes: string[]) => void;
+  setSubjects: (subjects: string[]) => void;
+  fetchSchoolApi: () => Promise<void>;
 }
