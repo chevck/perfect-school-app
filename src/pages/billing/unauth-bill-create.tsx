@@ -25,7 +25,7 @@ export function UnauthCreateBill() {
   const [previewing, setPreviewing] = useState(false);
   const [billLayout, setBillLayout] = useState<
     "standard" | "minimalist" | "modern"
-  >("standard");
+  >("modern");
   // const { students, fetchStudentsApi } = useStudentsStore() as StudentStore;
   const [school, setSchool] = useState<School | null>(null);
   const [isLoading, setIsLoading] = useState(false);
