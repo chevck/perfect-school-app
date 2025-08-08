@@ -1335,6 +1335,32 @@ table {
       }
     }
 
+    .notes {
+      margin-top: 16px;
+
+      .note {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        i {
+          cursor: pointer;
+          font-size: 13px;
+          color: #dc2626;
+        }
+
+        input {
+          margin-bottom: 8px;
+          font-size: 14px;
+        }
+      }
+
+      button {
+        height: 36px;
+        background-color: #166534;
+      }
+    }
+
     .footer {
       padding-top: 16px;
       margin-top: 24px;
@@ -1547,12 +1573,12 @@ table {
 
     .notes {
       margin-top: 16px;
-      padding: 0 10px;
+      padding: 0;
       font-size: 14px;
       color: #e6344c;
 
       ul {
-        padding-left: 1rem;
+        padding-left: 0;
         line-height: 20px;
       }
     }
@@ -1839,12 +1865,12 @@ table {
     }
     .notes {
       margin-top: 16px;
-      padding: 0 10px;
+      padding: 0;
       font-size: 14px;
       color: #e6344c;
 
       ul {
-        padding-left: 1rem;
+        padding-left: 0;
         line-height: 20px;
       }
     }

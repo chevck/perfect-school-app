@@ -46,8 +46,11 @@ export function UnauthCreateBill() {
       billDate: moment().format("Do MMMM, YYYY"),
       session: "",
       saveAsDraft: true,
-      notes:
-        "Please note that all payments are NON-REFUNDABLE. We kindly request that parents/guardians pay at least 70% of the school fees into the school account at the start of the term.",
+      notes: [
+        "All textbooks and stationeries are included",
+        "Please note that all payments are NON-REFUNDABLE.",
+        "We kindly request that parents/guardians pay at least 70% of the school fees into the school account at the start of the term",
+      ],
     },
     onSubmit: () => {
       console.log(isLoading);
@@ -251,6 +254,10 @@ export function UnauthCreateBill() {
   };
 
   const handlePreviewBill = () => {
+    if (formik.values.notes.some((note) => note.trim() === "")) {
+      toast.error("Please remove empty notes");
+      return;
+    }
     formik.validateForm().then((errors) => {
       formik.setTouched({
         // student: true,
@@ -580,14 +587,40 @@ export function UnauthCreateBill() {
               </div>
             )}
           </div>
-          <textarea
-            className='form-control'
-            placeholder='Add any additional notes here'
-            value={formik.values.notes}
-            onChange={formik.handleChange}
-            name='notes'
-            style={{ marginTop: "16px", fontSize: 14, minHeight: 100 }}
-          />
+          <div className='notes'>
+            <h5>Notes</h5>
+            {formik.values.notes.map((note, key) => (
+              <div className='note' key={key}>
+                <input
+                  className='form-control'
+                  key={key}
+                  value={note}
+                  onChange={(e) => {
+                    const updatedNotes = [...formik.values.notes];
+                    updatedNotes[key] = e.target.value;
+                    formik.setFieldValue("notes", updatedNotes);
+                  }}
+                />
+                <i
+                  className='bi bi-x-circle'
+                  onClick={() =>
+                    formik.setFieldValue(
+                      "notes",
+                      formik.values.notes.filter((_, index) => index !== key)
+                    )
+                  }
+                ></i>
+              </div>
+            ))}
+            <button
+              className='button'
+              onClick={() =>
+                formik.setFieldValue("notes", [...formik.values.notes, ""])
+              }
+            >
+              Add Note
+            </button>
+          </div>
           <div className='footer'>
             <button
               className='button clear'

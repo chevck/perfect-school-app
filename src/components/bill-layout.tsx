@@ -132,16 +132,14 @@ export function BillLayout({
           </div>
           {billingInformation.notes ? (
             <div className='notes' style={{ marginTop: "16px" }}>
-              <p
-                style={{
-                  marginBottom: "0px",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#b4063b",
-                }}
-              >
-                NOTE: {billingInformation.notes}
-              </p>
+              <div className='notes'>
+                <b>NOTE:</b>
+                <ul>
+                  {billingInformation.notes?.map((note, index) => (
+                    <li key={index}>{note}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ) : null}
         </div>
@@ -231,19 +229,13 @@ export function BillLayout({
               Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
-          {billingInformation.notes ? (
+          {billingInformation.notes?.length ? (
             <div className='notes'>
               <b>NOTE:</b>
               <ul>
-                <li>All textbooks and stationeries are included</li>
-                <li>
-                  Please note that all payments are <b>NON-REFUNDABLE</b>.
-                </li>
-                <li>
-                  We kindly request that parents/guardians pay at least 70% of
-                  the school fees into the school account at the start of the
-                  term
-                </li>
+                {billingInformation.notes?.map((note, index) => (
+                  <li key={index}>{note}</li>
+                ))}
               </ul>
             </div>
           ) : null}
@@ -295,18 +287,16 @@ export function BillLayout({
               Account Number: <b>{primaryBankAccount?.accountNumber}</b>
             </li>
           </div>
-          {billingInformation.notes ? (
+          {billingInformation.notes?.length ? (
             <div className='notes' style={{ marginTop: "16px" }}>
-              <p
-                style={{
-                  marginBottom: "0px",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "#b4063b",
-                }}
-              >
-                NOTE: {billingInformation.notes}
-              </p>
+              <div className='notes'>
+                <b>NOTE:</b>
+                <ul>
+                  {billingInformation.notes?.map((note, index) => (
+                    <li key={index}>{note}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ) : null}
         </div>

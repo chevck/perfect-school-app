@@ -98,7 +98,7 @@ export interface BillingInformation {
   parent: string;
   student: string;
   session: string;
-  notes: string;
+  notes: string[];
 }
 
 export interface BankAccount {
