@@ -1,4 +1,9 @@
-import type { BankAccount, BillItem, BillingInformation } from "../utils/types";
+import type {
+  BankAccount,
+  BillItem,
+  BillingInformation,
+  School,
+} from "../utils/types";
 import { formatMoney, getUserData, NAIRA_SYMBOL } from "../utils";
 // import useStudentsStore from "../dataset/students.store";
 // import type { StudentStore } from "../dataset/store.types";
@@ -10,16 +15,18 @@ export function BillLayout({
   primaryBankAccount,
   billLayout,
   setBillLayout,
+  school,
 }: {
   billItems: BillItem[];
   billingInformation: BillingInformation;
   primaryBankAccount: BankAccount;
   billLayout: "standard" | "minimalist" | "modern";
   setBillLayout: (layout: "standard" | "minimalist" | "modern") => void;
+  school: School;
 }) {
   const userData = getUserData() || {
-    schoolName: "The Crystal School",
-    schoolAddress: "Alafara Road, Ile tuntun, Nihort Road, Ibadan",
+    schoolName: school.schoolName,
+    schoolAddress: school.address,
   };
   // const { students } = useStudentsStore() as StudentStore;
   // const [paymentLink, setPaymentLink] = useState("");
@@ -121,13 +128,13 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>{primaryBankAccount?.bankName}</b>
+              Bank Name: <b>{school?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>{primaryBankAccount?.accountName}</b>
+              Account Name: <b>{school?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
+              Account Number: <b>{school?.accountNumber}</b>
             </li>
           </div>
           {billingInformation.notes ? (
@@ -220,13 +227,13 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>{primaryBankAccount?.bankName}</b>
+              Bank Name: <b>{school?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>{primaryBankAccount?.accountName}</b>
+              Account Name: <b>{school?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
+              Account Number: <b>{school?.accountNumber}</b>
             </li>
           </div>
           {billingInformation.notes?.length ? (
@@ -278,13 +285,13 @@ export function BillLayout({
           <div className='payment-instructions'>
             <p>Payment Terms: Please pay into the account below</p>
             <li>
-              Bank Name: <b>{primaryBankAccount?.bankName}</b>
+              Bank Name: <b>{school?.bankName}</b>
             </li>
             <li>
-              Account Name: <b>{primaryBankAccount?.accountName}</b>
+              Account Name: <b>{school?.accountName}</b>
             </li>
             <li>
-              Account Number: <b>{primaryBankAccount?.accountNumber}</b>
+              Account Number: <b>{school?.accountNumber}</b>
             </li>
           </div>
           {billingInformation.notes?.length ? (

@@ -163,4 +163,8 @@ export interface School {
   adminName?: string;
   expiresAt?: number;
   logoUrl?: string;
+  address?: string;
+  accountNumber?: string;
+  accountName?: string;
+  bankName?: string;
 }

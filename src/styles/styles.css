@@ -1135,6 +1135,51 @@ table {
     padding: 24px;
     border-radius: 8px;
 
+    .school-list {
+      display: grid;
+      gap: 16px;
+      flex-wrap: wrap;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      margin-bottom: 16px;
+
+      .school-item {
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        &:hover {
+          background-color: #f9fafb;
+        }
+
+        &.active {
+          background-color: #1d4fd888;
+          color: white;
+
+          p,
+          span {
+            color: white !important;
+          }
+        }
+
+        .school-account-details {
+          display: flex;
+          flex-direction: column;
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 0;
+            color: #64748b;
+
+            span {
+              font-weight: 500;
+              color: #020817;
+            }
+          }
+        }
+      }
+    }
+
     button {
       font-size: 14px;
       line-height: 20px;

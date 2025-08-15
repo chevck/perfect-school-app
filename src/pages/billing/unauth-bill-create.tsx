@@ -36,6 +36,33 @@ export function UnauthCreateBill() {
   const { billId } = useParams();
   const isEditPage = !!billId;
 
+  const schools: School[] = [
+    {
+      schoolName: "Sharon Heirs Int'l School",
+      address: "Onirinloye Junction, Gbekuba Apata, Ibadan",
+      _id: "sharon-heirs-int-school",
+      accountNumber: "0030582667",
+      accountName: "Shalom Kiddies College",
+      bankName: "GTBank",
+    },
+    {
+      schoolName: "The Crystal School",
+      address: "Alafara Road, Ile tuntun, Nihort Road, Ibadan",
+      _id: "the-crystal-school",
+      accountName: "The Crystal School",
+      accountNumber: "2035951377",
+      bankName: "First Bank of Nigeria",
+    },
+    {
+      schoolName: "Shalom Kiddies College",
+      address: "Off Joyce 'B' Road, Ogunleye Avenue, Oke Ado Ibadan",
+      _id: "shalom-kiddies-college",
+      accountNumber: "0030582667",
+      accountName: "Shalom Kiddies College",
+      bankName: "GTBank",
+    },
+  ];
+
   const formik = useFormik({
     initialValues: {
       student: "",
@@ -76,10 +103,7 @@ export function UnauthCreateBill() {
   };
 
   useEffect(() => {
-    setSchool({
-      schoolName: "The Crystal School",
-      _id: "The Crystal Height School",
-    });
+    setSchool(schools[0] as School);
   }, []);
 
   // const handleGetBill = async () => {
@@ -293,6 +317,27 @@ export function UnauthCreateBill() {
             <button className='button' onClick={handlePreviewBill}>
               Preview Bill
             </button>
+          </div>
+          <div className='school-list'>
+            {schools.map((schoolItem) => (
+              <div
+                key={schoolItem._id}
+                className={`school-item ${
+                  schoolItem._id === school?._id ? "active" : ""
+                }`}
+                onClick={() => setSchool(schoolItem)}
+              >
+                <h3>{schoolItem.schoolName}</h3>
+                <div className='school-account-details'>
+                  <p>
+                    <span>Account Number:</span> {schoolItem.accountNumber}
+                  </p>
+                  <p>
+                    <span>Bank Name:</span> {schoolItem.bankName}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
           <div className='row user-information'>
             {/* <div className='col-12 col-md-6'>
@@ -675,6 +720,7 @@ export function UnauthCreateBill() {
             primaryBankAccount={primaryBankAccount as BankAccount}
             billLayout={billLayout}
             setBillLayout={setBillLayout}
+            school={school as School}
           />
           <div className='footer'>
             <button
