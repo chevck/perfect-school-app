@@ -1152,6 +1152,12 @@ table {
           background-color: #f9fafb;
         }
 
+        h3 {
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 5px;
+        }
+
         &.active {
           background-color: #1d4fd888;
           color: white;
